@@ -1,0 +1,274 @@
+import DateTimePicker from "@react-native-community/datetimepicker";
+import React, { useState } from "react";
+import {
+  Platform,
+  StyleSheet,
+  Text,
+  TextInput,
+  TextStyle,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from "react-native";
+
+interface InputProps {
+  label?: string;
+  value: string;
+  onChangeText: (text: string) => void;
+  placeholder?: string;
+  maxLength?: number;
+  multiline?: boolean;
+  numberOfLines?: number;
+  style?: TextStyle;
+  containerStyle?: ViewStyle;
+  type?: "text" | "email" | "password" | "date" | "time" | "number";
+}
+
+const Input: React.FC<InputProps> = ({
+  label,
+  value,
+  onChangeText,
+  placeholder,
+  maxLength,
+  multiline = false,
+  numberOfLines = 1,
+  style,
+  containerStyle,
+  type = "text",
+}) => {
+  const [isFocused, setIsFocused] = useState(false);
+  const [showPicker, setShowPicker] = useState(false);
+  const [pickerMode, setPickerMode] = useState<"date" | "time">("date");
+
+  // First, install the required package:
+  // npm install @react-native-community/datetimepicker
+
+  const handleDatePress = () => {
+    if (type === "date" || type === "time") {
+      setPickerMode(type);
+      setShowPicker(true);
+    }
+  };
+
+  const handlePickerChange = (event: any, selectedDate?: Date) => {
+    setShowPicker(false);
+
+    if (selectedDate) {
+      let formattedValue = "";
+
+      if (type === "date") {
+        // Format as DD/MM/YYYY (Brazilian format)
+        const day = selectedDate.getDate().toString().padStart(2, "0");
+        const month = (selectedDate.getMonth() + 1).toString().padStart(2, "0"); // Months are 0-indexed
+        const year = selectedDate.getFullYear();
+        formattedValue = `${day}/${month}/${year}`;
+      } else if (type === "time") {
+        // Format as HH:MM (same as before, but 24h format is standard in Brazil)
+        const hours = selectedDate.getHours().toString().padStart(2, "0");
+        const minutes = selectedDate.getMinutes().toString().padStart(2, "0");
+        formattedValue = `${hours}:${minutes}`;
+      }
+
+      onChangeText(formattedValue);
+    }
+  };
+
+  // Get current date for the picker
+  const getCurrentDate = () => {
+    if (value) {
+      if (type === "date") {
+        return new Date(value);
+      } else if (type === "time") {
+        const [hours, minutes] = value.split(":").map(Number);
+        const date = new Date();
+        date.setHours(hours, minutes);
+        return date;
+      }
+    }
+    return new Date();
+  };
+
+  // Format date input (YYYY-MM-DD)
+  const formatDate = (text: string) => {
+    const numbers = text.replace(/[^\d-]/g, "");
+
+    if (numbers.length <= 4) {
+      return numbers;
+    } else if (numbers.length <= 6) {
+      return `${numbers.slice(0, 4)}-${numbers.slice(4).replace("-", "")}`;
+    } else if (numbers.length <= 8) {
+      return `${numbers.slice(0, 4)}-${numbers.slice(4, 6)}-${numbers.slice(
+        6,
+        8
+      )}`;
+    } else {
+      return `${numbers.slice(0, 4)}-${numbers.slice(4, 6)}-${numbers.slice(
+        6,
+        8
+      )}`;
+    }
+  };
+
+  // Format time input (HH:MM)
+  const formatTime = (text: string) => {
+    const numbers = text.replace(/[^\d:]/g, "");
+
+    if (numbers.length <= 2) {
+      return numbers;
+    } else if (numbers.length <= 4) {
+      return `${numbers.slice(0, 2)}:${numbers.slice(2).replace(":", "")}`;
+    } else {
+      return `${numbers.slice(0, 2)}:${numbers.slice(2, 4)}`;
+    }
+  };
+
+  const handleChangeText = (text: string) => {
+    let formattedText = text;
+
+    if (type === "date") {
+      formattedText = formatDate(text);
+    } else if (type === "time") {
+      formattedText = formatTime(text);
+    }
+
+    onChangeText(formattedText);
+  };
+
+  // Get placeholder based on type
+  const getPlaceholder = () => {
+    if (placeholder) return placeholder;
+
+    switch (type) {
+      case "date":
+        return "Toque para selecionar data";
+      case "time":
+        return "Toque para selecionar hora";
+      default:
+        return "";
+    }
+  };
+
+  // Get max length based on type
+  const getMaxLength = () => {
+    if (maxLength) return maxLength;
+
+    switch (type) {
+      case "date":
+        return 10;
+      case "time":
+        return 5;
+      default:
+        return undefined;
+    }
+  };
+
+  const inputStyle: TextStyle = {
+    backgroundColor: "white",
+    borderWidth: 1,
+    borderColor: isFocused ? "#1b0363ff" : "#ced4da",
+    borderRadius: 8,
+    padding: 12,
+    fontSize: 16,
+    ...(isFocused && {
+      shadowColor: "#98c5fbff",
+      shadowOffset: { width: 0, height: 0 },
+      shadowOpacity: 0.2,
+      shadowRadius: 4,
+      elevation: 3,
+    }),
+    ...(multiline && {
+      minHeight: 100,
+      textAlignVertical: "top",
+    }),
+    ...((type === "date" || type === "time") && {
+      color: value ? "#333" : "#6b7280",
+    }),
+    ...style,
+  };
+
+  // For date/time inputs, we'll use a TouchableOpacity to trigger the picker
+  if (type === "date" || type === "time") {
+    return (
+      <View style={[styles.container, containerStyle]}>
+        {label && <Text style={styles.label}>{label}</Text>}
+        <TouchableOpacity onPress={handleDatePress}>
+          <View pointerEvents="none">
+            <TextInput
+              value={value}
+              onChangeText={handleChangeText}
+              placeholder={getPlaceholder()}
+              maxLength={getMaxLength()}
+              multiline={multiline}
+              numberOfLines={numberOfLines}
+              style={inputStyle}
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
+              keyboardType={
+                type === "date" || type === "time"
+                  ? "numbers-and-punctuation"
+                  : "default"
+              }
+              editable={true} // Still editable for manual input
+            />
+          </View>
+        </TouchableOpacity>
+
+        {showPicker && (
+          <DateTimePicker
+            value={getCurrentDate()}
+            mode={pickerMode}
+            display={Platform.OS === "ios" ? "spinner" : "default"}
+            onChange={handlePickerChange}
+            locale="pt-BR" // Portuguese locale
+            {...(type === "date" && {
+              minimumDate: new Date(2000, 0, 1),
+              maximumDate: new Date(2100, 11, 31),
+            })}
+          />
+        )}
+      </View>
+    );
+  }
+
+  // Regular text inputs
+  return (
+    <View style={[styles.container, containerStyle]}>
+      {label && <Text style={styles.label}>{label}</Text>}
+      <TextInput
+        value={value}
+        onChangeText={handleChangeText}
+        placeholder={getPlaceholder()}
+        maxLength={getMaxLength()}
+        multiline={multiline}
+        numberOfLines={numberOfLines}
+        style={inputStyle}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
+        keyboardType={
+          type === "email"
+            ? "email-address"
+            : type === "number"
+            ? "numeric"
+            : "default"
+        }
+        secureTextEntry={type === "password"}
+        autoCapitalize={type === "email" ? "none" : "sentences"}
+        autoCorrect={type !== "email" && type !== "password"}
+      />
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    marginBottom: 16,
+  },
+  label: {
+    fontSize: 16,
+    fontWeight: "600",
+    marginBottom: 8,
+    color: "#333",
+  },
+});
+
+export default Input;
