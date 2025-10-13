@@ -10,11 +10,11 @@ import {
   TouchableWithoutFeedback,
   Keyboard 
 } from "react-native";
-import api from "../services/api";
-import Input from "../components/Input";
-import Button from "../components/Button";
-import ServiceTypeSelector from "../components/ServiceTypeSelector";
-import NavigationBar from "../components/NavigationBar";
+import api from "@/src/services/api";
+import Input from "@/src/components/Input";
+import Button from "@/src/components/Button";
+import ServiceTypeSelector from "@/src/components/ServiceTypeSelector";
+import NavigationBar from "@/src/components/NavigationBar";
 
 interface Type {
   id: string;

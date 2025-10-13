@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { authService } from '@/src/services/auth';
+import { useRouter } from "expo-router";
+import { authService } from "@/src/services/auth";
 import {
   View,
   Text,
@@ -24,59 +25,62 @@ const LoginScreen: React.FC<LoginScreenProps> = ({
   onLogin,
   loading = false,
 }) => {
+  const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<string[]>([]);
 
   const handleLogin = async () => {
-  const newErrors: string[] = [];
+    const newErrors: string[] = [];
 
-  // Basic validation
-  if (!username.trim()) {
-    newErrors.push("O campo usuário é obrigatório");
-  }
-  if (!password.trim()) {
-    newErrors.push("O campo senha é obrigatório");
-  }
-
-  if (newErrors.length > 0) {
-    setErrors(newErrors);
-    return;
-  }
-
-  setErrors([]);
-  
-  try {
-    // Call your Laravel API
-    const response = await authService.login({
-      username: username.trim(),
-      password: password.trim()
-    });
-
-    // Store authentication data
-    await authService.storeAuthData(response.token, response.user);
-    
-    // Call the success callback
-    onLogin(username, password);
-    
-  } catch (error: any) {
-    console.error('Login error:', error);
-    
-    // Handle different error types
-    if (error.response?.status === 401) {
-      setErrors(['Credenciais inválidas']);
-    } else if (error.response?.status === 422) {
-      // Validation errors from Laravel
-      const errors = error.response.data.errors;
-      const errorMessages = Object.values(errors).flat() as string[];
-      setErrors(errorMessages);
-    } else if (error.message === 'Network Error') {
-      setErrors(['Erro de conexão. Verifique sua internet.']);
-    } else {
-      setErrors(['Erro no servidor. Tente novamente.']);
+    // Basic validation
+    if (!username.trim()) {
+      newErrors.push("O campo usuário é obrigatório");
     }
-  }
-};
+    if (!password.trim()) {
+      newErrors.push("O campo senha é obrigatório");
+    }
+
+    if (newErrors.length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    setErrors([]);
+
+    try {
+      // Call your Laravel API
+      const response = await authService.login({
+        username: username.trim(),
+        password: password.trim(),
+      });
+
+      // Store authentication data
+      await authService.storeAuthData(response.token, response.user);
+
+      // Call the success callback
+      onLogin(username, password);
+
+      // ✅ ADD THIS: Navigate to OrderCreate after successful login
+      router.replace("/(tabs)/OrderCreate"); // or whatever your route path is
+    } catch (error: any) {
+      console.error("Login error:", error);
+
+      // Handle different error types
+      if (error.response?.status === 401) {
+        setErrors(["Credenciais inválidas"]);
+      } else if (error.response?.status === 422) {
+        // Validation errors from Laravel
+        const errors = error.response.data.errors;
+        const errorMessages = Object.values(errors).flat() as string[];
+        setErrors(errorMessages);
+      } else if (error.message === "Network Error") {
+        setErrors(["Erro de conexão. Verifique sua internet."]);
+      } else {
+        setErrors(["Erro no servidor. Tente novamente."]);
+      }
+    }
+  };
 
   return (
     <KeyboardAvoidingView
