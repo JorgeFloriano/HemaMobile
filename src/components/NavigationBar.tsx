@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Image } from "expo-image";
-
+import { useAuth } from "@/src/contexts/AuthContext";
 import {
   View,
   Text,
@@ -52,6 +52,7 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
   backgroundColor = "#1b0363ff",
   tintColor = "white",
 }) => {
+  const { user } = useAuth();
   const [menuVisible, setMenuVisible] = useState(false);
   const [slideAnim] = useState(new Animated.Value(-300));
 
@@ -119,6 +120,11 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
               source={require("@/assets/images/logo2_hema.png")}
               style={{ width: 40, height: 35, alignSelf: "center" }}
             />
+          </View>
+
+          {/* Center - Title */}
+          <View style={styles.centerContainer}>
+            <Text style={styles.title}>{user?.name}</Text>
           </View>
 
           {/* Right Side - Menu Icon */}
@@ -224,6 +230,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flex: 1,
   },
+  
+  centerContainer: {
+    flex: 1,
+    alignItems: "center",
+  },
+  title: {
+    fontSize: 18,
+    color: "white",
+  },
+  
   logo: {
     width: 32,
     height: 32,

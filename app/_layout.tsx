@@ -1,26 +1,12 @@
 import { Stack } from "expo-router";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
-import { authService } from '@/src/services/auth';
+import { AuthProvider, useAuth } from '@/src/contexts/AuthContext';
 
-export default function RootLayout() {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+function RootLayoutContent() {
+  const { user, isLoading } = useAuth(); // Get loading state from AuthContext
 
-  useEffect(() => {
-    checkAuthStatus();
-  }, []);
-
-  const checkAuthStatus = async () => {
-    try {
-      const authenticated = await authService.isAuthenticated();
-      setIsAuthenticated(authenticated);
-    } catch (error) {
-      console.error('Auth check error:', error);
-      setIsAuthenticated(false);
-    }
-  };
-
-  if (isAuthenticated === null) {
+  if (isLoading) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <ActivityIndicator size="large" color="#1b0363ff" />
@@ -30,11 +16,21 @@ export default function RootLayout() {
 
   return (
     <Stack screenOptions={{ headerShown: false }}>
-      {!isAuthenticated ? (
+      {!user ? (
+        // Show login when not authenticated
         <Stack.Screen name="login" />
       ) : (
+        // Show tabs when authenticated
         <Stack.Screen name="(tabs)" />
       )}
     </Stack>
+  );
+}
+
+export default function RootLayout() {
+  return (
+    <AuthProvider>
+      <RootLayoutContent />
+    </AuthProvider>
   );
 }

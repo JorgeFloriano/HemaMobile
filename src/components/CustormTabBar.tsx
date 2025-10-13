@@ -64,8 +64,6 @@ const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, descriptors, navigat
           // Get the icon name based on route name
           const getIconName = () => {
             switch (route.name) {
-              case 'index':
-                return 'house.fill';
               case 'explore':
                 return 'paperplane.fill';
               case 'copy':
@@ -108,7 +106,6 @@ const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, descriptors, navigat
 const styles = StyleSheet.create({
   tabBarContainer: {
     backgroundColor: 'white',
-    position: 'relative',
   },
   tabBar: {
     flexDirection: 'row',
