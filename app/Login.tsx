@@ -2,30 +2,22 @@ import React, { useState } from "react";
 import { useRouter } from "expo-router";
 import { authService } from "@/src/services/auth";
 import { useAuth } from "@/src/contexts/AuthContext";
+import api from "@/src/services/api";
+
 import {
   View,
   Text,
   Image,
   StyleSheet,
-  KeyboardAvoidingView,
-  Platform,
   ScrollView,
   Alert,
   TouchableWithoutFeedback,
-  Keyboard,
 } from "react-native";
 import Input from "@/src/components/Input";
 import Button from "@/src/components/Button";
 
-interface LoginScreenProps {
-  onLogin: (username: string, password: string) => void;
-  loading?: boolean;
-}
-
-const LoginScreen: React.FC<LoginScreenProps> = ({
-  onLogin,
-  loading = false,
-}) => {
+// Remove the onLogin prop since we're using AuthContext
+const LoginScreen: React.FC = () => {
   const router = useRouter();
   const { login } = useAuth();
   const [username, setUsername] = useState("");
@@ -50,6 +42,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({
     }
 
     setErrors([]);
+    setIsLoading(true);
 
     try {
       // Call your Laravel API
@@ -61,11 +54,11 @@ const LoginScreen: React.FC<LoginScreenProps> = ({
       // Use the context login function to update global state
       await login(response.token, response.user);
 
-      // Call the success callback
-      onLogin(username, password);
+      // ✅ REMOVED: onLogin callback - no longer needed
+      // onLogin(username, password);
 
-      // ✅ ADD THIS: Navigate to OrderCreate after successful login
-      router.replace("/(tabs)"); // or whatever your route path is
+      // Navigate to tabs after successful login
+      router.replace("/(tabs)");
     } catch (error: any) {
       console.error("Login error:", error);
 
@@ -88,75 +81,78 @@ const LoginScreen: React.FC<LoginScreenProps> = ({
   };
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-    >
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <ScrollView
-          contentContainerStyle={styles.scrollContent}
-          keyboardShouldPersistTaps="handled"
-        >
-          <View style={styles.card}>
-            {/* Logo Section */}
-            <View style={styles.logoContainer}>
-              <Image
-                source={require("@/assets/images/logo_hema.png")} // Replace with your logo path
-                style={styles.logo}
-                resizeMode="contain"
-              />
-            </View>
-
-            {/* Form Section */}
-            <View style={styles.formContainer}>
-              <Text style={styles.title}>Sistema de Gerenciamento</Text>
-
-              <Input
-                label="Usuário"
-                value={username}
-                onChangeText={setUsername}
-                placeholder="Usuário"
-                containerStyle={styles.input}
-                autoCapitalize="none"
-                autoCorrect={false}
-              />
-
-              <Input
-                label="Senha"
-                value={password}
-                onChangeText={setPassword}
-                placeholder="Senha"
-                containerStyle={styles.input}
-                type="password"
-                secureTextEntry
-                autoCapitalize="none"
-                autoCorrect={false}
-                showPasswordToggle={true}
-              />
-
-              <Button
-                title={isLoading ? "ENTRANDO..." : "ENTRAR"}
-                onPress={handleLogin}
-                variant="primary"
-                disabled={isLoading}
-                style={styles.loginButton}
-              />
-
-              {/* Error Messages */}
-              {errors.length > 0 && (
-                <View style={styles.errorContainer}>
-                  {errors.map((error, index) => (
-                    <Text key={index} style={styles.errorText}>
-                      • {error}
-                    </Text>
-                  ))}
-                </View>
-              )}
-            </View>
+    <TouchableWithoutFeedback>
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <View style={styles.card}>
+          {/* Logo Section */}
+          <View style={styles.logoContainer}>
+            <Image
+              source={require("@/assets/images/logo_hema.png")} // Replace with your logo path
+              style={styles.logo}
+              resizeMode="contain"
+            />
           </View>
-        </ScrollView>
-      </TouchableWithoutFeedback>
-    </KeyboardAvoidingView>
+
+          {/* Form Section */}
+          <View style={styles.formContainer}>
+            <Text style={styles.title}>Sistema de Gerenciamento</Text>
+
+            <Input
+              label="Usuário"
+              value={username}
+              onChangeText={setUsername}
+              placeholder="Usuário"
+              containerStyle={styles.input}
+              autoCapitalize="none"
+              autoCorrect={false}
+            />
+
+            <Input
+              label="Senha"
+              value={password}
+              onChangeText={setPassword}
+              placeholder="Senha"
+              containerStyle={styles.input}
+              type="password"
+              secureTextEntry
+              autoCapitalize="none"
+              autoCorrect={false}
+              showPasswordToggle={true}
+            />
+
+            <Button
+              title={isLoading ? "ENTRANDO..." : "ENTRAR"}
+              onPress={handleLogin}
+              variant="primary"
+              disabled={isLoading}
+              style={styles.loginButton}
+            />
+
+            <View style={styles.debugContainer}>
+              <Text style={styles.debugText}>Debug Info:</Text>
+              <Text style={styles.debugText}>
+                Loading: {isLoading ? "YES" : "NO"}
+              </Text>
+              <Text style={styles.debugText}>Username: {username}</Text>
+              <Text style={styles.debugText}>
+                API Base: {api.defaults.baseURL}
+              </Text>
+            </View>
+
+            {/* Error Messages */}
+            {errors.length > 0 && (
+              <View style={styles.errorContainer}>
+                {errors.map((error, index) => (
+                  <Text key={index} style={styles.errorText}>
+                    • {error}
+                  </Text>
+                ))}
+              </View>
+            )}
+          </View>
+        </View>
+      </ScrollView>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -221,6 +217,16 @@ const styles = StyleSheet.create({
     color: "#721c24",
     fontSize: 14,
     marginBottom: 4,
+  },
+  debugContainer: {
+    backgroundColor: "#e9ecef",
+    padding: 10,
+    borderRadius: 8,
+    marginTop: 10,
+  },
+  debugText: {
+    fontSize: 12,
+    color: "#666",
   },
 });
 

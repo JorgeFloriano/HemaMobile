@@ -3,7 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Use your computer's IP address, not localhost!
 // Find your IP: ipconfig (Windows) or ifconfig (Linux/Mac)
-const API_BASE_URL = "http://192.168.0.110/Hema/public/api"; // Replace with your IP
+const API_BASE_URL = "http://10.131.104.214/Hema/public/api"; // Replace with your IP
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -13,6 +13,22 @@ const api = axios.create({
     Accept: "application/json",
   },
 });
+
+// Add request interceptor for debugging
+api.interceptors.request.use(
+  (config) => {
+    console.log('API Request:', {
+      url: config.url,
+      method: config.method,
+      data: config.data
+    });
+    return config;
+  },
+  (error) => {
+    console.log('API Request Error:', error);
+    return Promise.reject(error);
+  }
+);
 
 // Add token to requests
 api.interceptors.request.use(

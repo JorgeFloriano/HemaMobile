@@ -1,7 +1,9 @@
 import { EyeOffIcon, EyeIcon } from "@/assets/images/icons/eye";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import React, { useState } from "react";
 import {
   TextInput,
+  Platform,
   TextStyle,
   ViewStyle,
   Text,
@@ -61,6 +63,53 @@ const Input: React.FC<InputProps> = ({
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [showPicker, setShowPicker] = useState(false);
+  const [pickerMode, setPickerMode] = useState<"date" | "time">("date");
+
+  const handleDatePress = () => {
+    if (type === "date" || type === "time") {
+      setPickerMode(type);
+      setShowPicker(true);
+    }
+  };
+
+  const handlePickerChange = (event: any, selectedDate?: Date) => {
+    setShowPicker(false);
+
+    if (selectedDate) {
+      let formattedValue = "";
+
+      if (type === "date") {
+        // Format as DD/MM/YYYY (Brazilian format)
+        const day = selectedDate.getDate().toString().padStart(2, "0");
+        const month = (selectedDate.getMonth() + 1).toString().padStart(2, "0"); // Months are 0-indexed
+        const year = selectedDate.getFullYear();
+        formattedValue = `${day}/${month}/${year}`;
+      } else if (type === "time") {
+        // Format as HH:MM (same as before, but 24h format is standard in Brazil)
+        const hours = selectedDate.getHours().toString().padStart(2, "0");
+        const minutes = selectedDate.getMinutes().toString().padStart(2, "0");
+        formattedValue = `${hours}:${minutes}`;
+      }
+
+      onChangeText(formattedValue);
+    }
+  };
+
+  // Get current date for the picker
+  const getCurrentDate = () => {
+    if (value) {
+      if (type === "date") {
+        return new Date(value);
+      } else if (type === "time") {
+        const [hours, minutes] = value.split(":").map(Number);
+        const date = new Date();
+        date.setHours(hours, minutes);
+        return date;
+      }
+    }
+    return new Date();
+  };
 
   // Get keyboard type based on input type
   const getKeyboardType = () => {
@@ -139,9 +188,9 @@ const Input: React.FC<InputProps> = ({
 
     switch (type) {
       case "date":
-        return "DD/MM/AAAA";
+        return "Toque para selecionar data";
       case "time":
-        return "HH:MM";
+        return "Toque para selecionar hora";
       default:
         return "";
     }
@@ -185,48 +234,75 @@ const Input: React.FC<InputProps> = ({
     ...style,
   };
 
+  // For date/time inputs, we'll use a TouchableOpacity to trigger the picker
+  if (type === "date" || type === "time") {
+    return (
+      <View style={[styles.container, containerStyle]}>
+        {label && <Text style={styles.label}>{label}</Text>}
+        <TouchableOpacity onPress={handleDatePress}>
+          <View pointerEvents="none">
+            <TextInput
+              value={value}
+              onChangeText={handleChangeText}
+              placeholder={getPlaceholder()}
+              maxLength={getMaxLength()}
+              multiline={multiline}
+              numberOfLines={numberOfLines}
+              style={inputStyle}
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
+              keyboardType={
+                type === "date" || type === "time"
+                  ? "numbers-and-punctuation"
+                  : "default"
+              }
+              editable={true} // Still editable for manual input
+            />
+          </View>
+        </TouchableOpacity>
+
+        {showPicker && (
+          <DateTimePicker
+            value={getCurrentDate()}
+            mode={pickerMode}
+            display={Platform.OS === "ios" ? "spinner" : "default"}
+            onChange={handlePickerChange}
+            locale="pt-BR" // Portuguese locale
+            {...(type === "date" && {
+              minimumDate: new Date(2000, 0, 1),
+              maximumDate: new Date(2100, 11, 31),
+            })}
+          />
+        )}
+      </View>
+    );
+  }
+
+  // Regular text inputs
   return (
     <View style={[styles.container, containerStyle]}>
       {label && <Text style={styles.label}>{label}</Text>}
-      <View style={styles.inputWrapper}>
-        <TextInput
-          value={value}
-          onChangeText={handleChangeText}
-          placeholder={getPlaceholder()}
-          maxLength={getMaxLength()}
-          multiline={multiline}
-          numberOfLines={numberOfLines}
-          style={[
-            styles.input,
-            showPasswordToggle && styles.inputWithToggle,
-            inputStyle,
-          ]}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
-          keyboardType={getKeyboardType()}
-          secureTextEntry={getSecureTextEntry()}
-          autoCapitalize={autoCapitalize}
-          autoCorrect={autoCorrect}
-          editable={editable}
-          returnKeyType={returnKeyType}
-          onSubmitEditing={onSubmitEditing}
-        />
-
-        {showPasswordToggle && secureTextEntry && (
-          <TouchableOpacity
-            style={styles.toggleButton}
-            onPress={() => setIsPasswordVisible(!isPasswordVisible)}
-          >
-            <View>
-              {isPasswordVisible ? (
-                <EyeOffIcon width={20} height={20} color="#666" />
-              ) : (
-                <EyeIcon width={20} height={20} color="#666" />
-              )}
-            </View>
-          </TouchableOpacity>
-        )}
-      </View>
+      <TextInput
+        value={value}
+        onChangeText={handleChangeText}
+        placeholder={getPlaceholder()}
+        maxLength={getMaxLength()}
+        multiline={multiline}
+        numberOfLines={numberOfLines}
+        style={inputStyle}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
+        keyboardType={
+          type === "email"
+            ? "email-address"
+            : type === "number"
+            ? "numeric"
+            : "default"
+        }
+        secureTextEntry={type === "password"}
+        autoCapitalize={type === "email" ? "none" : "sentences"}
+        autoCorrect={type !== "email" && type !== "password"}
+      />
     </View>
   );
 };
@@ -240,31 +316,6 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     marginBottom: 8,
     color: "#333",
-  },
-  inputWrapper: {
-    position: "relative",
-  },
-  input: {
-    backgroundColor: "white",
-    borderWidth: 1,
-    borderColor: "#ced4da",
-    borderRadius: 8,
-    padding: 12,
-    fontSize: 16,
-  },
-  inputWithToggle: {
-    paddingRight: 50, // Space for the toggle button
-  },
-  toggleButton: {
-    position: "absolute",
-    right: 12,
-    top: 12,
-    padding: 4,
-    borderRadius: 4,
-  },
-  
-  toggleText: {
-    fontSize: 18,
   },
 });
 

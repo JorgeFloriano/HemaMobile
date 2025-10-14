@@ -1,3 +1,4 @@
+// src/services/auth.ts
 import api from './api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -18,41 +19,81 @@ export interface AuthResponse {
 
 export const authService = {
   async login(credentials: LoginCredentials): Promise<AuthResponse> {
-    const response = await api.post('/auth/login', credentials);
-    return response.data;
+    try {
+      console.log('Attempting login with:', { 
+        username: credentials.username,
+        // Don't log password for security
+      });
+      
+      const response = await api.post('/auth/login', credentials);
+      
+      console.log('Login response:', {
+        status: response.status,
+        hasToken: !!response.data.token,
+        user: response.data.user
+      });
+      
+      return response.data;
+    } catch (error: any) {
+      console.error('Login service error:', {
+        message: error.message,
+        status: error.response?.status,
+        data: error.response?.data,
+        url: error.config?.url
+      });
+      throw error;
+    }
   },
 
   async logout(): Promise<void> {
-    // Clear token from storage
-    await AsyncStorage.removeItem('authToken');
-    await AsyncStorage.removeItem('userData');
+    try {
+      console.log('Logging out...');
+      await AsyncStorage.removeItem('authToken');
+      await AsyncStorage.removeItem('userData');
+      console.log('Logout completed');
+    } catch (error) {
+      console.error('Logout error:', error);
+      throw error;
+    }
   },
 
   async getCurrentUser() {
-    const response = await api.get('/auth/me');
+    const response = await api.get('/auth/user');
     return response.data;
   },
 
-  // Store authentication data
   async storeAuthData(token: string, user: any): Promise<void> {
-    await AsyncStorage.setItem('authToken', token);
-    await AsyncStorage.setItem('userData', JSON.stringify(user));
+    try {
+      console.log('Storing auth data:', { 
+        tokenLength: token.length,
+        user: user.name 
+      });
+      await AsyncStorage.setItem('authToken', token);
+      await AsyncStorage.setItem('userData', JSON.stringify(user));
+      console.log('Auth data stored successfully');
+    } catch (error) {
+      console.error('Error storing auth data:', error);
+      throw error;
+    }
   },
 
-  // Check if user is authenticated
   async isAuthenticated(): Promise<boolean> {
     const token = await AsyncStorage.getItem('authToken');
-    return !!token;
+    const isAuth = !!token;
+    console.log('isAuthenticated check:', { hasToken: isAuth });
+    return isAuth;
   },
 
-  // Get stored token
   async getToken(): Promise<string | null> {
-    return await AsyncStorage.getItem('authToken');
+    const token = await AsyncStorage.getItem('authToken');
+    console.log('getToken:', { tokenExists: !!token });
+    return token;
   },
 
-  // Get stored user data
   async getUserData(): Promise<any> {
     const userData = await AsyncStorage.getItem('userData');
-    return userData ? JSON.parse(userData) : null;
+    const parsedData = userData ? JSON.parse(userData) : null;
+    console.log('getUserData:', { userExists: !!parsedData });
+    return parsedData;
   }
 };

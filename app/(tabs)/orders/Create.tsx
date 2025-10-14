@@ -1,21 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { 
-  View, 
-  ScrollView, 
-  Alert, 
-  StyleSheet, 
-  Platform, 
+import {
+  View,
+  ScrollView,
+  Alert,
+  StyleSheet,
+  Platform,
   StatusBar,
-  KeyboardAvoidingView,
   TouchableWithoutFeedback,
-  Keyboard,
-   
+  Text,
 } from "react-native";
 import api from "@/src/services/api";
 import Input from "@/src/components/Input";
 import Button from "@/src/components/Button";
 import ServiceTypeSelector from "@/src/components/ServiceTypeSelector";
-import NavigationBar from "@/src/components/NavigationBar";
 
 interface Type {
   id: string;
@@ -30,11 +27,11 @@ const CreateOrderScreen = () => {
     order_type_id: "",
     sector: "",
     req_name: "",
-    req_date: new Date().toLocaleDateString('pt-BR'),
-    req_time: new Date().toLocaleTimeString('pt-BR', { 
-      hour: '2-digit', 
-      minute: '2-digit',
-      hour12: false 
+    req_date: new Date().toLocaleDateString("pt-BR"),
+    req_time: new Date().toLocaleTimeString("pt-BR", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
     }),
     req_descr: "",
     equipment: "",
@@ -77,11 +74,11 @@ const CreateOrderScreen = () => {
       order_type_id: "",
       sector: "",
       req_name: "",
-      req_date: new Date().toLocaleDateString('pt-BR'),
-      req_time: new Date().toLocaleTimeString('pt-BR', { 
-        hour: '2-digit', 
-        minute: '2-digit',
-        hour12: false 
+      req_date: new Date().toLocaleDateString("pt-BR"),
+      req_time: new Date().toLocaleTimeString("pt-BR", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
       }),
       req_descr: "",
       equipment: "",
@@ -98,26 +95,14 @@ const CreateOrderScreen = () => {
 
   return (
     <View style={styles.container}>
-      {/* Fixed Navigation Bar */}
-      <NavigationBar
-        // logoSource={require('../assets/logo.png')}
-        backgroundColor="#1b0363ff"
-        tintColor="white"
-      />
-      
-      {/* Keyboard avoiding view to handle keyboard covering inputs */}
-      <KeyboardAvoidingView 
-        style={styles.keyboardAvoid}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      >
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <ScrollView 
+        <TouchableWithoutFeedback>
+          <ScrollView
             style={styles.scrollView}
             contentContainerStyle={styles.scrollContent}
-            keyboardShouldPersistTaps="handled" // Allow taps on inputs when keyboard is open
             showsVerticalScrollIndicator={false}
           >
             <View style={styles.form}>
+              <Text style={styles.welcome}>Solicitação de Atendimento</Text>
               <ServiceTypeSelector
                 types={types}
                 selectedTypeId={formData.order_type_id}
@@ -191,17 +176,16 @@ const CreateOrderScreen = () => {
                   variant="primary"
                   disabled={loading}
                 />
-                
+
                 <Button
                   title="Voltar"
-                  onPress={() => console.log('Navigate back')}
+                  onPress={() => console.log("Navigate back")}
                   variant="secondary"
                 />
               </View>
             </View>
           </ScrollView>
         </TouchableWithoutFeedback>
-      </KeyboardAvoidingView>
     </View>
   );
 };
@@ -211,16 +195,25 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "white",
   },
-  keyboardAvoid: {
-    flex: 1,
-    height: "100%",
+  welcome: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 8,
+    color: "#333",
   },
+  subtitle: {
+    fontSize: 16,
+    color: "#666",
+    marginBottom: 30,
+  },
+  
   scrollView: {
     flex: 1,
   },
   scrollContent: {
     flexGrow: 1,
-    paddingTop: Platform.OS === 'ios' ? 44 + 60 : (StatusBar.currentHeight || 0) + 60, // Navbar height
+    paddingTop:
+      Platform.OS === "ios" ? 44 : (StatusBar.currentHeight || 0), // Navbar height
   },
   form: {
     padding: 20,
@@ -239,7 +232,6 @@ const styles = StyleSheet.create({
     marginTop: 20,
     gap: 16,
   },
-  
 });
 
 export default CreateOrderScreen;

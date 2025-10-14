@@ -1,36 +1,33 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { useRouter } from 'expo-router';
-import { useAuth } from '@/src/contexts/AuthContext';
-import NavigationBar from '@/src/components/NavigationBar';
+import React from "react";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { useRouter } from "expo-router";
+import { useAuth } from "@/src/contexts/AuthContext";
 
 export default function HomeScreen() {
   const { user } = useAuth();
   const router = useRouter();
 
   return (
-    <View style={styles.container}><NavigationBar
-        // logoSource={require('../assets/logo.png')}
-        backgroundColor="#1b0363ff"
-        tintColor="white"
-      />
-      <Text style={styles.welcome}>Bem-vindo, {user?.name}!</Text>
-      <Text style={styles.subtitle}>Sistema de Gerenciamento</Text>
-      
-      <TouchableOpacity 
+    <View style={styles.container}>
+      <Text style={styles.welcome}>Sistema HEMA</Text>
+      <Text style={styles.subtitle}>Gerenciamento de Solicitações de Serviço (SAT)</Text>
+
+      <TouchableOpacity
         style={styles.card}
-        onPress={() => router.push('/(tabs)/orders/Create')}
+        onPress={() => router.push("/(tabs)/orders/Create")}
       >
-        <Text style={styles.cardTitle}>Criar Novo Pedido</Text>
-        <Text style={styles.cardDescription}>Iniciar um novo pedido de serviço</Text>
+        <Text style={styles.cardTitle}>Abrir Novo Chamado</Text>
+        <Text style={styles.cardDescription}>
+          Solicitar um novo atendimento
+        </Text>
       </TouchableOpacity>
 
-      <TouchableOpacity 
+      <TouchableOpacity
         style={styles.card}
-        onPress={() => router.push('/(tabs)/orders/Create')}
+        onPress={() => router.push("/(tabs)/orders/Create")}
       >
-        <Text style={styles.cardTitle}>Ver Pedidos</Text>
-        <Text style={styles.cardDescription}>Consultar pedidos existentes</Text>
+        <Text style={styles.cardTitle}>Ver Chamedos</Text>
+        <Text style={styles.cardDescription}>Consultar atendimentos realizados anteriormente</Text>
       </TouchableOpacity>
     </View>
   );
@@ -40,25 +37,26 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#f8f9fa',
+    paddingTop: 70,
+    backgroundColor: "#f8f9fa",
   },
   welcome: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 8,
-    color: '#333',
+    color: "#333",
   },
   subtitle: {
     fontSize: 16,
-    color: '#666',
+    color: "#666",
     marginBottom: 30,
   },
   card: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     padding: 20,
     borderRadius: 12,
     marginBottom: 16,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 8,
@@ -66,12 +64,12 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#1b0363ff',
+    fontWeight: "bold",
+    color: "#1b0363ff",
     marginBottom: 8,
   },
   cardDescription: {
     fontSize: 14,
-    color: '#666',
+    color: "#666",
   },
 });
