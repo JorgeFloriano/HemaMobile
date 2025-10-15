@@ -218,10 +218,10 @@ const Input: React.FC<InputProps> = ({
     padding: 12,
     fontSize: 16,
     ...(isFocused && {
-      shadowColor: "#98c5fbff",
-      shadowOffset: { width: 0, height: 0 },
-      shadowOpacity: 0.2,
-      shadowRadius: 4,
+      boxShadowColor: "#98c5fbff",
+      boxShadowOffset: { width: 0, height: 0 },
+      boxShadowOpacity: 0.2,
+      boxShadowRadius: 4,
       elevation: 3,
     }),
     ...(multiline && {
@@ -251,6 +251,8 @@ const Input: React.FC<InputProps> = ({
               style={inputStyle}
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
+              secureTextEntry={getSecureTextEntry()}
+              onSubmitEditing={onSubmitEditing}
               keyboardType={
                 type === "date" || type === "time"
                   ? "numbers-and-punctuation"
@@ -278,31 +280,48 @@ const Input: React.FC<InputProps> = ({
     );
   }
 
-  // Regular text inputs
   return (
     <View style={[styles.container, containerStyle]}>
       {label && <Text style={styles.label}>{label}</Text>}
-      <TextInput
-        value={value}
-        onChangeText={handleChangeText}
-        placeholder={getPlaceholder()}
-        maxLength={getMaxLength()}
-        multiline={multiline}
-        numberOfLines={numberOfLines}
-        style={inputStyle}
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
-        keyboardType={
-          type === "email"
-            ? "email-address"
-            : type === "number"
-            ? "numeric"
-            : "default"
-        }
-        secureTextEntry={type === "password"}
-        autoCapitalize={type === "email" ? "none" : "sentences"}
-        autoCorrect={type !== "email" && type !== "password"}
-      />
+      <View style={styles.inputWrapper}>
+        <TextInput
+          value={value}
+          onChangeText={handleChangeText}
+          placeholder={getPlaceholder()}
+          maxLength={getMaxLength()}
+          multiline={multiline}
+          numberOfLines={numberOfLines}
+          style={[
+            styles.input,
+            showPasswordToggle && styles.inputWithToggle,
+            inputStyle,
+          ]}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+          keyboardType={getKeyboardType()}
+          secureTextEntry={getSecureTextEntry()}
+          autoCapitalize={autoCapitalize}
+          autoCorrect={autoCorrect}
+          editable={editable}
+          returnKeyType={returnKeyType}
+          onSubmitEditing={onSubmitEditing}
+        />
+
+        {showPasswordToggle && secureTextEntry && (
+          <TouchableOpacity
+            style={styles.toggleButton}
+            onPress={() => setIsPasswordVisible(!isPasswordVisible)}
+          >
+            <View>
+              {isPasswordVisible ? (
+                <EyeOffIcon width={20} height={20} color="#666" />
+              ) : (
+                <EyeIcon width={20} height={20} color="#666" />
+              )}
+            </View>
+          </TouchableOpacity>
+        )}
+      </View>
     </View>
   );
 };
@@ -316,6 +335,27 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     marginBottom: 8,
     color: "#333",
+  },
+  toggleButton: {
+    position: "absolute",
+    right: 10,
+    top: 4,
+    padding: 8,
+    borderRadius: 4,
+  },
+  input: {
+    backgroundColor: "white",
+    borderWidth: 1,
+    borderColor: "#ced4da",
+    borderRadius: 8,
+    padding: 12,
+    fontSize: 16,
+  },
+  inputWithToggle: {
+    paddingRight: 50, // Space for the toggle button
+  },
+  inputWrapper: {
+    position: 'relative',
   },
 });
 

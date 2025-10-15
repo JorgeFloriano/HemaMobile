@@ -1,13 +1,18 @@
 {
   "expo": {
-    "name": "HemaMobile",
+    "name": "Hema Mobile",
     "slug": "HemaMobile",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/logo2_hema.png",
+    "icon": "./assets/images/logo_hema_splash.png",
     "scheme": "hemamobile",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/images/logo_hema_splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#1b0363ff"
+    },
     "ios": {
       "supportsTablet": true
     },
@@ -32,8 +37,10 @@
         {
           "image": "./assets/images/logo_hema.png",
           "imageWidth": 100,
+          "imageHeight": 100,
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff",
+
+          "backgroundColor": "#1b0363ff",
           "dark": {
             "backgroundColor": "#000000"
           }

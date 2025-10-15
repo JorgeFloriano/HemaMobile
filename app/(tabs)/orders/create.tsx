@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   ScrollView,
@@ -12,15 +12,15 @@ import {
 import api from "@/src/services/api";
 import Input from "@/src/components/Input";
 import Button from "@/src/components/Button";
-import ServiceTypeSelector from "@/src/components/ServiceTypeSelector";
+//import ServiceTypeSelector from "@/src/components/ServiceTypeSelector";
 
-interface Type {
-  id: string;
-  description: string;
-}
+// interface Type {
+//   id: string;
+//   description: string;
+// }
 
 const CreateOrderScreen = () => {
-  const [types, setTypes] = useState<Type[]>([]);
+  //const [types, setTypes] = useState<Type[]>([]);
   const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -37,19 +37,19 @@ const CreateOrderScreen = () => {
     equipment: "",
   });
 
-  useEffect(() => {
-    loadOrderTypes();
-  }, []);
+  // useEffect(() => {
+  //   loadOrderTypes();
+  // }, []);
 
-  const loadOrderTypes = async () => {
-    try {
-      const response = await api.get("/orders/create");
-      setTypes(response.data.types);
-    } catch (error) {
-      Alert.alert("Error", "Failed to load order types");
-      console.error("Error loading types:", error);
-    }
-  };
+  // const loadOrderTypes = async () => {
+  //   try {
+  //     const response = await api.get("/orders/create");
+  //     setTypes(response.data.types);
+  //   } catch (error) {
+  //     Alert.alert("Error", "Failed to load order types");
+  //     console.error("Error loading types:", error);
+  //   }
+  // };
 
   const handleSubmit = async () => {
     if (!formData.order_type_id) {
@@ -89,9 +89,9 @@ const CreateOrderScreen = () => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleTypeSelect = (type: Type) => {
-    updateFormData("order_type_id", type.id);
-  };
+  // const handleTypeSelect = (type: Type) => {
+  //   updateFormData("order_type_id", type.id);
+  // };
 
   return (
     <View style={styles.container}>
@@ -103,11 +103,11 @@ const CreateOrderScreen = () => {
           >
             <View style={styles.form}>
               <Text style={styles.welcome}>Solicitação de Atendimento</Text>
-              <ServiceTypeSelector
+              {/* <ServiceTypeSelector
                 types={types}
                 selectedTypeId={formData.order_type_id}
                 onTypeSelect={handleTypeSelect}
-              />
+              /> */}
 
               <Input
                 label="Setor *"
@@ -192,6 +192,7 @@ const CreateOrderScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
+    paddingTop: 20,
     flex: 1,
     backgroundColor: "white",
   },

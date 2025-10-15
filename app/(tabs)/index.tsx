@@ -1,20 +1,20 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
-import { useAuth } from "@/src/contexts/AuthContext";
 
 export default function HomeScreen() {
-  const { user } = useAuth();
   const router = useRouter();
 
   return (
     <View style={styles.container}>
       <Text style={styles.welcome}>Sistema HEMA</Text>
-      <Text style={styles.subtitle}>Gerenciamento de Solicitações de Serviço (SAT)</Text>
+      <Text style={styles.subtitle}>
+        Gerenciamento de Solicitações de Serviço (SAT)
+      </Text>
 
       <TouchableOpacity
         style={styles.card}
-        onPress={() => router.push("/(tabs)/orders/Create")}
+        onPress={() => router.push("/(tabs)/orders/create")}
       >
         <Text style={styles.cardTitle}>Abrir Novo Chamado</Text>
         <Text style={styles.cardDescription}>
@@ -24,10 +24,12 @@ export default function HomeScreen() {
 
       <TouchableOpacity
         style={styles.card}
-        onPress={() => router.push("/(tabs)/orders/Create")}
+        onPress={() => router.push("/(tabs)/orders/create")}
       >
         <Text style={styles.cardTitle}>Ver Chamedos</Text>
-        <Text style={styles.cardDescription}>Consultar atendimentos realizados anteriormente</Text>
+        <Text style={styles.cardDescription}>
+          Consultar atendimentos realizados anteriormente
+        </Text>
       </TouchableOpacity>
     </View>
   );
@@ -37,7 +39,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    paddingTop: 70,
+    paddingTop: 80,
     backgroundColor: "#f8f9fa",
   },
   welcome: {

@@ -10,7 +10,6 @@ import {
   Image,
   StyleSheet,
   ScrollView,
-  Alert,
   TouchableWithoutFeedback,
 } from "react-native";
 import Input from "@/src/components/Input";
