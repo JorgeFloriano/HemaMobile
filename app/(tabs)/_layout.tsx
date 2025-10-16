@@ -1,18 +1,18 @@
 // app/(tabs)/_layout.tsx
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { Stack } from 'expo-router';
-import TopNavigationBar from '@/src/components/TopNavigationBar';
-import BottomTabBar from '@/src/components/BottomTabBar';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import React from "react";
+import { View, StyleSheet } from "react-native";
+import { Stack } from "expo-router";
+import TopNavigationBar from "@/src/components/TopNavigationBar";
+import BottomTabBar from "@/src/components/BottomTabBar";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 export default function TabLayout() {
   return (
     <SafeAreaProvider>
-      <SafeAreaView style={styles.container} edges={['top']}>
+      <SafeAreaView style={styles.container} edges={["top"]}>
         {/* Top Navigation Bar */}
         <TopNavigationBar />
-        
+
         {/* Main Content */}
         <View style={styles.content}>
           <Stack screenOptions={{ headerShown: false }}>
@@ -22,9 +22,11 @@ export default function TabLayout() {
             <Stack.Screen name="profile" />
           </Stack>
         </View>
-        
+
         {/* Bottom Tab Bar - Will be positioned above device buttons */}
-        <BottomTabBar />
+       
+          <BottomTabBar />
+        
       </SafeAreaView>
     </SafeAreaProvider>
   );
@@ -33,7 +35,7 @@ export default function TabLayout() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8f9fa',
+    backgroundColor: "#f8f9fa",
   },
   content: {
     flex: 1,

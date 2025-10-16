@@ -97,8 +97,8 @@ const CreateOrderScreen = () => {
     <View style={styles.container}>
         <TouchableWithoutFeedback>
           <ScrollView
-            style={styles.scrollView}
-            contentContainerStyle={styles.scrollContent}
+            //style={styles.scrollView}
+            //contentContainerStyle={styles.scrollContent}
             showsVerticalScrollIndicator={false}
           >
             <View style={styles.form}>
@@ -192,7 +192,7 @@ const CreateOrderScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 20,
+    paddingTop: 80,
     flex: 1,
     backgroundColor: "white",
   },
