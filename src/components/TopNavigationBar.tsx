@@ -19,7 +19,7 @@ const TopNavigationBar: React.FC<TopNavigationBarProps> = ({
 
   const handleLogout = async () => {
     await logout();
-    router.replace('/Login');
+    router.replace('/login');
   };
 
   return (

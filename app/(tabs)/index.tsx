@@ -16,7 +16,7 @@ export default function HomeScreen() {
         style={styles.card}
         onPress={() => router.push("/(tabs)/orders/create")}
       >
-        <Text style={styles.cardTitle}>Abrir Novo Chamado</Text>
+        <Text style={styles.cardTitle}>Nova Solicitação</Text>
         <Text style={styles.cardDescription}>
           Solicitar um novo atendimento
         </Text>
@@ -26,9 +26,9 @@ export default function HomeScreen() {
         style={styles.card}
         onPress={() => router.push("/(tabs)/orders/create")}
       >
-        <Text style={styles.cardTitle}>Ver Chamedos</Text>
+        <Text style={styles.cardTitle}>Ver Solicitações</Text>
         <Text style={styles.cardDescription}>
-          Consultar atendimentos realizados anteriormente
+          Consultar atendimentos solicitados anteriormente
         </Text>
       </TouchableOpacity>
     </View>

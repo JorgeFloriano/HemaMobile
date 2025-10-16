@@ -218,11 +218,14 @@ const Input: React.FC<InputProps> = ({
     padding: 12,
     fontSize: 16,
     ...(isFocused && {
-      boxShadowColor: "#98c5fbff",
-      boxShadowOffset: { width: 0, height: 0 },
-      boxShadowOpacity: 0.2,
-      boxShadowRadius: 4,
-      elevation: 3,
+      borderColor: "#270984", // your ring color (from your theme)
+      borderWidth: 1,
+      // React Native doesn't have 'ring' so we simulate with shadow
+      shadowColor: "#270984", // your ring color
+      shadowOffset: { width: 0, height: 0 },
+      shadowOpacity: 0.5,
+      shadowRadius: 3,
+      elevation: 3, // for Android
     }),
     ...(multiline && {
       minHeight: 100,
@@ -355,7 +358,7 @@ const styles = StyleSheet.create({
     paddingRight: 50, // Space for the toggle button
   },
   inputWrapper: {
-    position: 'relative',
+    position: "relative",
   },
 });
 

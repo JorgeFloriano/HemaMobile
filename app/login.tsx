@@ -127,7 +127,7 @@ const LoginScreen: React.FC = () => {
               style={styles.loginButton}
             />
 
-            <View style={styles.debugContainer}>
+            {/* <View style={styles.debugContainer}>
               <Text style={styles.debugText}>Debug Info:</Text>
               <Text style={styles.debugText}>
                 Loading: {isLoading ? "YES" : "NO"}
@@ -136,7 +136,7 @@ const LoginScreen: React.FC = () => {
               <Text style={styles.debugText}>
                 API Base: {api.defaults.baseURL}
               </Text>
-            </View>
+            </View> */}
 
             {/* Error Messages */}
             {errors.length > 0 && (

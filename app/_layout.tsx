@@ -20,7 +20,7 @@ function RootLayoutContent() {
       <Stack screenOptions={{ headerShown: false }}>
         {!user ? (
           // Show login when not authenticated (no navigation bars)
-          <Stack.Screen name="Login" />
+          <Stack.Screen name="login" />
         ) : (
           // Show tabs when authenticated (with navigation bars)
           <Stack.Screen name="(tabs)" />

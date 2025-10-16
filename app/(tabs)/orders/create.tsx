@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useRouter } from "expo-router";
 import {
   View,
   ScrollView,
@@ -22,6 +23,8 @@ import Button from "@/src/components/Button";
 const CreateOrderScreen = () => {
   //const [types, setTypes] = useState<Type[]>([]);
   const [loading, setLoading] = useState(false);
+
+  const router = useRouter();
 
   const [formData, setFormData] = useState({
     order_type_id: "",
@@ -179,7 +182,7 @@ const CreateOrderScreen = () => {
 
                 <Button
                   title="Voltar"
-                  onPress={() => console.log("Navigate back")}
+                  onPress={() => router.push("/(tabs)")}
                   variant="secondary"
                 />
               </View>
