@@ -1,30 +1,238 @@
-import React from 'react';
-import { Text, StyleSheet, ScrollView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import {
+  View,
+  Text,
+  FlatList,
+  Alert,
+  StyleSheet,
+  RefreshControl,
+  ActivityIndicator,
+} from 'react-native';
+import { useRouter } from 'expo-router';
+import api from '@/src/services/api';
+import OrderCard from '@/src/components/OrderCard'; // We'll create this component
+import Button from '@/src/components/Button';
 
-export default function OrdersScreen() {
-  return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.title}>Pedidos</Text>
-      <Text style={styles.placeholder}>Lista de pedidos aparecerá aqui</Text>
-    </ScrollView>
-  );
+// Types
+export interface Order {
+  id: string;
+  order_type_id: string;
+  tec_id: string | null;
+  req_descr: string;
+  req_name: string;
+  sector: string;
+  req_date: string;
+  req_time: string;
+  finished: boolean;
+  type: {
+    id: string;
+    description: string;
+  };
+  tec: {
+    id: string;
+    user_id: string;
+    user: {
+      id: string;
+      name: string;
+      surname: string;
+    };
+  } | null;
 }
+
+interface OrdersResponse {
+  orders: Order[];
+}
+
+const OrdersScreen = () => {
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
+
+  // Load orders
+  const loadOrders = async (showRefreshing = false) => {
+    try {
+      if (showRefreshing) {
+        setRefreshing(true);
+      } else {
+        setLoading(true);
+      }
+      
+      setError(null);
+      const response = await api.get<OrdersResponse>('/orders');
+      setOrders(response.data.orders);
+    } catch (err) {
+      const errorMessage = 'Failed to load orders';
+      setError(errorMessage);
+      Alert.alert('Error', errorMessage);
+      console.error('Error loading orders:', err);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
+
+  // Initial load
+  useEffect(() => {
+    loadOrders();
+  }, []);
+
+  // Pull to refresh
+  const handleRefresh = () => {
+    loadOrders(true);
+  };
+
+  // Navigate to create order
+  const handleCreateOrder = () => {
+    router.push('/(tabs)/orders/create');
+  };
+
+  // Render order item
+  const renderOrderItem = ({ item }: { item: Order }) => (
+    <OrderCard order={item} onPress={() => handleOrderPress(item)} />
+  );
+
+  // Handle order press
+  const handleOrderPress = (order: Order) => {
+    // Navigate to order details
+    //router.push(`/orders/${order.id}`);
+  };
+
+  // Render empty state
+  const renderEmptyState = () => (
+    <View style={styles.emptyState}>
+      <Text style={styles.emptyStateText}>No orders found</Text>
+      <Button
+        title="Create First Order"
+        onPress={handleCreateOrder}
+        variant="primary"
+        style={styles.emptyStateButton}
+      />
+    </View>
+  );
+
+  // Render error state
+  const renderErrorState = () => (
+    <View style={styles.errorState}>
+      <Text style={styles.errorStateText}>{error}</Text>
+      <Button
+        title="Try Again"
+        onPress={() => loadOrders()}
+        variant="primary"
+        style={styles.errorStateButton}
+      />
+    </View>
+  );
+
+  if (loading && !refreshing) {
+    return (
+      <View style={styles.centerContainer}>
+        <ActivityIndicator size="large" color="#007AFF" />
+        <Text style={styles.loadingText}>Loading orders...</Text>
+      </View>
+    );
+  }
+
+  if (error && !loading) {
+    return renderErrorState();
+  }
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.title}>My Orders</Text>
+        <Button
+          title="New Order"
+          onPress={handleCreateOrder}
+          variant="primary"
+          
+        />
+      </View>
+
+      <FlatList
+        data={orders}
+        renderItem={renderOrderItem}
+        keyExtractor={(item) => item.id}
+        contentContainerStyle={styles.listContent}
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={handleRefresh}
+            colors={['#007AFF']}
+            tintColor="#007AFF"
+          />
+        }
+        ListEmptyComponent={renderEmptyState}
+      />
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: '#f8f9fa',
+    backgroundColor: '#f5f5f5',
+    paddingHorizontal: 16,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 16,
+    backgroundColor: '#f5f5f5',
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 20,
     color: '#333',
   },
-  placeholder: {
-    textAlign: 'center',
+  listContent: {
+    flexGrow: 1,
+    paddingBottom: 16,
+  },
+  centerContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#f5f5f5',
+  },
+  loadingText: {
+    marginTop: 12,
+    fontSize: 16,
     color: '#666',
-    marginTop: 50,
+  },
+  emptyState: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 60,
+  },
+  emptyStateText: {
+    fontSize: 18,
+    color: '#666',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  emptyStateButton: {
+    minWidth: 160,
+  },
+  errorState: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 40,
+  },
+  errorStateText: {
+    fontSize: 16,
+    color: '#FF3B30',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  errorStateButton: {
+    minWidth: 120,
   },
 });
+
+export default OrdersScreen;

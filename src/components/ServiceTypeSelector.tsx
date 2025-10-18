@@ -18,20 +18,22 @@ interface ServiceTypeSelectorProps {
   selectedTypeId: string;
   onTypeSelect: (type: Type) => void;
   label?: string;
+  placeholder?: string;
 }
 
 const ServiceTypeSelector: React.FC<ServiceTypeSelectorProps> = ({
   types,
   selectedTypeId,
   onTypeSelect,
-  label = "Serviço *",
+  label,
+  placeholder,
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const getSelectedTypeName = () => {
-    if (!selectedTypeId) return "Selecione um serviço";
+    if (!selectedTypeId) return placeholder || "Selecione uma opção";
     const selected = types.find((type) => type.id === selectedTypeId);
-    return selected ? selected.description : "Selecione um serviço";
+    return selected ? selected.description : placeholder || "Selecione uma opção";
   };
 
   const handleTypeSelect = (type: Type) => {

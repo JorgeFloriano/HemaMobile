@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "expo-router";
 import {
   View,
@@ -13,15 +13,15 @@ import {
 import api from "@/src/services/api";
 import Input from "@/src/components/Input";
 import Button from "@/src/components/Button";
-//import ServiceTypeSelector from "@/src/components/ServiceTypeSelector";
+import ServiceTypeSelector from "@/src/components/ServiceTypeSelector";
 
-// interface Type {
-//   id: string;
-//   description: string;
-// }
+interface Type {
+  id: string;
+  description: string;
+}
 
 const CreateOrderScreen = () => {
-  //const [types, setTypes] = useState<Type[]>([]);
+  const [types, setTypes] = useState<Type[]>([]);
   const [loading, setLoading] = useState(false);
 
   const router = useRouter();
@@ -40,19 +40,19 @@ const CreateOrderScreen = () => {
     equipment: "",
   });
 
-  // useEffect(() => {
-  //   loadOrderTypes();
-  // }, []);
+  useEffect(() => {
+    loadOrderTypes();
+  }, []);
 
-  // const loadOrderTypes = async () => {
-  //   try {
-  //     const response = await api.get("/orders/create");
-  //     setTypes(response.data.types);
-  //   } catch (error) {
-  //     Alert.alert("Error", "Failed to load order types");
-  //     console.error("Error loading types:", error);
-  //   }
-  // };
+  const loadOrderTypes = async () => {
+    try {
+      const response = await api.get("/orders/create");
+      setTypes(response.data.types);
+    } catch (error) {
+      Alert.alert("Error", "Failed to load order types");
+      console.error("Error loading types:", error);
+    }
+  };
 
   const handleSubmit = async () => {
     if (!formData.order_type_id) {
@@ -92,110 +92,103 @@ const CreateOrderScreen = () => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  // const handleTypeSelect = (type: Type) => {
-  //   updateFormData("order_type_id", type.id);
-  // };
+  const handleTypeSelect = (type: Type) => {
+    updateFormData("order_type_id", type.id);
+  };
 
   return (
     <View style={styles.container}>
-        <TouchableWithoutFeedback>
-          <ScrollView
-            //style={styles.scrollView}
-            //contentContainerStyle={styles.scrollContent}
-            showsVerticalScrollIndicator={false}
-          >
-            <View style={styles.form}>
-              <Text style={styles.welcome}>Solicitação de Atendimento</Text>
-              {/* <ServiceTypeSelector
-                types={types}
-                selectedTypeId={formData.order_type_id}
-                onTypeSelect={handleTypeSelect}
-              /> */}
+      <TouchableWithoutFeedback>
+        <ScrollView
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.form}>
+            <Text style={styles.welcome}>Solicitação de Atendimento</Text>
+            <ServiceTypeSelector
+              label="Tipo de Serviço *"
+              placeholder="Selecione um tipo de serviço"
+              types={types}
+              selectedTypeId={formData.order_type_id}
+              onTypeSelect={handleTypeSelect}
+            />
 
-              <Input
-                label="Setor *"
-                value={formData.sector}
-                onChangeText={(text) => updateFormData("sector", text)}
-                placeholder="Setor"
-                maxLength={30}
-                type="text"
-              />
+            <Input
+              label="Setor *"
+              value={formData.sector}
+              onChangeText={(text) => updateFormData("sector", text)}
+              placeholder="Setor"
+              maxLength={30}
+              type="text"
+            />
 
-              <Input
-                label="Nome do Solicitante *"
-                value={formData.req_name}
-                onChangeText={(text) => updateFormData("req_name", text)}
-                placeholder="Solicitante"
-                maxLength={20}
-                type="text"
-              />
-
-              <View style={styles.row}>
-                <View style={styles.halfInput}>
-                  <Input
-                    label="Data do Acionamento *"
-                    value={formData.req_date}
-                    onChangeText={(text) => updateFormData("req_date", text)}
-                    placeholder="DD/MM/AAAA"
-                    type="date"
-                  />
-                </View>
-
-                <View style={styles.halfInput}>
-                  <Input
-                    label="Hora do Acionamento *"
-                    value={formData.req_time}
-                    onChangeText={(text) => updateFormData("req_time", text)}
-                    placeholder="HH:MM"
-                    type="time"
-                  />
-                </View>
+            <View style={styles.row}>
+              <View style={styles.halfInput}>
+                <Input
+                  label="Data do Acionamento *"
+                  value={formData.req_date}
+                  onChangeText={(text) => updateFormData("req_date", text)}
+                  placeholder="DD/MM/AAAA"
+                  type="date"
+                />
               </View>
 
-              <Input
-                label="Problema Relatado *"
-                value={formData.req_descr}
-                onChangeText={(text) => updateFormData("req_descr", text)}
-                placeholder="Descreva o problema"
-                multiline
-                numberOfLines={4}
-                maxLength={470}
-                type="text"
-              />
-
-              <Input
-                label="Equipamento"
-                value={formData.equipment}
-                onChangeText={(text) => updateFormData("equipment", text)}
-                placeholder="Equipamento"
-                maxLength={70}
-                type="text"
-              />
-
-              <View style={styles.buttonGroup}>
-                <Button
-                  title={loading ? "Criando..." : "Confirmar"}
-                  onPress={handleSubmit}
-                  variant="primary"
-                  disabled={loading}
-                />
-
-                <Button
-                  title="Voltar"
-                  onPress={() => router.push("/(tabs)")}
-                  variant="secondary"
+              <View style={styles.halfInput}>
+                <Input
+                  label="Hora do Acionamento *"
+                  value={formData.req_time}
+                  onChangeText={(text) => updateFormData("req_time", text)}
+                  placeholder="HH:MM"
+                  type="time"
                 />
               </View>
             </View>
-          </ScrollView>
-        </TouchableWithoutFeedback>
+
+            <Input
+              label="Problema Relatado *"
+              value={formData.req_descr}
+              onChangeText={(text) => updateFormData("req_descr", text)}
+              placeholder="Descreva o problema"
+              multiline
+              numberOfLines={4}
+              maxLength={470}
+              type="text"
+            />
+
+            <Input
+              label="Equipamento"
+              value={formData.equipment}
+              onChangeText={(text) => updateFormData("equipment", text)}
+              placeholder="Equipamento"
+              maxLength={70}
+              type="text"
+            />
+
+            <View style={styles.buttonGroup}>
+              <Button
+                title={loading ? "Criando..." : "Confirmar"}
+                onPress={handleSubmit}
+                variant="primary"
+                disabled={loading}
+              />
+
+              <Button
+                title="Voltar"
+                onPress={() => router.push("/(tabs)")}
+                variant="secondary"
+              />
+            </View>
+          </View>
+        </ScrollView>
+      </TouchableWithoutFeedback>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 80,
+    paddingTop: 20,
     flex: 1,
     backgroundColor: "white",
   },
@@ -210,21 +203,20 @@ const styles = StyleSheet.create({
     color: "#666",
     marginBottom: 30,
   },
-  
+
   scrollView: {
     flex: 1,
   },
   scrollContent: {
     flexGrow: 1,
-    paddingTop:
-      Platform.OS === "ios" ? 44 : (StatusBar.currentHeight || 0), // Navbar height
+    paddingTop: Platform.OS === "ios" ? 44 : StatusBar.currentHeight || 0, // Navbar height
   },
   form: {
     padding: 20,
   },
   row: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    gap: 8,
   },
   halfInput: {
     flex: 1,

@@ -24,7 +24,7 @@ export default function HomeScreen() {
 
       <TouchableOpacity
         style={styles.card}
-        onPress={() => router.push("/(tabs)/orders/create")}
+        onPress={() => router.push("/(tabs)/orders")}
       >
         <Text style={styles.cardTitle}>Ver Solicitações</Text>
         <Text style={styles.cardDescription}>
