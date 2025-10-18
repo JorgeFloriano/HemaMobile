@@ -1,6 +1,6 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { Order } from '@/app/(tabs)/orders';
+import React from "react";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { Order } from "@/app/(tabs)/orders";
 
 interface OrderCardProps {
   order: Order;
@@ -9,11 +9,11 @@ interface OrderCardProps {
 
 const OrderCard: React.FC<OrderCardProps> = ({ order, onPress }) => {
   const getStatusColor = (finished: boolean) => {
-    return finished ? '#4CAF50' : '#FF9800';
+    return finished ? "#4CAF50" : "#FF9800";
   };
 
   const getStatusText = (finished: boolean) => {
-    return finished ? 'Finalizada' : 'Pendente';
+    return finished ? "F" : "P";
   };
 
   const formatDate = (date: string) => {
@@ -28,6 +28,9 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onPress }) => {
     <TouchableOpacity style={styles.card} onPress={onPress}>
       <View style={styles.header}>
         <Text style={styles.serviceType} numberOfLines={1}>
+          {order.id}
+        </Text>
+        <Text style={styles.serviceType} numberOfLines={1}>
           {order.type.description}
         </Text>
         <View
@@ -36,9 +39,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onPress }) => {
             { backgroundColor: getStatusColor(order.finished) },
           ]}
         >
-          <Text style={styles.statusText}>
-            {getStatusText(order.finished)}
-          </Text>
+          <Text style={styles.statusText}>{getStatusText(order.finished)}</Text>
         </View>
       </View>
 
@@ -51,7 +52,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onPress }) => {
           <Text style={styles.detailLabel}>Setor:</Text>
           <Text style={styles.detailValue}>{order.sector}</Text>
         </View>
-        
+
         <View style={styles.detailRow}>
           <Text style={styles.detailLabel}>Data:</Text>
           <Text style={styles.detailValue}>
@@ -74,11 +75,11 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onPress }) => {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 12,
     padding: 16,
     marginBottom: 12,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -88,15 +89,15 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
     marginBottom: 8,
   },
   serviceType: {
     fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
+    fontWeight: "bold",
+    color: "#333",
     flex: 1,
     marginRight: 8,
   },
@@ -107,35 +108,35 @@ const styles = StyleSheet.create({
   },
   statusText: {
     fontSize: 12,
-    fontWeight: '600',
-    color: 'white',
+    fontWeight: "600",
+    color: "white",
   },
   description: {
     fontSize: 14,
-    color: '#666',
+    color: "#666",
     marginBottom: 12,
     lineHeight: 20,
   },
   details: {
     borderTopWidth: 1,
-    borderTopColor: '#f0f0f0',
+    borderTopColor: "#f0f0f0",
     paddingTop: 12,
   },
   detailRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 4,
   },
   detailLabel: {
     fontSize: 12,
-    color: '#999',
-    fontWeight: '500',
+    color: "#999",
+    fontWeight: "500",
   },
   detailValue: {
     fontSize: 12,
-    color: '#333',
-    fontWeight: '400',
+    color: "#333",
+    fontWeight: "400",
   },
 });
 

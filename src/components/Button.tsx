@@ -19,8 +19,8 @@ const Button: React.FC<ButtonProps> = ({
   textStyle,
 }) => {
   const buttonStyle = {
-    flex: 1,
-    padding: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
     borderRadius: 10,
     alignItems: "center" as const,
     ...(variant === "primary" && {

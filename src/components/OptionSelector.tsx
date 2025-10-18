@@ -13,7 +13,7 @@ interface Type {
   description: string;
 }
 
-interface ServiceTypeSelectorProps {
+interface OptionSelectorProps {
   types: Type[];
   selectedTypeId: string;
   onTypeSelect: (type: Type) => void;
@@ -21,7 +21,7 @@ interface ServiceTypeSelectorProps {
   placeholder?: string;
 }
 
-const ServiceTypeSelector: React.FC<ServiceTypeSelectorProps> = ({
+const OptionSelector: React.FC<OptionSelectorProps> = ({
   types,
   selectedTypeId,
   onTypeSelect,
@@ -68,7 +68,7 @@ const ServiceTypeSelector: React.FC<ServiceTypeSelectorProps> = ({
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Selecione o Serviço</Text>
+              <Text style={styles.modalTitle}>Selecione uma opção</Text>
               <TouchableOpacity
                 style={styles.closeButton}
                 onPress={() => setModalVisible(false)}
@@ -190,4 +190,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ServiceTypeSelector;
+export default OptionSelector;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -7,23 +7,24 @@ import {
   StyleSheet,
   RefreshControl,
   ActivityIndicator,
-} from 'react-native';
-import { useRouter } from 'expo-router';
-import api from '@/src/services/api';
-import OrderCard from '@/src/components/OrderCard'; // We'll create this component
-import Button from '@/src/components/Button';
+} from "react-native";
+import { useRouter } from "expo-router";
+import api from "@/src/services/api";
+import OrderCard from "@/src/components/OrderCard"; // We'll create this component
+import Button from "@/src/components/Button";
 
 // Types
 export interface Order {
   id: string;
   order_type_id: string;
-  tec_id: string | null;
+  tec_id?: string | null;
   req_descr: string;
   req_name: string;
   sector: string;
   req_date: string;
   req_time: string;
   finished: boolean;
+  equipment?: string;
   type: {
     id: string;
     description: string;
@@ -37,6 +38,13 @@ export interface Order {
       surname: string;
     };
   } | null;
+  notes: {
+    id: string;
+    date: string;
+    services: string;
+    note: string;
+    created_at: string;
+  }[];
 }
 
 interface OrdersResponse {
@@ -58,15 +66,15 @@ const OrdersScreen = () => {
       } else {
         setLoading(true);
       }
-      
+
       setError(null);
-      const response = await api.get<OrdersResponse>('/orders');
+      const response = await api.get<OrdersResponse>("/orders");
       setOrders(response.data.orders);
     } catch (err) {
-      const errorMessage = 'Failed to load orders';
+      const errorMessage = "Failed to load orders";
       setError(errorMessage);
-      Alert.alert('Error', errorMessage);
-      console.error('Error loading orders:', err);
+      Alert.alert("Error", errorMessage);
+      console.error("Error loading orders:", err);
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -85,7 +93,7 @@ const OrdersScreen = () => {
 
   // Navigate to create order
   const handleCreateOrder = () => {
-    router.push('/(tabs)/orders/create');
+    router.push("/(tabs)/orders/create");
   };
 
   // Render order item
@@ -95,8 +103,8 @@ const OrdersScreen = () => {
 
   // Handle order press
   const handleOrderPress = (order: Order) => {
-    // Navigate to order details
-    //router.push(`/orders/${order.id}`);
+    //Navigate to order details
+    router.push(`/orders/${order.id}`);
   };
 
   // Render empty state
@@ -141,13 +149,13 @@ const OrdersScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>My Orders</Text>
-        <Button
-          title="New Order"
-          onPress={handleCreateOrder}
-          variant="primary"
-          
-        />
+        <Text style={styles.welcome}>Sistema HEMA</Text>
+        <Text style={styles.subtitle}>
+          Gerenciamento de Solicitações de Serviço (SAT)
+        </Text>
+        <View style={styles.buttonGroup}>
+          <Button title="Nova" onPress={handleCreateOrder} variant="primary"/>
+        </View>
       </View>
 
       <FlatList
@@ -160,7 +168,7 @@ const OrdersScreen = () => {
           <RefreshControl
             refreshing={refreshing}
             onRefresh={handleRefresh}
-            colors={['#007AFF']}
+            colors={["#007AFF"]}
             tintColor="#007AFF"
           />
         }
@@ -173,62 +181,77 @@ const OrdersScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    paddingTop: 60,
+    backgroundColor: "#f5f5f5",
     paddingHorizontal: 16,
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    justifyContent: "space-between",
     paddingVertical: 16,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: "#f5f5f5",
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
+    fontWeight: "bold",
+    color: "#333",
+  },
+  welcome: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 8,
+    color: "#333",
+  },
+  subtitle: {
+    fontSize: 16,
+    color: "#666",
   },
   listContent: {
     flexGrow: 1,
     paddingBottom: 16,
   },
+  buttonGroup: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 20,
+    gap: 16,
+  },
   centerContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f5f5f5',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#f5f5f5",
   },
   loadingText: {
     marginTop: 12,
     fontSize: 16,
-    color: '#666',
+    color: "#666",
   },
   emptyState: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     paddingVertical: 60,
   },
   emptyStateText: {
     fontSize: 18,
-    color: '#666',
+    color: "#666",
     marginBottom: 20,
-    textAlign: 'center',
+    textAlign: "center",
   },
   emptyStateButton: {
     minWidth: 160,
   },
   errorState: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     paddingHorizontal: 40,
   },
   errorStateText: {
     fontSize: 16,
-    color: '#FF3B30',
+    color: "#FF3B30",
     marginBottom: 20,
-    textAlign: 'center',
+    textAlign: "center",
   },
   errorStateButton: {
     minWidth: 120,

@@ -13,7 +13,7 @@ import {
 import api from "@/src/services/api";
 import Input from "@/src/components/Input";
 import Button from "@/src/components/Button";
-import ServiceTypeSelector from "@/src/components/ServiceTypeSelector";
+import OptionSelector from "@/src/components/OptionSelector";
 
 interface Type {
   id: string;
@@ -106,7 +106,7 @@ const CreateOrderScreen = () => {
         >
           <View style={styles.form}>
             <Text style={styles.welcome}>Solicitação de Atendimento</Text>
-            <ServiceTypeSelector
+            <OptionSelector
               label="Tipo de Serviço *"
               placeholder="Selecione um tipo de serviço"
               types={types}
