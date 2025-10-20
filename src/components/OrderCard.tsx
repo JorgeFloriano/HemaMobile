@@ -17,11 +17,24 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onPress }) => {
   };
 
   const formatDate = (date: string) => {
-    return date; // Already formatted from Laravel
+    const [year, month, day] = date.split("-");
+    return `${day}/${month}/${year}`;
   };
 
-  const formatTime = (time: string) => {
-    return time; // Already formatted from Laravel
+  // Format date and time for Brazilian display
+  const formatDateTime = (date: string, time: string) => {
+    // If date is already in DD/MM/YYYY format from API, use it directly
+    let formattedDate = date; // Assuming API returns DD/MM/YYYY
+
+    // If date comes in YYYY-MM-DD format from API, convert to DD/MM/YYYY
+    if (date.match(/^\d{4}-\d{2}-\d{2}$/)) {
+      formattedDate = formatDate(date);
+    }
+
+    // Format time to Brazilian format (HH:MM)
+    const formattedTime = time.length === 5 ? time : time.substring(0, 5);
+
+    return `${formattedDate} às ${formattedTime}`;
   };
 
   return (
@@ -56,7 +69,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onPress }) => {
         <View style={styles.detailRow}>
           <Text style={styles.detailLabel}>Data:</Text>
           <Text style={styles.detailValue}>
-            {formatDate(order.req_date)} às {formatTime(order.req_time)}
+            {formatDateTime(order.req_date, order.req_time)}
           </Text>
         </View>
 

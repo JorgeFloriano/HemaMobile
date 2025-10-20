@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -22,30 +22,33 @@ const OrderDetailScreen = () => {
   const [refreshing, setRefreshing] = useState(false);
 
   // Load order details
-  const loadOrder = async (showRefreshing = false) => {
-    try {
-      if (showRefreshing) {
-        setRefreshing(true);
-      } else {
-        setLoading(true);
-      }
+  const loadOrder = useCallback(
+    async (showRefreshing = false) => {
+      try {
+        if (showRefreshing) {
+          setRefreshing(true);
+        } else {
+          setLoading(true);
+        }
 
-      const response = await api.get<{ order: Order }>(`/orders/${id}`);
-      setOrder(response.data.order);
-    } catch (error) {
-      Alert.alert("Error", "Failed to load order details");
-      console.error("Error loading order:", error);
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
-  };
+        const response = await api.get<{ order: Order }>(`/orders/${id}`);
+        setOrder(response.data.order);
+      } catch (error) {
+        Alert.alert("Error", "Failed to load order details");
+        console.error("Error loading order:", error);
+      } finally {
+        setLoading(false);
+        setRefreshing(false);
+      }
+    },
+    [id]
+  ); // Add dependencies that loadOrder uses
 
   useEffect(() => {
     if (id) {
       loadOrder();
     }
-  }, [id]);
+  }, [id, loadOrder]); // Now include loadOrder in dependencies
 
   // Handle refresh
   const handleRefresh = () => {
@@ -108,6 +111,33 @@ const OrderDetailScreen = () => {
   console.log(["order", order]);
 
   const statusInfo = getStatusInfo(order.finished);
+
+  const MaterialsList = ({
+    materials,
+  }: {
+    materials?: {
+      id: string;
+      description: string;
+      unit: string;
+      pivot: { quantity: number; };
+    }[];
+  }) => {
+    // Handle empty or undefined materials
+    if (!materials || materials.length === 0) {
+      return '';
+    }
+
+    return (
+      <Text style={styles.description}>
+        {materials.map((material, index) => (
+          <Text key={material.id}>
+            {material.description} ({material.pivot.quantity} {material.unit})
+            {index === materials.length - 1 ? ". " : ", "}
+          </Text>
+        ))}
+      </Text>
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -185,11 +215,20 @@ const OrderDetailScreen = () => {
                 <Text style={styles.detailLabel}>Serviços Realizados:</Text>
               </View>
 
-              <Text style={styles.description}>
-                {note.services}
-              </Text>
+              <Text style={styles.description}>{note.services}</Text>
 
-              <View style={styles.details}>
+              <View style={styles.detailRow}>
+                <Text style={styles.detailLabel}>Materiais utilizados:</Text>
+              </View>
+
+              <MaterialsList materials={note.materials} />
+
+              <View
+                style={[
+                  styles.details,
+                  index === order.notes.length - 1 && styles.noBorder, // Remove border for last item
+                ]}
+              >
                 <View style={styles.detailRow}>
                   <Text style={styles.detailLabel}>Setor:</Text>
                   <Text style={styles.detailValue}>{order.sector}</Text>
@@ -348,6 +387,9 @@ const styles = StyleSheet.create({
     borderBottomColor: "#d1ceceff",
     paddingTop: 12,
     marginBottom: 12,
+  },
+  noBorder: {
+    borderBottomWidth: 0, // Remove border
   },
 });
 

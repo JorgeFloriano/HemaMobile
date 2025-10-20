@@ -44,6 +44,14 @@ export interface Order {
     services: string;
     note: string;
     created_at: string;
+    materials: {
+      id: number;
+      description: string;
+      unit: string;
+      pivot: {
+        quantity: number;
+      };
+    };
   }[];
 }
 
@@ -154,7 +162,7 @@ const OrdersScreen = () => {
           Gerenciamento de Solicitações de Serviço (SAT)
         </Text>
         <View style={styles.buttonGroup}>
-          <Button title="Nova" onPress={handleCreateOrder} variant="primary"/>
+          <Button title="Nova" onPress={handleCreateOrder} variant="primary" />
         </View>
       </View>
 
