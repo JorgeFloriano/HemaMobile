@@ -60,6 +60,10 @@ const OrderDetailScreen = () => {
     return `${day}/${month}/${year}`;
   };
 
+  const formatTime = (time: string) => {
+    return time.length === 5 ? time : time.substring(0, 5);
+  };
+
   // Format date and time for Brazilian display
   const formatDateTime = (date: string, time: string) => {
     // If date is already in DD/MM/YYYY format from API, use it directly
@@ -71,7 +75,7 @@ const OrderDetailScreen = () => {
     }
 
     // Format time to Brazilian format (HH:MM)
-    const formattedTime = time.length === 5 ? time : time.substring(0, 5);
+    const formattedTime = formatTime(time);
 
     return `${formattedDate} às ${formattedTime}`;
   };
@@ -112,33 +116,6 @@ const OrderDetailScreen = () => {
 
   const statusInfo = getStatusInfo(order.finished);
 
-  const MaterialsList = ({
-    materials,
-  }: {
-    materials?: {
-      id: string;
-      description: string;
-      unit: string;
-      pivot: { quantity: number; };
-    }[];
-  }) => {
-    // Handle empty or undefined materials
-    if (!materials || materials.length === 0) {
-      return '';
-    }
-
-    return (
-      <Text style={styles.description}>
-        {materials.map((material, index) => (
-          <Text key={material.id}>
-            {material.description} ({material.pivot.quantity} {material.unit})
-            {index === materials.length - 1 ? ". " : ", "}
-          </Text>
-        ))}
-      </Text>
-    );
-  };
-
   return (
     <View style={styles.container}>
       <ScrollView
@@ -166,12 +143,10 @@ const OrderDetailScreen = () => {
               </Text>
             </View>
           </View>
-          <Text style={styles.orderType}>Tipo: {order.type.description}</Text>
-        </View>
-
-        {/* Details Section */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Informações da Solicitação</Text>
+          <View style={styles.detailRow}>
+            <Text style={styles.detailLabel}>Tipo:</Text>
+            <Text style={styles.detailValue}>{order.type.description}</Text>
+          </View>
 
           <View style={styles.detailRow}>
             <Text style={styles.detailLabel}>Setor:</Text>
@@ -190,7 +165,7 @@ const OrderDetailScreen = () => {
             </Text>
           </View>
 
-          {order.id && (
+          {order.equipment && (
             <View style={styles.detailRow}>
               <Text style={styles.detailLabel}>Equipamento:</Text>
               <Text style={styles.detailValue}>{order.equipment}</Text>
@@ -212,35 +187,65 @@ const OrderDetailScreen = () => {
               </View>
 
               <View style={styles.detailRow}>
-                <Text style={styles.detailLabel}>Serviços Realizados:</Text>
+                <Text style={styles.subtitle}>Serviços Realizados:</Text>
               </View>
 
               <Text style={styles.description}>{note.services}</Text>
+              {note.materials.length > 0 ? (
+                <>
+                  <View style={styles.detailRow}>
+                    <Text style={styles.subtitle}>Materiais utilizados:</Text>
+                  </View>
 
-              <View style={styles.detailRow}>
-                <Text style={styles.detailLabel}>Materiais utilizados:</Text>
-              </View>
-
-              <MaterialsList materials={note.materials} />
-
+                  {note.materials.map((material, index) => (
+                    <View key={index} style={styles.materialsRow}>
+                      <Text style={styles.materialLabel}>
+                        {material.description}
+                      </Text>
+                      <Text style={styles.materialValue}>
+                        {material.pivot.quantity} {material.unit}
+                      </Text>
+                    </View>
+                  ))}
+                </>
+              ) : null}
               <View
                 style={[
                   styles.details,
                   index === order.notes.length - 1 && styles.noBorder, // Remove border for last item
                 ]}
               >
-                <View style={styles.detailRow}>
-                  <Text style={styles.detailLabel}>Setor:</Text>
-                  <Text style={styles.detailValue}>{order.sector}</Text>
-                </View>
+                {note.tecs && (
+                  <>
+                    <View style={styles.materialsRow}>
+                      <Text style={styles.materialLabel}>Horário:</Text>
+                      <Text style={styles.materialValue}>
+                        Início: {formatTime(note.start)}h - Término:{" "}
+                        {formatTime(note.end)}h
+                      </Text>
+                    </View>
 
-                {order.tec && (
-                  <View style={styles.detailRow}>
-                    <Text style={styles.detailLabel}>Técnico:</Text>
-                    <Text style={styles.detailValue}>
-                      {order.tec.user.name} {order.tec.user.surname}
-                    </Text>
-                  </View>
+                    <View style={styles.detailRow}>
+                      <Text style={styles.subtitle}>Executante(s):</Text>
+                    </View>
+                    {note.tecs.map((tecn, index) => (
+                      <View key={index}>
+                        <View style={styles.materialsRow}>
+                          <Text style={styles.materialLabel}>Nome:</Text>
+                          <Text style={styles.materialValue}>
+                            {tecn.user.name} {tecn.user.surname}
+                          </Text>
+                        </View>
+
+                        <View style={styles.materialsRow}>
+                          <Text style={styles.materialLabel}>Função:</Text>
+                          <Text style={styles.materialValue}>
+                            {tecn.user.function}
+                          </Text>
+                        </View>
+                      </View>
+                    ))}
+                  </>
                 )}
               </View>
             </View>
@@ -262,7 +267,7 @@ const OrderDetailScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 80,
+    paddingTop: 60,
     flex: 1,
     backgroundColor: "#f5f5f5",
   },
@@ -320,10 +325,7 @@ const styles = StyleSheet.create({
     flex: 1,
     textAlign: "right",
   },
-  orderType: {
-    fontSize: 14,
-    color: "#666",
-  },
+
   section: {
     backgroundColor: "white",
     marginTop: 12,
@@ -339,7 +341,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 7,
+    marginBottom: 2,
     paddingVertical: 4,
   },
   detailLabel: {
@@ -348,6 +350,14 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     flex: 1,
   },
+
+  subtitle: {
+    fontSize: 14,
+    color: "#666",
+    fontWeight: "600",
+    flex: 1,
+  },
+
   detailValue: {
     fontSize: 14,
     color: "#333",
@@ -390,6 +400,26 @@ const styles = StyleSheet.create({
   },
   noBorder: {
     borderBottomWidth: 0, // Remove border
+  },
+
+  materialsRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 7,
+  },
+  materialLabel: {
+    fontSize: 14,
+    color: "#666",
+    fontWeight: "400",
+    flex: 1,
+  },
+  materialValue: {
+    fontSize: 14,
+    color: "#333",
+    fontWeight: "400",
+    flex: 1,
+    textAlign: "right",
   },
 });
 

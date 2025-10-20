@@ -39,22 +39,30 @@ export interface Order {
     };
   } | null;
   notes: {
-    id: string;
+    id: number;
     date: string;
+    start: string;
+    end: string;
     services: string;
-    note: string;
+    tecs: {
+      id: string;
+      user_id: string;
+      user: {
+        id: string;
+        name: string;
+        function: string;
+        surname: string;
+      };
+    }[];
     created_at: string;
     materials: {
       id: number;
       description: string;
       unit: string;
-      pivot: {
-        quantity: number;
-      };
-    };
+      pivot: { quantity: number };
+    }[];
   }[];
 }
-
 interface OrdersResponse {
   orders: Order[];
 }
