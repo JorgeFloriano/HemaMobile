@@ -252,15 +252,6 @@ const OrderDetailScreen = () => {
           ))}
         </View>
       </ScrollView>
-
-      {/* Bottom Navigation */}
-      <View style={styles.bottomNav}>
-        <Button
-          title="Voltar"
-          onPress={() => router.push("/(tabs)/orders")}
-          variant="secondary"
-        />
-      </View>
     </View>
   );
 };

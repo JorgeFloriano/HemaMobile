@@ -14,7 +14,8 @@
       "backgroundColor": "#1b0363ff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.anonymous.HemaMobile"
     },
     "android": {
       "adaptiveIcon": {
@@ -24,7 +25,8 @@
         "monochromeImage": "./assets/images/logo_hema.png"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.anonymous.HemaMobile"
     },
     "web": {
       "output": "static",
@@ -39,7 +41,6 @@
           "imageWidth": 100,
           "imageHeight": 100,
           "resizeMode": "contain",
-
           "backgroundColor": "#1b0363ff",
           "dark": {
             "backgroundColor": "#000000"

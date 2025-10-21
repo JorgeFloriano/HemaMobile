@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useRouter } from "expo-router";
 import { authService } from "@/src/services/auth";
 import { useAuth } from "@/src/contexts/AuthContext";
-import api from "@/src/services/api";
+//import api from "@/src/services/api";
 
 import {
   View,
@@ -11,6 +11,8 @@ import {
   StyleSheet,
   ScrollView,
   TouchableWithoutFeedback,
+  Platform,
+  StatusBar,
 } from "react-native";
 import Input from "@/src/components/Input";
 import Button from "@/src/components/Button";
@@ -162,8 +164,9 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
-    justifyContent: "center",
+    //justifyContent: "center",
     paddingHorizontal: 20,
+    paddingTop: Platform.OS === "ios" ? 44 : (StatusBar.currentHeight ? StatusBar.currentHeight + 20 : 20) || 20,
   },
   card: {
     backgroundColor: "white",

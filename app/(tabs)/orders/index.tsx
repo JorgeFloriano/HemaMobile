@@ -169,9 +169,6 @@ const OrdersScreen = () => {
         <Text style={styles.subtitle}>
           Gerenciamento de Solicitações de Serviço (SAT)
         </Text>
-        <View style={styles.buttonGroup}>
-          <Button title="Nova" onPress={handleCreateOrder} variant="primary" />
-        </View>
       </View>
 
       <FlatList
