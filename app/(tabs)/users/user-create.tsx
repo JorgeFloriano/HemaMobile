@@ -6,63 +6,33 @@ import {
   StyleSheet,
   Platform,
   StatusBar,
-  TouchableWithoutFeedback,
+  Pressable,
   Text,
 } from "react-native";
 import api from "@/src/services/api";
 import Input from "@/src/components/Input";
 import Button from "@/src/components/Button";
 
-interface Type {
-  id: string;
-  description: string;
-}
-
 const CreateOrderScreen = () => {
-  const [types, setTypes] = useState<Type[]>([]);
   const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
-    order_type_id: "",
-    sector: "",
-    req_name: "",
-    req_date: new Date().toLocaleDateString("pt-BR"),
-    req_time: new Date().toLocaleTimeString("pt-BR", {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false,
-    }),
-    req_descr: "",
-    equipment: "",
+    name: "",
+    surname: "",
+    email: "",
+    username: "",
+    password: "",
+    function: "",
   });
 
-  useEffect(() => {
-    loadOrderTypes();
-  }, []);
-
-  const loadOrderTypes = async () => {
-    try {
-      const response = await api.get("/orders/create");
-      setTypes(response.data.types);
-    } catch (error) {
-      Alert.alert("Error", "Failed to load order types");
-      console.error("Error loading types:", error);
-    }
-  };
-
   const handleSubmit = async () => {
-    if (!formData.order_type_id) {
-      Alert.alert("Error", "Please select a service type");
-      return;
-    }
-
     setLoading(true);
     try {
-      await api.post("/orders", formData);
-      Alert.alert("Success", "Order created successfully!");
+      await api.post("/users", formData);
+      Alert.alert("Usuário cadastrado com sucesso!");
       resetForm();
     } catch (error) {
-      Alert.alert("Error", "Failed to create order");
+      Alert.alert("Erro ao cadastrar usuário");
       console.error("Error creating order:", error);
     }
     setLoading(false);
@@ -70,17 +40,12 @@ const CreateOrderScreen = () => {
 
   const resetForm = () => {
     setFormData({
-      order_type_id: "",
-      sector: "",
-      req_name: "",
-      req_date: new Date().toLocaleDateString("pt-BR"),
-      req_time: new Date().toLocaleTimeString("pt-BR", {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false,
-      }),
-      req_descr: "",
-      equipment: "",
+      name: "",
+      surname: "",
+      email: "",
+      username: "",
+      password: "",
+      function: "",
     });
   };
 
@@ -90,7 +55,7 @@ const CreateOrderScreen = () => {
 
   return (
     <View style={styles.container}>
-      <TouchableWithoutFeedback>
+      <Pressable>
         <ScrollView
           style={styles.scrollView}
           contentContainerStyle={styles.scrollContent}
@@ -100,68 +65,71 @@ const CreateOrderScreen = () => {
             <Text style={styles.welcome}>Cadastrar Usuário</Text>
 
             <Input
-              label="Nome do Solicitante *"
-              value={formData.req_name}
-              onChangeText={(text) => updateFormData("req_name", text)}
-              placeholder="Nome do Solicitante"
+              label="Nome *"
+              value={formData.name}
+              onChangeText={(text) => updateFormData("name", text)}
+              placeholder="Nome do Usuário"
+              maxLength={20}
+              type="text"
+            />
+
+            <Input
+              label="Sobrenome"
+              value={formData.surname}
+              onChangeText={(text) => updateFormData("surname", text)}
+              placeholder="Sobrenome do Usuário"
+              maxLength={20}
+              type="text"
+            />
+
+            <Input
+              label="Email *"
+              value={formData.email}
+              onChangeText={(text) => updateFormData("email", text)}
+              placeholder="Email"
               maxLength={50}
+              type="email"
+            />
+
+            <Input
+              label="Usuário *"
+              value={formData.username}
+              onChangeText={(text) => updateFormData("username", text)}
+              placeholder="Username"
+              maxLength={20}
               type="text"
             />
 
             <Input
-              label="Setor *"
-              value={formData.sector}
-              onChangeText={(text) => updateFormData("sector", text)}
-              placeholder="Setor"
-              maxLength={30}
-              type="text"
-            />
-
-            <View style={styles.row}>
-              <View style={styles.halfInput}>
-                <Input
-                  label="Data do Acionamento *"
-                  value={formData.req_date}
-                  onChangeText={(text) => updateFormData("req_date", text)}
-                  placeholder="DD/MM/AAAA"
-                  type="date"
-                />
-              </View>
-
-              <View style={styles.halfInput}>
-                <Input
-                  label="Hora do Acionamento *"
-                  value={formData.req_time}
-                  onChangeText={(text) => updateFormData("req_time", text)}
-                  placeholder="HH:MM"
-                  type="time"
-                />
-              </View>
-            </View>
-
-            <Input
-              label="Problema Relatado *"
-              value={formData.req_descr}
-              onChangeText={(text) => updateFormData("req_descr", text)}
-              placeholder="Descreva o problema"
-              multiline
-              numberOfLines={4}
-              maxLength={470}
+              label="Função"
+              value={formData.function}
+              onChangeText={(text) => updateFormData("function", text)}
+              placeholder="Função"
+              maxLength={20}
               type="text"
             />
 
             <Input
-              label="Equipamento"
-              value={formData.equipment}
-              onChangeText={(text) => updateFormData("equipment", text)}
-              placeholder="Equipamento"
-              maxLength={70}
-              type="text"
+              label="Senha *"
+              value={formData.password}
+              onChangeText={(text) => updateFormData("password", text)}
+              placeholder="Senha"
+              maxLength={20}
+              type="password"
+            />
+
+            <Input
+              label="Confirmar Senha *"
+              value={formData.password}
+              onChangeText={(text) => updateFormData("password_confirm", text)}
+              placeholder="Confirmar Senha"
+              maxLength={20}
+              type="password"
             />
 
             <View style={styles.buttonGroup}>
               <Button
-                title={loading ? "Criando..." : "Confirmar"}
+                title={loading ? "Salvando..." : "Salvar"}
                 onPress={handleSubmit}
                 variant="primary"
                 disabled={loading}
@@ -169,14 +137,14 @@ const CreateOrderScreen = () => {
             </View>
           </View>
         </ScrollView>
-      </TouchableWithoutFeedback>
+      </Pressable>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 20,
+    paddingTop: 60,
     flex: 1,
     backgroundColor: "white",
   },

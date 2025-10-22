@@ -2,9 +2,9 @@ import React from "react";
 import { Text, TextStyle, TouchableOpacity, ViewStyle } from "react-native";
 
 interface ButtonProps {
-  title: string;
+  title: string | React.ReactNode;
   onPress: () => void;
-  variant?: "primary" | "secondary";
+  variant?: "primary" | "secondary" | "icon";
   disabled?: boolean;
   style?: ViewStyle;
   textStyle?: TextStyle;
@@ -30,6 +30,13 @@ const Button: React.FC<ButtonProps> = ({
       backgroundColor: "transparent",
       borderWidth: 1,
       borderColor: "#1b0363ff",
+    }),
+    ...(variant === "icon" && {
+      paddingVertical: 6,
+      paddingHorizontal: 8,
+      borderWidth: 1,
+      borderColor: "#1b0363ff",
+      hoverBackgroundColor: "#cdc6e2ff",
     }),
     ...style,
   };

@@ -45,6 +45,13 @@ const TopNavigationBar: React.FC<TopNavigationBarProps> = ({
     router.replace("/login");
   };
 
+  const icon = () => {
+    if (pathname === "/") {
+      return 'log-out-outline';
+    }
+    return 'arrow-back-outline';
+  }
+
   const handleBackPress = () => {
     if (onBackPress) {
       onBackPress();
@@ -90,7 +97,7 @@ const TopNavigationBar: React.FC<TopNavigationBarProps> = ({
         {/* Back button on the left */}
         {showBack && (
           <TouchableOpacity style={styles.backButton} onPress={handleBackPress}>
-            <Ionicons name="arrow-back" size={24} color="white" />
+            <Ionicons name={icon()} size={24} color="white" />
           </TouchableOpacity>
         )}
       </View>

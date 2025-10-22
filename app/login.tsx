@@ -10,7 +10,7 @@ import {
   Image,
   StyleSheet,
   ScrollView,
-  TouchableWithoutFeedback,
+  Pressable,
   Platform,
   StatusBar,
 } from "react-native";
@@ -82,7 +82,7 @@ const LoginScreen: React.FC = () => {
   };
 
   return (
-    <TouchableWithoutFeedback>
+    <Pressable>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.card}>
           {/* Logo Section */}
@@ -153,7 +153,7 @@ const LoginScreen: React.FC = () => {
           </View>
         </View>
       </ScrollView>
-    </TouchableWithoutFeedback>
+    </Pressable>
   );
 };
 

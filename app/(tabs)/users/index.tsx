@@ -132,14 +132,8 @@ const UsersScreen = () => {
 
   // Render user item
   const renderUserItem = ({ item }: { item: User }) => (
-    <UserCard user={item} onPress={() => handleUserPress(item)} />
+    <UserCard user={item} />
   );
-
-  // Handle user press
-  const handleUserPress = (user: User) => {
-    //Navigate to user details
-    //router.push(`/users/${user.id}`);
-  };
 
   // Render empty state
   const renderEmptyState = () => (
@@ -184,15 +178,15 @@ const UsersScreen = () => {
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.title}>
-          <Text style={styles.welcome}>Solicitações</Text>
+          <Text style={styles.welcome}>Usuários</Text>
           <Button
             onPress={handleCreateUser}
-            title="Nova"
+            title="Novo"
             variant="primary"
           />
         </View>
         <Text style={styles.subtitle}>
-          Gerenciamento de Solicitações de Serviço (SAT)
+          Gerenciamento de Usuários
         </Text>
       </View>
 

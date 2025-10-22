@@ -1,25 +1,44 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { User } from "@/app/(tabs)/users";
+import Feather from '@expo/vector-icons/Feather';
+import Button from "@/src/components/Button";
 
 interface UserCardProps {
   user: User;
-  onPress: () => void;
 }
 
-const UserCard: React.FC<UserCardProps> = ({ user, onPress }) => {
-  
+const UserCard: React.FC<UserCardProps> = ({ user }) => {
   return (
-    <TouchableOpacity style={styles.card} onPress={onPress}>
+    <View style={styles.card}>
       <View style={styles.header}>
         <Text style={styles.serviceType} numberOfLines={1}>
-          {user.id}
+          {user.id} - {user.name} {user.surname}
         </Text>
-        <Text style={styles.serviceType} numberOfLines={1}>
-          {user.name} {user.surname}
+        <Text style={styles.description} numberOfLines={2}>
+          {user.function}
         </Text>
       </View>
-    </TouchableOpacity>
+
+      <View style={styles.details}>
+        <View style={styles.detailRow}>
+          <Text style={styles.detailLabel}>Username: {user.username}</Text>
+          <View style={styles.buttonRow}>
+            <Button
+              title={<Feather name="edit" size={18} color="#1b0363ff" />}
+              onPress={() => console.log("Edit user")}
+              variant="icon"
+              textStyle={{ padding: -10 }}
+            />
+            <Button
+              title={<Feather name="delete" size={18} color="#1b0363ff" />}
+              onPress={() => console.log("Edit user")}
+              variant="icon"
+            />
+          </View>
+        </View>
+      </View>
+    </View>
   );
 };
 
@@ -87,6 +106,10 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "#333",
     fontWeight: "400",
+  },
+  buttonRow: {
+    flexDirection: "row",
+    gap: 8,
   },
 });
 
