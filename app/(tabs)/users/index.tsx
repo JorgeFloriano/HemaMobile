@@ -10,72 +10,78 @@ import {
 } from "react-native";
 import { useRouter } from "expo-router";
 import api from "@/src/services/api";
-import OrderCard from "@/src/components/OrderCard"; // We'll create this component
+import UserCard from "@/src/components/UserCard";
 import Button from "@/src/components/Button";
 
 // Types
-export interface Order {
+export interface User {
   id: string;
-  order_type_id: string;
-  tec_id?: string | null;
-  req_descr: string;
-  req_name: string;
-  sector: string;
-  req_date: string;
-  req_time: string;
-  finished: boolean;
-  equipment?: string;
-  type: {
-    id: string;
-    description: string;
-  };
-  tec: {
-    id: string;
-    user_id: string;
-    user: {
-      id: string;
-      name: string;
-      surname: string;
-    };
-  } | null;
-  notes: {
-    id: number;
-    date: string;
-    start: string;
-    end: string;
-    services: string;
-    tecs: {
-      id: string;
-      user_id: string;
-      user: {
-        id: string;
-        name: string;
-        function: string;
-        surname: string;
-      };
-    }[];
-    created_at: string;
-    materials: {
-      id: number;
-      description: string;
-      unit: string;
-      pivot: { quantity: number };
-    }[];
-  }[];
-}
-interface OrdersResponse {
-  orders: Order[];
+  name: string;
+  surname?: string;
+  username: string;
+  function?: string;
 }
 
-const OrdersScreen = () => {
-  const [orders, setOrders] = useState<Order[]>([]);
+interface UsersResponse {
+  users: User[];
+}
+
+// Mock data for testing
+const mockUsers: User[] = [
+  {
+    id: "1",
+    name: "João",
+    surname: "Silva",
+    username: "joao.silva",
+    function: "Técnico de TI"
+  },
+  {
+    id: "2", 
+    name: "Maria",
+    surname: "Santos",
+    username: "maria.santos",
+    function: "Supervisora"
+  },
+  {
+    id: "3",
+    name: "Pedro",
+    surname: "Oliveira",
+    username: "pedro.oliveira",
+    function: "Analista"
+  },
+  {
+    id: "4",
+    name: "Ana",
+    surname: "Costa",
+    username: "ana.costa", 
+    function: "Coordenadora"
+  },
+  {
+    id: "5",
+    name: "Carlos",
+    surname: "Ferreira",
+    username: "carlos.ferreira",
+    function: "Gerente"
+  },
+  {
+    id: "6",
+    name: "Juliana",
+    surname: "Ribeiro",
+    username: "juliana.ribeiro",
+    function: "Assistente"
+  }
+];
+
+const UsersScreen = () => {
+  const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [useMockData, setUseMockData] = useState(true); // Set to false when API is ready
   const router = useRouter();
 
-  // Load orders
-  const loadOrders = async (showRefreshing = false) => {
+  // Load users
+  const loadUsers = async (showRefreshing = false) => {
     try {
       if (showRefreshing) {
         setRefreshing(true);
@@ -84,52 +90,64 @@ const OrdersScreen = () => {
       }
 
       setError(null);
-      const response = await api.get<OrdersResponse>("/orders");
-      setOrders(response.data.orders);
+      
+      if (useMockData) {
+        // Use mock data for testing
+        setTimeout(() => {
+          setUsers(mockUsers);
+        }, 1000); // Simulate API delay
+      } else {
+        // Use real API
+        const response = await api.get<UsersResponse>("/users");
+        setUsers(response.data.users);
+      }
     } catch (err) {
-      const errorMessage = "Failed to load orders";
+      const errorMessage = "Failed to load users";
       setError(errorMessage);
       Alert.alert("Error", errorMessage);
-      console.error("Error loading orders:", err);
+      console.error("Error loading users:", err);
     } finally {
       setLoading(false);
       setRefreshing(false);
     }
   };
 
+  // Rest of your component remains the same...
   // Initial load
   useEffect(() => {
-    loadOrders();
+    loadUsers();
   }, []);
+
+  // ... rest of your existing code
 
   // Pull to refresh
   const handleRefresh = () => {
-    loadOrders(true);
+    loadUsers(true);
   };
 
-  // Navigate to create order
-  const handleCreateOrder = () => {
-    router.push("/(tabs)/order-create");
+  // Navigate to create user
+  const handleCreateUser = () => {
+    router.push("/(tabs)/users/user-create");
   };
 
-  // Render order item
-  const renderOrderItem = ({ item }: { item: Order }) => (
-    <OrderCard order={item} onPress={() => handleOrderPress(item)} />
+  // Render user item
+  const renderUserItem = ({ item }: { item: User }) => (
+    <UserCard user={item} onPress={() => handleUserPress(item)} />
   );
 
-  // Handle order press
-  const handleOrderPress = (order: Order) => {
-    //Navigate to order details
-    router.push(`/orders/${order.id}`);
+  // Handle user press
+  const handleUserPress = (user: User) => {
+    //Navigate to user details
+    //router.push(`/users/${user.id}`);
   };
 
   // Render empty state
   const renderEmptyState = () => (
     <View style={styles.emptyState}>
-      <Text style={styles.emptyStateText}>No orders found</Text>
+      <Text style={styles.emptyStateText}>No users found</Text>
       <Button
-        title="Create First Order"
-        onPress={handleCreateOrder}
+        title="Create First User"
+        onPress={handleCreateUser}
         variant="primary"
         style={styles.emptyStateButton}
       />
@@ -142,7 +160,7 @@ const OrdersScreen = () => {
       <Text style={styles.errorStateText}>{error}</Text>
       <Button
         title="Try Again"
-        onPress={() => loadOrders()}
+        onPress={() => loadUsers()}
         variant="primary"
         style={styles.errorStateButton}
       />
@@ -153,7 +171,7 @@ const OrdersScreen = () => {
     return (
       <View style={styles.centerContainer}>
         <ActivityIndicator size="large" color="#007AFF" />
-        <Text style={styles.loadingText}>Loading orders...</Text>
+        <Text style={styles.loadingText}>Loading users...</Text>
       </View>
     );
   }
@@ -168,7 +186,7 @@ const OrdersScreen = () => {
         <View style={styles.title}>
           <Text style={styles.welcome}>Solicitações</Text>
           <Button
-            onPress={handleCreateOrder}
+            onPress={handleCreateUser}
             title="Nova"
             variant="primary"
           />
@@ -179,8 +197,8 @@ const OrdersScreen = () => {
       </View>
 
       <FlatList
-        data={orders}
-        renderItem={renderOrderItem}
+        data={users}
+        renderItem={renderUserItem}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.listContent}
         showsVerticalScrollIndicator={false}
@@ -279,4 +297,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default OrdersScreen;
+export default UsersScreen;

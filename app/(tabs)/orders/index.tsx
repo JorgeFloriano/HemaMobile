@@ -109,7 +109,7 @@ const OrdersScreen = () => {
 
   // Navigate to create order
   const handleCreateOrder = () => {
-    router.push("/(tabs)/orders/create");
+    router.push("/(tabs)/order-create");
   };
 
   // Render order item
@@ -165,7 +165,14 @@ const OrdersScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.welcome}>Sistema HEMA</Text>
+        <View style={styles.title}>
+          <Text style={styles.welcome}>Solicitações</Text>
+          <Button
+            onPress={handleCreateOrder}
+            title="Nova"
+            variant="primary"
+          />
+        </View>
         <Text style={styles.subtitle}>
           Gerenciamento de Solicitações de Serviço (SAT)
         </Text>
@@ -204,9 +211,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#f5f5f5",
   },
   title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#333",
+   flexDirection: "row",
+   alignItems: "center",
+   justifyContent: "space-between",
+   marginBottom: 10,
   },
   welcome: {
     fontSize: 24,

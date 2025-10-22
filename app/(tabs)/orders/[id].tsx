@@ -11,7 +11,7 @@ import {
 import { useLocalSearchParams, useRouter } from "expo-router";
 import api from "@/src/services/api";
 import Button from "@/src/components/Button";
-import { Order } from "@/app/(tabs)/orders";
+import { Order } from "@/app/(tabs)";
 
 const OrderDetailScreen = () => {
   const { id } = useLocalSearchParams();

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useRouter } from "expo-router";
 import {
   View,
   ScrollView,
@@ -13,7 +12,6 @@ import {
 import api from "@/src/services/api";
 import Input from "@/src/components/Input";
 import Button from "@/src/components/Button";
-import OptionSelector from "@/src/components/OptionSelector";
 
 interface Type {
   id: string;
@@ -23,8 +21,6 @@ interface Type {
 const CreateOrderScreen = () => {
   const [types, setTypes] = useState<Type[]>([]);
   const [loading, setLoading] = useState(false);
-
-  const router = useRouter();
 
   const [formData, setFormData] = useState({
     order_type_id: "",
@@ -92,10 +88,6 @@ const CreateOrderScreen = () => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleTypeSelect = (type: Type) => {
-    updateFormData("order_type_id", type.id);
-  };
-
   return (
     <View style={styles.container}>
       <TouchableWithoutFeedback>
@@ -105,13 +97,15 @@ const CreateOrderScreen = () => {
           showsVerticalScrollIndicator={false}
         >
           <View style={styles.form}>
-            <Text style={styles.welcome}>Solicitação de Atendimento</Text>
-            <OptionSelector
-              label="Tipo de Serviço *"
-              placeholder="Selecione um tipo de serviço"
-              types={types}
-              selectedTypeId={formData.order_type_id}
-              onTypeSelect={handleTypeSelect}
+            <Text style={styles.welcome}>Cadastrar Usuário</Text>
+
+            <Input
+              label="Nome do Solicitante *"
+              value={formData.req_name}
+              onChangeText={(text) => updateFormData("req_name", text)}
+              placeholder="Nome do Solicitante"
+              maxLength={50}
+              type="text"
             />
 
             <Input
@@ -171,12 +165,6 @@ const CreateOrderScreen = () => {
                 onPress={handleSubmit}
                 variant="primary"
                 disabled={loading}
-              />
-
-              <Button
-                title="Voltar"
-                onPress={() => router.push("/(tabs)")}
-                variant="secondary"
               />
             </View>
           </View>

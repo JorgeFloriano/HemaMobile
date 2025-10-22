@@ -32,7 +32,7 @@ const tabs: Tab[] = [
     name: "orders",
     href: "/orders",
     icon: "list",
-    label: "Pedidos",
+    label: "Ordens",
   },
   {
     name: "example",
@@ -41,10 +41,10 @@ const tabs: Tab[] = [
     label: "Exemplo",
   },
   {
-    name: "profile",
-    href: "/profile",
+    name: "users",
+    href: "/users",
     icon: "person",
-    label: "Perfil",
+    label: "Usuários",
   },
 ];
 

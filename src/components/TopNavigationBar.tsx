@@ -57,7 +57,7 @@ const TopNavigationBar: React.FC<TopNavigationBarProps> = ({
         router.push(parentPath as any);
       } else {
         // If we're at root, use default back
-        router.push('/(tabs)');
+        router.push("/(tabs)");
       }
       if (pathname === "/") {
         handleLogout();
@@ -72,12 +72,12 @@ const TopNavigationBar: React.FC<TopNavigationBarProps> = ({
 
       {/* Navigation Content */}
       <View style={styles.content}>
-        {/* Back button on the left */}
-        {showBack && (
-          <TouchableOpacity style={styles.backButton} onPress={handleBackPress}>
-            <Ionicons name="arrow-back" size={24} color="white" />
-          </TouchableOpacity>
-        )}
+        {/* Logo on the right for balance */}
+        <Image
+          source={require("@/assets/images/logo2_hema.png")}
+          style={styles.logo}
+          resizeMode="contain"
+        />
 
         {/* Welcome message in center */}
         <View style={styles.titleContainer}>
@@ -87,13 +87,12 @@ const TopNavigationBar: React.FC<TopNavigationBarProps> = ({
             </Text>
           )}
         </View>
-
-        {/* Logo on the right for balance */}
-        <Image
-          source={require("@/assets/images/logo2_hema.png")}
-          style={styles.logo}
-          resizeMode="contain"
-        />
+        {/* Back button on the left */}
+        {showBack && (
+          <TouchableOpacity style={styles.backButton} onPress={handleBackPress}>
+            <Ionicons name="arrow-back" size={24} color="white" />
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );
