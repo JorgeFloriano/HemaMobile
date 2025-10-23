@@ -10,7 +10,7 @@ import {
   Image,
   StyleSheet,
   ScrollView,
-  Pressable,
+  TouchableWithoutFeedback,
   Platform,
   StatusBar,
 } from "react-native";
@@ -82,7 +82,7 @@ const LoginScreen: React.FC = () => {
   };
 
   return (
-    <Pressable>
+    <TouchableWithoutFeedback>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.card}>
           {/* Logo Section */}
@@ -153,7 +153,7 @@ const LoginScreen: React.FC = () => {
           </View>
         </View>
       </ScrollView>
-    </Pressable>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -166,7 +166,10 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     //justifyContent: "center",
     paddingHorizontal: 20,
-    paddingTop: Platform.OS === "ios" ? 44 : (StatusBar.currentHeight ? StatusBar.currentHeight + 20 : 20) || 20,
+    paddingTop:
+      Platform.OS === "ios"
+        ? 44
+        : (StatusBar.currentHeight ? StatusBar.currentHeight + 20 : 20) || 20,
   },
   card: {
     backgroundColor: "white",

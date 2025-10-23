@@ -6,7 +6,7 @@ import {
   StyleSheet,
   Platform,
   StatusBar,
-  Pressable,
+  TouchableWithoutFeedback,
   Text,
 } from "react-native";
 import api from "@/src/services/api";
@@ -55,7 +55,7 @@ const CreateOrderScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Pressable>
+      <TouchableWithoutFeedback>
         <ScrollView
           style={styles.scrollView}
           contentContainerStyle={styles.scrollContent}
@@ -137,14 +137,14 @@ const CreateOrderScreen = () => {
             </View>
           </View>
         </ScrollView>
-      </Pressable>
+      </TouchableWithoutFeedback>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 60,
+    paddingTop: 20,
     flex: 1,
     backgroundColor: "white",
   },
