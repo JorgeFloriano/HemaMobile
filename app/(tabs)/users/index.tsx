@@ -56,20 +56,6 @@ const mockUsers: User[] = [
     username: "ana.costa", 
     function: "Coordenadora"
   },
-  {
-    id: "5",
-    name: "Carlos",
-    surname: "Ferreira",
-    username: "carlos.ferreira",
-    function: "Gerente"
-  },
-  {
-    id: "6",
-    name: "Juliana",
-    surname: "Ribeiro",
-    username: "juliana.ribeiro",
-    function: "Assistente"
-  }
 ];
 
 const UsersScreen = () => {

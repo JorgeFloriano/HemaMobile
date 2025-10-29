@@ -18,7 +18,7 @@ function RootLayoutContent() {
     <>
       <StatusBar barStyle="light-content" translucent backgroundColor="transparent" />
       <Stack screenOptions={{ headerShown: false }}>
-        {!user ? (
+        {!user?.isClient ? (
           // Show login when not authenticated (no navigation bars)
           <Stack.Screen name="login" />
         ) : (

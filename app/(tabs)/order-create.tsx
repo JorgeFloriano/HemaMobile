@@ -8,7 +8,9 @@ import {
   StatusBar,
   TouchableWithoutFeedback,
   Text,
+  Keyboard,
 } from "react-native";
+import { useRouter } from "expo-router";
 import api from "@/src/services/api";
 import Input from "@/src/components/Input";
 import Button from "@/src/components/Button";
@@ -20,6 +22,7 @@ interface Type {
 }
 
 const CreateOrderScreen = () => {
+  const router = useRouter();
   const [types, setTypes] = useState<Type[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -27,12 +30,12 @@ const CreateOrderScreen = () => {
     order_type_id: "",
     sector: "",
     req_name: "",
-    req_date: new Date().toLocaleDateString("pt-BR"),
-    req_time: new Date().toLocaleTimeString("pt-BR", {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false,
-    }),
+    // req_date: new Date().toLocaleDateString("pt-BR"),
+    // req_time: new Date().toLocaleTimeString("pt-BR", {
+    //   hour: "2-digit",
+    //   minute: "2-digit",
+    //   hour12: false,
+    // }),
     req_descr: "",
     equipment: "",
   });
@@ -44,7 +47,7 @@ const CreateOrderScreen = () => {
   const loadOrderTypes = async () => {
     try {
       const response = await api.get("/orders/create");
-      setTypes(response.data.types);
+      setTypes(response.data.types || response.data);
     } catch (error) {
       Alert.alert("Error", "Failed to load order types");
       console.error("Error loading types:", error);
@@ -57,16 +60,50 @@ const CreateOrderScreen = () => {
       return;
     }
 
-    setLoading(true);
-    try {
-      await api.post("/orders", formData);
-      Alert.alert("Success", "Order created successfully!");
-      resetForm();
-    } catch (error) {
-      Alert.alert("Error", "Failed to create order");
-      console.error("Error creating order:", error);
+    if (!formData.req_descr) {
+      Alert.alert("Erro", "Por favor descreva o problema");
+      return;
     }
-    setLoading(false);
+
+    setLoading(true);
+    Keyboard.dismiss();
+
+    try {
+      const response = await api.post("/orders", formData);
+
+      if (response.data.success) {
+        Alert.alert("Sucesso", response.data.message, [
+          {
+            text: "OK",
+            onPress: () => {
+              resetForm();
+              router.back(); // Go back to previous screen
+            },
+          },
+        ]);
+      } else {
+        Alert.alert(
+          "Erro",
+          response.data.message || "Falha ao criar ordem de serviço"
+        );
+      }
+    } catch (error: any) {
+      console.error("Error creating order:", error);
+
+      // Handle validation errors from Laravel
+      if (error.response?.data?.errors) {
+        const errors = error.response.data.errors;
+        const firstError = Object.values(errors)[0] as string[];
+        Alert.alert("Erro", firstError[0]);
+      } else {
+        Alert.alert(
+          "Erro",
+          error.response?.data?.message || "Falha ao criar ordem de serviço"
+        );
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   const resetForm = () => {
@@ -74,12 +111,12 @@ const CreateOrderScreen = () => {
       order_type_id: "",
       sector: "",
       req_name: "",
-      req_date: new Date().toLocaleDateString("pt-BR"),
-      req_time: new Date().toLocaleTimeString("pt-BR", {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false,
-      }),
+      // req_date: new Date().toLocaleDateString("pt-BR"),
+      // req_time: new Date().toLocaleTimeString("pt-BR", {
+      //   hour: "2-digit",
+      //   minute: "2-digit",
+      //   hour12: false,
+      // }),
       req_descr: "",
       equipment: "",
     });
@@ -120,7 +157,7 @@ const CreateOrderScreen = () => {
               type="text"
             />
 
-            <View style={styles.row}>
+            {/* <View style={styles.row}>
               <View style={styles.halfInput}>
                 <Input
                   label="Data do Acionamento *"
@@ -140,7 +177,7 @@ const CreateOrderScreen = () => {
                   type="time"
                 />
               </View>
-            </View>
+            </View> */}
 
             <Input
               label="Problema Relatado *"
@@ -148,7 +185,7 @@ const CreateOrderScreen = () => {
               onChangeText={(text) => updateFormData("req_descr", text)}
               placeholder="Descreva o problema"
               multiline
-              numberOfLines={4}
+              numberOfLines={10}
               maxLength={470}
               type="text"
             />

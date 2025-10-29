@@ -228,7 +228,7 @@ const Input: React.FC<InputProps> = ({
       elevation: 3, // for Android
     }),
     ...(multiline && {
-      minHeight: 100,
+      minHeight: 150,
       textAlignVertical: "top",
     }),
     ...((type === "date" || type === "time") && {

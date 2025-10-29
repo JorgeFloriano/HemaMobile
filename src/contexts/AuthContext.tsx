@@ -7,6 +7,8 @@ interface User {
   username: string;
   name: string;
   email?: string;
+  isClient: boolean;
+  clientId?: string;
 }
 
 interface AuthContextType {

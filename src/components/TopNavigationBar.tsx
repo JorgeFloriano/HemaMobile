@@ -1,5 +1,5 @@
 // src/components/TopNavigationBar.tsx
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -8,10 +8,13 @@ import {
   StyleSheet,
   Platform,
   StatusBar,
+  Modal,
+  Alert,
 } from "react-native";
 import { useAuth } from "@/src/contexts/AuthContext";
 import { useRouter, usePathname } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import Button from "@/src/components/Button";
 
 interface TopNavigationBarProps {
   title?: string;
@@ -30,6 +33,7 @@ const getParentPath = (path: string): string => {
   return path; // Return original if no slash found
 };
 
+// Top Navigation Bar Component
 const TopNavigationBar: React.FC<TopNavigationBarProps> = ({
   title = "Sistema de Gerenciamento",
   showBack = true,
@@ -39,10 +43,15 @@ const TopNavigationBar: React.FC<TopNavigationBarProps> = ({
   const router = useRouter();
   const pathname = usePathname();
   const { user, logout } = useAuth();
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const handleLogout = async () => {
     await logout();
     router.replace("/login");
+  };
+
+  const showLogoutConfirmation = () => {
+    setShowLogoutModal(true);
   };
 
   const icon = () => {
@@ -52,22 +61,21 @@ const TopNavigationBar: React.FC<TopNavigationBarProps> = ({
     return 'arrow-back-outline';
   }
 
-  const handleBackPress = () => {
-    if (onBackPress) {
-      onBackPress();
+  const handleButtonPress = () => {
+    if (pathname === "/") {
+      // Show logout confirmation on home screen
+      showLogoutConfirmation();
     } else {
-      // Simple: go to parent path by removing last segment
-      const parentPath = getParentPath(pathname);
-
-      // Only navigate if we're not already at the root
-      if (parentPath !== pathname) {
-        router.push(parentPath as any);
+      // Handle back navigation for other screens
+      if (onBackPress) {
+        onBackPress();
       } else {
-        // If we're at root, use default back
-        router.push("/(tabs)");
-      }
-      if (pathname === "/") {
-        handleLogout();
+        const parentPath = getParentPath(pathname);
+        if (parentPath !== pathname) {
+          router.push(parentPath as any);
+        } else {
+          router.push("/(tabs)");
+        }
       }
     }
   };
@@ -96,14 +104,47 @@ const TopNavigationBar: React.FC<TopNavigationBarProps> = ({
         </View>
         {/* Back button on the left */}
         {showBack && (
-          <TouchableOpacity style={styles.backButton} onPress={handleBackPress}>
+          <TouchableOpacity style={styles.backButton} onPress={handleButtonPress}>
             <Ionicons name={icon()} size={24} color="white" />
           </TouchableOpacity>
         )}
       </View>
+    {/* Logout Confirmation Modal */}
+      <Modal
+        visible={showLogoutModal}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setShowLogoutModal(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Confirmar Logout</Text>
+            <Text style={styles.modalMessage}>
+              Tem certeza que deseja sair do aplicativo?
+            </Text>
+            
+            <View style={styles.modalButtons}>
+              <TouchableOpacity 
+                style={[styles.modalButton, styles.cancelButton]}
+                onPress={() => setShowLogoutModal(false)}
+              >
+                <Text style={styles.cancelButtonText}>Cancelar</Text>
+              </TouchableOpacity>
+              
+              <TouchableOpacity 
+                style={[styles.modalButton, styles.confirmButton]}
+                onPress={handleLogout}
+              >
+                <Text style={styles.confirmButtonText}>Sair</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
@@ -151,6 +192,67 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     textAlign: "center",
     marginTop: 2,
+  },
+ // Modal Styles
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+  },
+  modalContent: {
+    backgroundColor: "white",
+    borderRadius: 12,
+    padding: 24,
+    width: "100%",
+    maxWidth: 320,
+    alignItems: "center",
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 8,
+    color: "#333",
+  },
+  modalMessage: {
+    fontSize: 16,
+    color: "#666",
+    textAlign: "center",
+    marginBottom: 24,
+    lineHeight: 20,
+  },
+  modalButtons: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+    gap: 12,
+  },
+  modalButton: {
+    flex: 1,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  cancelButton: {
+    backgroundColor: "#f0f0f0",
+    borderWidth: 1,
+    borderColor: "#ddd",
+  },
+  confirmButton: {
+    backgroundColor: "#1b0363ff",
+  },
+  cancelButtonText: {
+    color: "#333",
+    fontSize: 16,
+    fontWeight: "500",
+  },
+  confirmButtonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "500",
   },
 });
 
