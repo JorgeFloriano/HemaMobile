@@ -131,7 +131,7 @@ const OrderDetailScreen = () => {
         {/* Header Section */}
         <View style={styles.header}>
           <View style={styles.headerTop}>
-            <Text style={styles.serviceNumber}>Solicitação Nº {order.id}</Text>
+            <Text style={styles.serviceNumber}>SAT Nº {order.id}</Text>
             <View
               style={[
                 styles.statusBadge,
@@ -154,7 +154,7 @@ const OrderDetailScreen = () => {
           </View>
 
           <View style={styles.detailRow}>
-            <Text style={styles.detailLabel}>Nome do Solicitante:</Text>
+            <Text style={styles.detailLabel}>Solicitante:</Text>
             <Text style={styles.detailValue}>{order.req_name}</Text>
           </View>
 
@@ -171,11 +171,17 @@ const OrderDetailScreen = () => {
               <Text style={styles.detailValue}>{order.equipment}</Text>
             </View>
           )}
+
+          <View style={styles.detailRow}>
+            <Text style={styles.subtitle}>Descrição:</Text>
+          </View>
+
+          <Text style={styles.description}>{order.req_descr}</Text>
         </View>
 
         {/* Notes Section */}
 
-        <View style={styles.section}>
+        {order.notes.length > 0 && (<View style={styles.section}>
           <Text style={styles.sectionTitle}>Informações do Atendimento</Text>
           {order.notes.map((note, index) => (
             <View key={index}>
@@ -250,7 +256,7 @@ const OrderDetailScreen = () => {
               </View>
             </View>
           ))}
-        </View>
+        </View>)}
       </ScrollView>
     </View>
   );

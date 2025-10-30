@@ -7,7 +7,7 @@ interface User {
   username: string;
   name: string;
   email?: string;
-  isClient: boolean;
+  isClient?: boolean;
   clientId?: string;
 }
 

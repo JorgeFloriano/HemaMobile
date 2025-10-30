@@ -41,11 +41,9 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onPress }) => {
     <TouchableOpacity style={styles.card} onPress={onPress}>
       <View style={styles.header}>
         <Text style={styles.serviceType} numberOfLines={1}>
-          {order.id}
+          {order.id} - {order.type.description}
         </Text>
-        <Text style={styles.serviceType} numberOfLines={1}>
-          {order.type.description}
-        </Text>
+       
         <View
           style={[
             styles.statusBadge,
@@ -92,14 +90,8 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 16,
     marginBottom: 12,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
     elevation: 3,
+    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
   },
   header: {
     flexDirection: "row",

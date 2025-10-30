@@ -61,7 +61,7 @@ const CreateOrderScreen = () => {
     }
 
     if (!formData.req_descr) {
-      Alert.alert("Erro", "Por favor descreva o problema");
+      Alert.alert("Erro", "Por favor descreva o serviço solicitado");
       return;
     }
 
@@ -152,7 +152,7 @@ const CreateOrderScreen = () => {
               label="Setor *"
               value={formData.sector}
               onChangeText={(text) => updateFormData("sector", text)}
-              placeholder="Setor"
+              placeholder="Setor do atendimento"
               maxLength={30}
               type="text"
             />
@@ -180,10 +180,10 @@ const CreateOrderScreen = () => {
             </View> */}
 
             <Input
-              label="Problema Relatado *"
+              label="Descrição *"
               value={formData.req_descr}
               onChangeText={(text) => updateFormData("req_descr", text)}
-              placeholder="Descreva o problema"
+              placeholder="Descreva a atividade a ser realizada"
               multiline
               numberOfLines={10}
               maxLength={470}
@@ -194,7 +194,7 @@ const CreateOrderScreen = () => {
               label="Equipamento"
               value={formData.equipment}
               onChangeText={(text) => updateFormData("equipment", text)}
-              placeholder="Equipamento"
+              placeholder="Informações do equipamento"
               maxLength={70}
               type="text"
             />

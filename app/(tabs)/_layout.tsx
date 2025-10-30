@@ -17,9 +17,9 @@ export default function TabLayout() {
         <View style={styles.content}>
           <Stack screenOptions={{ headerShown: false }}>
             <Stack.Screen name="index" />
-            <Stack.Screen name="orders" />
-            <Stack.Screen name="orders/create" />
-            <Stack.Screen name="profile" />
+            <Stack.Screen name="orders/index" />
+            <Stack.Screen name="example/index" />
+            <Stack.Screen name="users/index" />
           </Stack>
         </View>
 

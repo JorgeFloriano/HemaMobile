@@ -109,7 +109,7 @@ const OrdersScreen = () => {
 
   // Navigate to create order
   const handleCreateOrder = () => {
-    router.push("/(tabs)/order-create");
+    router.push("/(tabs)/orders/order-create");
   };
 
   // Render order item
