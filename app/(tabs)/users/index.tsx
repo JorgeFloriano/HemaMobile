@@ -24,46 +24,17 @@ export interface User {
 
 interface UsersResponse {
   users: User[];
+  success: boolean;
+  error?: string;
+  message?: string;
+  data?: User[];
 }
-
-// Mock data for testing
-const mockUsers: User[] = [
-  {
-    id: "1",
-    name: "João",
-    surname: "Silva",
-    username: "joao.silva",
-    function: "Técnico de TI"
-  },
-  {
-    id: "2", 
-    name: "Maria",
-    surname: "Santos",
-    username: "maria.santos",
-    function: "Supervisora"
-  },
-  {
-    id: "3",
-    name: "Pedro",
-    surname: "Oliveira",
-    username: "pedro.oliveira",
-    function: "Analista"
-  },
-  {
-    id: "4",
-    name: "Ana",
-    surname: "Costa",
-    username: "ana.costa", 
-    function: "Coordenadora"
-  },
-];
 
 const UsersScreen = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [useMockData, setUseMockData] = useState(true); // Set to false when API is ready
   const router = useRouter();
 
   // Load users
@@ -76,29 +47,31 @@ const UsersScreen = () => {
       }
 
       setError(null);
-      
-      if (useMockData) {
-        // Use mock data for testing
-        setTimeout(() => {
-          setUsers(mockUsers);
-        }, 1000); // Simulate API delay
-      } else {
-        // Use real API
-        const response = await api.get<UsersResponse>("/users");
-        setUsers(response.data.users);
-      }
-    } catch (err) {
-      const errorMessage = "Failed to load users";
+      const response = await api.get<UsersResponse>("/users");
+
+      // Check if response has success flag
+    if (response.data.success === false) {
+      throw new Error(response.data.error || response.data.message || "Failed to load users");
+    }
+
+      setUsers(response.data.users || response.data.data || []);
+    } catch (err: any) {
+      console.error("Error loading orders:", err);
+
+      // Get detailed error message
+      const errorMessage = err.response?.data?.error 
+      || err.response?.data?.message 
+      || err.message 
+      || "Failed to load orders";
+
       setError(errorMessage);
       Alert.alert("Error", errorMessage);
-      console.error("Error loading users:", err);
     } finally {
       setLoading(false);
       setRefreshing(false);
     }
   };
 
-  // Rest of your component remains the same...
   // Initial load
   useEffect(() => {
     loadUsers();
@@ -117,9 +90,7 @@ const UsersScreen = () => {
   };
 
   // Render user item
-  const renderUserItem = ({ item }: { item: User }) => (
-    <UserCard user={item} />
-  );
+  const renderUserItem = ({ item }: { item: User }) => <UserCard user={item} />;
 
   // Render empty state
   const renderEmptyState = () => (
@@ -165,15 +136,9 @@ const UsersScreen = () => {
       <View style={styles.header}>
         <View style={styles.title}>
           <Text style={styles.welcome}>Usuários</Text>
-          <Button
-            onPress={handleCreateUser}
-            title="Novo"
-            variant="primary"
-          />
+          <Button onPress={handleCreateUser} title="Novo" variant="primary" />
         </View>
-        <Text style={styles.subtitle}>
-          Gerenciamento de Usuários
-        </Text>
+        <Text style={styles.subtitle}>Gerenciamento de Usuários</Text>
       </View>
 
       <FlatList
@@ -209,10 +174,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#f5f5f5",
   },
   title: {
-   flexDirection: "row",
-   alignItems: "center",
-   justifyContent: "space-between",
-   marginBottom: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 10,
   },
   welcome: {
     fontSize: 24,
