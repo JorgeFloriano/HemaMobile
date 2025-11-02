@@ -11,12 +11,11 @@ import {
 import { useLocalSearchParams, useRouter } from "expo-router";
 import api from "@/src/services/api";
 import Button from "@/src/components/Button";
-import { Order } from "@/app/(tabs)";
+import { Order } from "@/app/(tabs)/orders";
 
 const OrderDetailScreen = () => {
   const { id } = useLocalSearchParams();
   const router = useRouter();
-
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);

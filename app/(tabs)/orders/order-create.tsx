@@ -49,14 +49,14 @@ const CreateOrderScreen = () => {
       const response = await api.get("/orders/create");
       setTypes(response.data.types || response.data);
     } catch (error) {
-      Alert.alert("Error", "Failed to load order types");
+      Alert.alert("Error", "Falha ao carregar tipos de serviços");
       console.error("Error loading types:", error);
     }
   };
 
   const handleSubmit = async () => {
     if (!formData.order_type_id) {
-      Alert.alert("Error", "Please select a service type");
+      Alert.alert("Error", "Por favor selecione um tipo de serviço");
       return;
     }
 
@@ -69,6 +69,8 @@ const CreateOrderScreen = () => {
     Keyboard.dismiss();
 
     try {
+
+      // Laravel API endpoint, automatcally identifies the store function trough method as POST
       const response = await api.post("/orders", formData);
 
       if (response.data.success) {
@@ -77,7 +79,7 @@ const CreateOrderScreen = () => {
             text: "OK",
             onPress: () => {
               resetForm();
-              router.back(); // Go back to previous screen
+              router.push("/"); // Go back to previous screen
             },
           },
         ]);

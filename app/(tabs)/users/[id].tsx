@@ -13,18 +13,20 @@ import { useRouter } from "expo-router";
 import api from "@/src/services/api";
 import Input from "@/src/components/Input";
 import Button from "@/src/components/Button";
+import { User } from "@/app/(tabs)/users";
 
 const CreateOrderScreen = () => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const [user, setUser] = useState<User | null>(null);
   const [formData, setFormData] = useState({
-    name: "",
-    surname: "",
-    email: "",
-    username: "",
+    name: user?.name || "",
+    surname: user?.surname || "",
+    email: user?.email || "",
+    username: user?.username || "",
     password: "",
     password_confirmation: "",
-    function: "",
+    function: user?.function || "",
   });
 
   const validateForm = () => {
