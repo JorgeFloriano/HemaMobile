@@ -72,12 +72,31 @@ const UsersScreen = () => {
     }
   };
 
+  // Delete user
+  const handleDeleteUser = async (user: User) => {
+    try {
+      const response = await api.delete(`/users/${user.id}`);
+      
+      if (response.data.success) {
+        Alert.alert("Sucesso", response.data.message);
+        // Remove user from local state
+        setUsers(prev => prev.filter(u => u.id !== user.id));
+      } else {
+        Alert.alert("Erro", response.data.message || "Falha ao excluir usuário");
+      }
+    } catch (error: any) {
+      console.error("Error deleting user:", error);
+      Alert.alert(
+        "Erro", 
+        error.response?.data?.message || "Falha ao excluir usuário"
+      );
+    }
+  };
+
   // Initial load
   useEffect(() => {
     loadUsers();
   }, []);
-
-  // ... rest of your existing code
 
   // Pull to refresh
   const handleRefresh = () => {
@@ -89,8 +108,13 @@ const UsersScreen = () => {
     router.push("/(tabs)/users/user-create");
   };
 
-  // Render user item
-  const renderUserItem = ({ item }: { item: User }) => <UserCard user={item} />;
+  // Render user item with navigation
+  const renderUserItem = ({ item }: { item: User }) => (
+    <UserCard 
+      user={item} 
+      onDelete={handleDeleteUser}
+    />
+  );
 
   // Render empty state
   const renderEmptyState = () => (

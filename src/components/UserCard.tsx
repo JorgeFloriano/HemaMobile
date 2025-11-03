@@ -1,14 +1,46 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Alert } from "react-native";
+import { useRouter } from "expo-router";
 import { User } from "@/app/(tabs)/users";
-import Feather from '@expo/vector-icons/Feather';
+import Feather from "@expo/vector-icons/Feather";
 import Button from "@/src/components/Button";
 
 interface UserCardProps {
   user: User;
+  onEdit?: (user: User) => void;
+  onDelete?: (user: User) => void;
 }
 
-const UserCard: React.FC<UserCardProps> = ({ user }) => {
+const UserCard: React.FC<UserCardProps> = ({ user, onDelete }) => {
+  const router = useRouter();
+
+  const handleEdit = () => {
+    // Navigate to edit screen using the dynamic [id].tsx route
+    router.push(`/users/${user.id}`);
+  };
+
+  const handleDelete = () => {
+    Alert.alert(
+      "Confirmar Exclusão",
+      `Tem certeza que deseja excluir o usuário ${user.name}?`,
+      [
+        {
+          text: "Cancelar",
+          style: "cancel",
+        },
+        {
+          text: "Excluir",
+          style: "destructive",
+          onPress: () => {
+            if (onDelete) {
+              onDelete(user);
+            }
+          },
+        },
+      ]
+    );
+  };
+
   return (
     <View style={styles.card}>
       <View style={styles.header}>
@@ -26,13 +58,13 @@ const UserCard: React.FC<UserCardProps> = ({ user }) => {
           <View style={styles.buttonRow}>
             <Button
               title={<Feather name="edit" size={18} color="#1b0363ff" />}
-              onPress={() => console.log("Edit user")}
+              onPress={handleEdit}
               variant="icon"
               textStyle={{ padding: -10 }}
             />
             <Button
               title={<Feather name="delete" size={18} color="#1b0363ff" />}
-              onPress={() => console.log("Edit user")}
+              onPress={handleDelete}
               variant="icon"
             />
           </View>

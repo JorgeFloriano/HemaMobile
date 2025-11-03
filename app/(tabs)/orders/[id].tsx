@@ -33,7 +33,7 @@ const OrderDetailScreen = () => {
         const response = await api.get<{ order: Order }>(`/orders/${id}`);
         setOrder(response.data.order);
       } catch (error) {
-        Alert.alert("Error", "Failed to load order details");
+        Alert.alert("Error", "Falha ao carregar dados do serviço");
         console.error("Error loading order:", error);
       } finally {
         setLoading(false);

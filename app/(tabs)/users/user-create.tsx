@@ -165,7 +165,7 @@ const CreateOrderScreen = () => {
 
             <Input
               label="Senha *"
-              value={formData.password.trimStart().trimEnd()}
+              value={formData.password}
               onChangeText={(text) => updateFormData("password", text)}
               placeholder="Senha"
               maxLength={20}
@@ -174,7 +174,7 @@ const CreateOrderScreen = () => {
 
             <Input
               label="Confirmar Senha *"
-              value={formData.password_confirmation.trimStart().trimEnd()}
+              value={formData.password_confirmation}
               onChangeText={(text) =>
                 updateFormData("password_confirmation", text)
               }
