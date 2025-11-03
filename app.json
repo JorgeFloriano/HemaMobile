@@ -11,7 +11,7 @@
     "splash": {
       "image": "./assets/images/logo_hema_splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#1b0363ff"
+      "backgroundColor": "#ffffff"
     },
     "ios": {
       "supportsTablet": true,
@@ -46,7 +46,8 @@
             "backgroundColor": "#000000"
           }
         }
-      ]
+      ],
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true,

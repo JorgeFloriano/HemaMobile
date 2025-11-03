@@ -1,21 +1,17 @@
 import React, { useState } from "react";
 import {
   View,
-  ScrollView,
   Alert,
   StyleSheet,
   Platform,
   StatusBar,
-  TouchableWithoutFeedback,
-  KeyboardAvoidingView,
   Text,
-  Pressable,
-  Keyboard,
 } from "react-native";
 import { useRouter } from "expo-router";
 import api from "@/src/services/api";
 import Input from "@/src/components/Input";
 import Button from "@/src/components/Button";
+import KeyboardAvoindingContainer from "@/src/components/KeyboardAvoidingContainer";
 
 const CreateOrderScreen = () => {
   const [loading, setLoading] = useState(false);
@@ -108,111 +104,87 @@ const CreateOrderScreen = () => {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0} // Adjust this value as needed
-    >
-      <Pressable onPress={Keyboard.dismiss} style={styles.pressableContainer}>
-        <ScrollView
-          style={styles.scrollView}
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
-          keyboardShouldPersistTaps="handled" // Important for nested touchables
-        >
-          <View style={styles.form}>
-            <Text style={styles.welcome}>Cadastrar Usuário</Text>
+    <KeyboardAvoindingContainer>
+      <View style={styles.form}>
+        <Text style={styles.welcome}>Cadastrar Usuário</Text>
 
-            <Input
-              label="Nome *"
-              value={formData.name}
-              onChangeText={(text) => updateFormData("name", text)}
-              placeholder="Nome do Usuário"
-              maxLength={20}
-              type="text"
-            />
+        <Input
+          label="Nome *"
+          value={formData.name}
+          onChangeText={(text) => updateFormData("name", text)}
+          placeholder="Nome do Usuário"
+          maxLength={20}
+          type="text"
+        />
 
-            <Input
-              label="Sobrenome"
-              value={formData.surname}
-              onChangeText={(text) => updateFormData("surname", text)}
-              placeholder="Sobrenome do Usuário"
-              maxLength={20}
-              type="text"
-            />
+        <Input
+          label="Sobrenome"
+          value={formData.surname}
+          onChangeText={(text) => updateFormData("surname", text)}
+          placeholder="Sobrenome do Usuário"
+          maxLength={20}
+          type="text"
+        />
 
-            <Input
-              label="Email *"
-              value={formData.email}
-              onChangeText={(text) => updateFormData("email", text)}
-              placeholder="Email"
-              maxLength={50}
-              type="email"
-            />
+        <Input
+          label="Email *"
+          value={formData.email}
+          onChangeText={(text) => updateFormData("email", text)}
+          placeholder="Email"
+          maxLength={50}
+          type="email"
+        />
 
-            <Input
-              label="Usuário *"
-              value={formData.username}
-              onChangeText={(text) => updateFormData("username", text)}
-              placeholder="Username"
-              maxLength={20}
-              type="text"
-            />
+        <Input
+          label="Usuário *"
+          value={formData.username}
+          onChangeText={(text) => updateFormData("username", text)}
+          placeholder="Username"
+          maxLength={20}
+          type="text"
+        />
 
-            <Input
-              label="Função"
-              value={formData.function}
-              onChangeText={(text) => updateFormData("function", text)}
-              placeholder="Função"
-              maxLength={20}
-              type="text"
-            />
+        <Input
+          label="Função"
+          value={formData.function}
+          onChangeText={(text) => updateFormData("function", text)}
+          placeholder="Função"
+          maxLength={20}
+          type="text"
+        />
 
-            <Input
-              label="Senha *"
-              value={formData.password}
-              onChangeText={(text) => updateFormData("password", text)}
-              placeholder="Senha"
-              maxLength={20}
-              type="password"
-            />
+        <Input
+          label="Senha *"
+          value={formData.password}
+          onChangeText={(text) => updateFormData("password", text)}
+          placeholder="Senha"
+          maxLength={20}
+          type="password"
+        />
 
-            <Input
-              label="Confirmar Senha *"
-              value={formData.password_confirmation}
-              onChangeText={(text) =>
-                updateFormData("password_confirmation", text)
-              }
-              placeholder="Confirmar Senha"
-              maxLength={20}
-              type="password"
-            />
+        <Input
+          label="Confirmar Senha *"
+          value={formData.password_confirmation}
+          onChangeText={(text) => updateFormData("password_confirmation", text)}
+          placeholder="Confirmar Senha"
+          maxLength={20}
+          type="password"
+        />
 
-            <View style={styles.buttonGroup}>
-              <Button
-                title={loading ? "Salvando..." : "Salvar"}
-                onPress={handleSubmit}
-                variant="primary"
-                disabled={loading}
-              />
-            </View>
-          </View>
-        </ScrollView>
-      </Pressable>
-    </KeyboardAvoidingView>
+        <View style={styles.buttonGroup}>
+          <Button
+            title={loading ? "Salvando..." : "Salvar"}
+            onPress={handleSubmit}
+            variant="primary"
+            disabled={loading}
+          />
+        </View>
+      </View>
+    </KeyboardAvoindingContainer>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    paddingTop: 30,
-    paddingBottom: 100,
-    flex: 1,
-    backgroundColor: "white",
-  },
-   pressableContainer: {
-    flex: 1,
-  },
   welcome: {
     fontSize: 24,
     fontWeight: "bold",
@@ -224,15 +196,9 @@ const styles = StyleSheet.create({
     color: "#666",
     marginBottom: 30,
   },
-  scrollView: {
-    flex: 1,
-  },
-  scrollContent: {
-    flexGrow: 1,
-    paddingTop: Platform.OS === "ios" ? 44 : StatusBar.currentHeight || 0, // Navbar height
-  },
   form: {
     padding: 20,
+    backgroundColor: "#ffffffff",
   },
   row: {
     flexDirection: "row",

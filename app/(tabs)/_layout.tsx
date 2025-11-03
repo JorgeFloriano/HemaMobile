@@ -1,12 +1,31 @@
 // app/(tabs)/_layout.tsx
-import React from "react";
-import { View, StyleSheet } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, StyleSheet, Keyboard } from "react-native";
 import { Stack } from "expo-router";
 import TopNavigationBar from "@/src/components/TopNavigationBar";
 import BottomTabBar from "@/src/components/BottomTabBar";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 export default function TabLayout() {
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+  // Simple keyboard listener
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => setKeyboardVisible(true)
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => setKeyboardVisible(false)
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container} edges={["top"]}>
@@ -23,9 +42,8 @@ export default function TabLayout() {
           </Stack>
         </View>
 
-        {/* Bottom Tab Bar - Will be positioned above device buttons */}
-       
-          <BottomTabBar />
+        {/* Bottom Tab Bar - Hidden when keyboard is open */}
+        {!isKeyboardVisible && <BottomTabBar />}
         
       </SafeAreaView>
     </SafeAreaProvider>
@@ -35,7 +53,7 @@ export default function TabLayout() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f8f9fa",
+    backgroundColor: "#ffffffff",
   },
   content: {
     flex: 1,

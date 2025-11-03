@@ -16,6 +16,7 @@ import {
 } from "react-native";
 import Input from "@/src/components/Input";
 import Button from "@/src/components/Button";
+import KeyboardAvoidingContainer from "@/src/components/KeyboardAvoidingContainer";
 
 // Remove the onLogin prop since we're using AuthContext
 const LoginScreen: React.FC = () => {
@@ -82,8 +83,8 @@ const LoginScreen: React.FC = () => {
   };
 
   return (
-    <TouchableWithoutFeedback>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+    <KeyboardAvoidingContainer>
+      <View style={styles.scrollContent}>
         <View style={styles.card}>
           {/* Logo Section */}
           <View style={styles.logoContainer}>
@@ -152,8 +153,8 @@ const LoginScreen: React.FC = () => {
             )}
           </View>
         </View>
-      </ScrollView>
-    </TouchableWithoutFeedback>
+      </View>
+    </KeyboardAvoidingContainer>
   );
 };
 
