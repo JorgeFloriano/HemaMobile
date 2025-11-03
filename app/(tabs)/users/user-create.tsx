@@ -7,7 +7,10 @@ import {
   Platform,
   StatusBar,
   TouchableWithoutFeedback,
+  KeyboardAvoidingView,
   Text,
+  Pressable,
+  Keyboard,
 } from "react-native";
 import { useRouter } from "expo-router";
 import api from "@/src/services/api";
@@ -28,14 +31,11 @@ const CreateOrderScreen = () => {
   });
 
   const validateForm = () => {
-    if (!formData.name)
-      return "Por favor insira o nome do usuário";
+    if (!formData.name) return "Por favor insira o nome do usuário";
     if (!formData.email)
       return "Por favor insira um e-mail válido para o usuário";
-    if (!formData.username)
-      return "Por favor insira um nome de usuário";
-    if (!formData.password)
-      return "Por favor insira uma senha para o usuário";
+    if (!formData.username) return "Por favor insira um nome de usuário";
+    if (!formData.password) return "Por favor insira uma senha para o usuário";
     if (!formData.password_confirmation)
       return "Por favor confirme a senha para o usuário";
     if (formData.password !== formData.password_confirmation)
@@ -108,12 +108,17 @@ const CreateOrderScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <TouchableWithoutFeedback>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0} // Adjust this value as needed
+    >
+      <Pressable onPress={Keyboard.dismiss} style={styles.pressableContainer}>
         <ScrollView
           style={styles.scrollView}
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled" // Important for nested touchables
         >
           <View style={styles.form}>
             <Text style={styles.welcome}>Cadastrar Usuário</Text>
@@ -193,16 +198,20 @@ const CreateOrderScreen = () => {
             </View>
           </View>
         </ScrollView>
-      </TouchableWithoutFeedback>
-    </View>
+      </Pressable>
+    </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 20,
+    paddingTop: 30,
+    paddingBottom: 100,
     flex: 1,
     backgroundColor: "white",
+  },
+   pressableContainer: {
+    flex: 1,
   },
   welcome: {
     fontSize: 24,
@@ -215,7 +224,6 @@ const styles = StyleSheet.create({
     color: "#666",
     marginBottom: 30,
   },
-
   scrollView: {
     flex: 1,
   },

@@ -34,6 +34,7 @@ const UsersScreen = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [deletingUserId, setDeletingUserId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
@@ -50,19 +51,22 @@ const UsersScreen = () => {
       const response = await api.get<UsersResponse>("/users");
 
       // Check if response has success flag
-    if (response.data.success === false) {
-      throw new Error(response.data.error || response.data.message || "Failed to load users");
-    }
+      if (response.data.success === false) {
+        throw new Error(
+          response.data.error || response.data.message || "Failed to load users"
+        );
+      }
 
       setUsers(response.data.users || response.data.data || []);
     } catch (err: any) {
       console.error("Error loading orders:", err);
 
       // Get detailed error message
-      const errorMessage = err.response?.data?.error 
-      || err.response?.data?.message 
-      || err.message 
-      || "Failed to load orders";
+      const errorMessage =
+        err.response?.data?.error ||
+        err.response?.data?.message ||
+        err.message ||
+        "Failed to load orders";
 
       setError(errorMessage);
       Alert.alert("Error", errorMessage);
@@ -74,22 +78,34 @@ const UsersScreen = () => {
 
   // Delete user
   const handleDeleteUser = async (user: User) => {
+    setDeletingUserId(user.id);
+
     try {
       const response = await api.delete(`/users/${user.id}`);
-      
+
       if (response.data.success) {
         Alert.alert("Sucesso", response.data.message);
-        // Remove user from local state
-        setUsers(prev => prev.filter(u => u.id !== user.id));
+        setUsers((prev) => prev.filter((u) => u.id !== user.id));
       } else {
-        Alert.alert("Erro", response.data.message || "Falha ao excluir usuário");
+        Alert.alert(
+          "Erro",
+          response.data.message || "Falha ao excluir usuário"
+        );
       }
     } catch (error: any) {
       console.error("Error deleting user:", error);
-      Alert.alert(
-        "Erro", 
-        error.response?.data?.message || "Falha ao excluir usuário"
-      );
+
+      if (error.response?.status === 404) {
+        Alert.alert("Erro", "Usuário não encontrado");
+      } else if (error.response?.status === 422) {
+        Alert.alert("Erro", error.response.data.message);
+      } else if (error.response?.data?.message) {
+        Alert.alert("Erro", error.response.data.message);
+      } else {
+        Alert.alert("Erro", "Falha ao excluir usuário");
+      }
+    } finally {
+      setDeletingUserId(null);
     }
   };
 
@@ -108,11 +124,12 @@ const UsersScreen = () => {
     router.push("/(tabs)/users/user-create");
   };
 
-  // Render user item with navigation
+  // Pass deleting state to UserCard
   const renderUserItem = ({ item }: { item: User }) => (
-    <UserCard 
-      user={item} 
+    <UserCard
+      user={item}
       onDelete={handleDeleteUser}
+      isDeleting={deletingUserId === item.id}
     />
   );
 

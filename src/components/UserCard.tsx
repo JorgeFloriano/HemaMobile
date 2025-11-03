@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, Alert } from "react-native";
+import { View, Text, StyleSheet, Alert, ActivityIndicator } from "react-native";
 import { useRouter } from "expo-router";
 import { User } from "@/app/(tabs)/users";
 import Feather from "@expo/vector-icons/Feather";
@@ -9,9 +9,14 @@ interface UserCardProps {
   user: User;
   onEdit?: (user: User) => void;
   onDelete?: (user: User) => void;
+  isDeleting?: boolean;
 }
 
-const UserCard: React.FC<UserCardProps> = ({ user, onDelete }) => {
+const UserCard: React.FC<UserCardProps> = ({
+  user,
+  onDelete,
+  isDeleting = false,
+}) => {
   const router = useRouter();
 
   const handleEdit = () => {
@@ -60,12 +65,19 @@ const UserCard: React.FC<UserCardProps> = ({ user, onDelete }) => {
               title={<Feather name="edit" size={18} color="#1b0363ff" />}
               onPress={handleEdit}
               variant="icon"
-              textStyle={{ padding: -10 }}
+              disabled={isDeleting}
             />
             <Button
-              title={<Feather name="delete" size={18} color="#1b0363ff" />}
+              title={
+                isDeleting ? (
+                  <ActivityIndicator size="small" color="#1b0363ff" />
+                ) : (
+                  <Feather name="trash-2" size={18} color="#1b0363ff" />
+                )
+              }
               onPress={handleDelete}
               variant="icon"
+              disabled={isDeleting}
             />
           </View>
         </View>

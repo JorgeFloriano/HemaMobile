@@ -207,7 +207,7 @@ const UserEditScreen = () => {
             />
 
             <Input
-              label="Nova Senha (deixe em branco para manter atual)"
+              label="Nova Senha (vazio para manter atual)"
               value={formData.password}
               onChangeText={(text) => updateFormData("password", text)}
               placeholder="Nova senha"
