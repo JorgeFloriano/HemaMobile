@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import {
-  View,
-  Alert,
-  StyleSheet,
-  Platform,
-  StatusBar,
-  Text,
-} from "react-native";
+import { View, Alert, StyleSheet, Text } from "react-native";
 import { useRouter } from "expo-router";
 import api from "@/src/services/api";
 import Input from "@/src/components/Input";

@@ -1,16 +1,27 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { View, Alert, StyleSheet, Text, Keyboard } from "react-native";
-import { useRouter, useLocalSearchParams } from "expo-router";
+import { useRouter } from "expo-router";
 import api from "@/src/services/api";
 import Input from "@/src/components/Input";
 import Button from "@/src/components/Button";
-import KeyboardAvoindingContainer from "@/src/components/KeyboardAvoidingContainer";
+import KeyboardAvoidingContainer from "@/src/components/KeyboardAvoidingContainer";
+import { useAuth } from "@/src/contexts/AuthContext";
 
-const UserEditScreen = () => {
+// Add User type definition
+interface User {
+  id: string;
+  name: string;
+  surname?: string;
+  email: string;
+  username: string;
+  function?: string;
+}
+
+const ProfileScreen = () => {
   const [loading, setLoading] = useState(false);
-  const [user, setUser] = useState<any>(null);
   const router = useRouter();
-  const { id } = useLocalSearchParams();
+  const { user: authUser } = useAuth(); // ✅ Renamed to avoid conflict
+  const [userData, setUserData] = useState<User | null>(null); // ✅ Renamed state
 
   const [formData, setFormData] = useState({
     name: "",
@@ -22,11 +33,13 @@ const UserEditScreen = () => {
     function: "",
   });
 
+  // Load current user data
+  // Load current user data
   const loadUser = useCallback(async () => {
     try {
-      const response = await api.get(`/users/${id}/edit`);
+      const response = await api.get(`/users/${authUser?.id}/edit`);
       const userData = response.data.user || response.data.data;
-      setUser(userData);
+      setUserData(userData);
 
       setFormData({
         name: userData.name || "",
@@ -37,17 +50,17 @@ const UserEditScreen = () => {
         password_confirmation: "",
         function: userData.function || "",
       });
-    } catch (error) {
+    } catch (error: any) {
       Alert.alert("Erro", "Falha ao carregar dados do usuário");
-      console.error("Error loading user:", error);
+      console.error("Error loading user data:", error);
     }
-  }, [id]);
-
+  }, [authUser?.id]);
+  // Load user data when component mounts
   useEffect(() => {
-    if (id) {
+    if (authUser?.id) {
       loadUser();
     }
-  }, [id, loadUser]);
+  }, [authUser?.id, loadUser]);
 
   const validateForm = () => {
     if (!formData.name) return "Por favor insira o nome do usuário";
@@ -80,8 +93,8 @@ const UserEditScreen = () => {
         delete (submitData as any).password_confirmation;
       }
 
-      // Laravel API endpoint, automatically identifies the update function through method as PUT
-      const response = await api.put(`/users/${id}`, submitData);
+      // Update current user's profile - use authUser
+      const response = await api.put(`/users/${authUser?.id}`, submitData);
 
       if (response.data.success) {
         Alert.alert("Sucesso", response.data.message, [
@@ -89,28 +102,28 @@ const UserEditScreen = () => {
             text: "OK",
             onPress: () => {
               resetForm();
-              router.push("/(tabs)/users"); // Go back to users list
+              router.push("/(tabs)"); // Go back to users list
             },
           },
         ]);
       } else {
         Alert.alert(
           "Erro",
-          response.data.message || "Falha ao atualizar usuário"
+          response.data.message || "Falha ao atualizar perfil"
         );
       }
     } catch (error: any) {
       console.error("Error updating user:", error);
 
       // Handle validation errors from Laravel
-      if (error.response?.data?.errors) {
+      if (error.response?.status === 422 && error.response?.data?.errors) {
         const errors = error.response.data.errors;
         const firstError = Object.values(errors)[0] as string[];
         Alert.alert("Erro", firstError[0]);
       } else {
         Alert.alert(
           "Erro",
-          error.response?.data?.message || "Falha ao atualizar usuário"
+          error.response?.data?.message || "Falha ao atualizar perfil"
         );
       }
     } finally {
@@ -119,22 +132,26 @@ const UserEditScreen = () => {
   };
 
   const resetForm = () => {
-    setFormData({
-      name: "",
-      surname: "",
-      email: "",
-      username: "",
-      password: "",
-      password_confirmation: "",
-      function: "",
-    });
+    if (userData) {
+      // ✅ Use userData instead of user
+      setFormData({
+        name: userData.name || "",
+        surname: userData.surname || "",
+        email: userData.email || "",
+        username: userData.username || "",
+        password: "",
+        password_confirmation: "",
+        function: userData.function || "",
+      });
+    }
   };
 
   const updateFormData = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  if (!user) {
+  // Check both authUser and userData
+  if (!authUser || !userData) {
     return (
       <View style={styles.centerContainer}>
         <Text>Carregando...</Text>
@@ -143,64 +160,57 @@ const UserEditScreen = () => {
   }
 
   return (
-    <KeyboardAvoindingContainer>
+    <KeyboardAvoidingContainer>
       <View style={styles.form}>
-        <Text style={styles.welcome}>Editar Usuário</Text>
-
+        <Text style={styles.welcome}>Editar Perfil</Text>
         <Input
           label="Nome *"
           value={formData.name}
           onChangeText={(text) => updateFormData("name", text)}
-          placeholder="Nome do Usuário"
+          placeholder="Seu nome"
           maxLength={20}
           type="text"
         />
-
         <Input
           label="Sobrenome"
           value={formData.surname}
           onChangeText={(text) => updateFormData("surname", text)}
-          placeholder="Sobrenome do Usuário"
+          placeholder="Seu sobrenome"
           maxLength={20}
           type="text"
         />
-
         <Input
           label="Email *"
           value={formData.email}
           onChangeText={(text) => updateFormData("email", text)}
-          placeholder="Email"
+          placeholder="Seu email"
           maxLength={50}
           type="email"
         />
-
         <Input
           label="Usuário *"
           value={formData.username}
           onChangeText={(text) => updateFormData("username", text)}
-          placeholder="Username"
+          placeholder="Seu nome de usuário"
           maxLength={20}
           type="text"
         />
-
         <Input
           label="Função"
           value={formData.function}
           onChangeText={(text) => updateFormData("function", text)}
-          placeholder="Função"
+          placeholder="Sua função"
           maxLength={20}
           type="text"
         />
-
         <Input
-          label="Nova Senha (deixe vazio para manter atual)"
+          label="Nova Senha (deixe vazio para manter a atual)"
           value={formData.password}
           onChangeText={(text) => updateFormData("password", text)}
           placeholder="Nova senha"
           maxLength={20}
           type="password"
         />
-
         <Input
           label="Confirmar Nova Senha"
           value={formData.password_confirmation}
@@ -209,7 +219,6 @@ const UserEditScreen = () => {
           maxLength={20}
           type="password"
         />
-
         <View style={styles.buttonGroup}>
           <Button
             title={loading ? "Atualizando..." : "Atualizar"}
@@ -219,10 +228,11 @@ const UserEditScreen = () => {
           />
         </View>
       </View>
-    </KeyboardAvoindingContainer>
+    </KeyboardAvoidingContainer>
   );
 };
 
+// ... your styles remain the same
 const styles = StyleSheet.create({
   centerContainer: {
     flex: 1,
@@ -236,29 +246,17 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     color: "#333",
   },
-  subtitle: {
-    fontSize: 16,
-    color: "#666",
-    marginBottom: 30,
-  },
   form: {
-    padding: 20,
-    backgroundColor: "#ffffffff",
-  },
-  row: {
-    flexDirection: "row",
-    gap: 8,
-  },
-  halfInput: {
     flex: 1,
-    marginHorizontal: 4,
+    padding: 20,
+    backgroundColor: "#ffffff",
   },
   buttonGroup: {
     flexDirection: "row",
     justifyContent: "space-between",
     marginTop: 20,
-    gap: 16,
+    gap: 12,
   },
 });
 
-export default UserEditScreen;
+export default ProfileScreen;

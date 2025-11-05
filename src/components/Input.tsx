@@ -217,16 +217,13 @@ const Input: React.FC<InputProps> = ({
     borderRadius: 8,
     padding: 12,
     fontSize: 16,
+    // Put focus styles first
     ...(isFocused && {
-      borderColor: "#270984", // your ring color (from your theme)
+      borderColor: "#270984",
       borderWidth: 1,
-      // React Native doesn't have 'ring' so we simulate with shadow
-      shadowColor: "#270984", // your ring color
-      shadowOffset: { width: 0, height: 0 },
-      shadowOpacity: 0.5,
-      shadowRadius: 3,
-      elevation: 3, // for Android
+      elevation: 3,
     }),
+    // Then other conditional styles
     ...(multiline && {
       minHeight: 150,
       textAlignVertical: "top",
@@ -234,6 +231,7 @@ const Input: React.FC<InputProps> = ({
     ...((type === "date" || type === "time") && {
       color: value ? "#333" : "#6b7280",
     }),
+    // Custom style last (so it can override everything)
     ...style,
   };
 

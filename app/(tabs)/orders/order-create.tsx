@@ -1,20 +1,11 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  ScrollView,
-  Alert,
-  StyleSheet,
-  Platform,
-  StatusBar,
-  TouchableWithoutFeedback,
-  Text,
-  Keyboard,
-} from "react-native";
+import { View, Alert, StyleSheet, Text, Keyboard } from "react-native";
 import { useRouter } from "expo-router";
 import api from "@/src/services/api";
 import Input from "@/src/components/Input";
 import Button from "@/src/components/Button";
 import OptionSelector from "@/src/components/OptionSelector";
+import KeyboardAvoindingContainer from "@/src/components/KeyboardAvoidingContainer";
 
 interface Type {
   id: string;
@@ -69,7 +60,6 @@ const CreateOrderScreen = () => {
     Keyboard.dismiss();
 
     try {
-
       // Laravel API endpoint, automatcally identifies the store function trough method as POST
       const response = await api.post("/orders", formData);
 
@@ -133,33 +123,27 @@ const CreateOrderScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <TouchableWithoutFeedback>
-        <ScrollView
-          style={styles.scrollView}
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
-        >
-          <View style={styles.form}>
-            <Text style={styles.welcome}>Solicitação de Atendimento</Text>
-            <OptionSelector
-              label="Tipo de Serviço *"
-              placeholder="Selecione um tipo de serviço"
-              types={types}
-              selectedTypeId={formData.order_type_id}
-              onTypeSelect={handleTypeSelect}
-            />
+    <KeyboardAvoindingContainer>
+      <View style={styles.form}>
+        <Text style={styles.welcome}>Solicitação de Atendimento</Text>
+        <OptionSelector
+          label="Tipo de Serviço *"
+          placeholder="Selecione um tipo de serviço"
+          types={types}
+          selectedTypeId={formData.order_type_id}
+          onTypeSelect={handleTypeSelect}
+        />
 
-            <Input
-              label="Setor *"
-              value={formData.sector}
-              onChangeText={(text) => updateFormData("sector", text)}
-              placeholder="Setor do atendimento"
-              maxLength={30}
-              type="text"
-            />
+        <Input
+          label="Setor *"
+          value={formData.sector}
+          onChangeText={(text) => updateFormData("sector", text)}
+          placeholder="Setor do atendimento"
+          maxLength={30}
+          type="text"
+        />
 
-            {/* <View style={styles.row}>
+        {/* <View style={styles.row}>
               <View style={styles.halfInput}>
                 <Input
                   label="Data do Acionamento *"
@@ -181,73 +165,51 @@ const CreateOrderScreen = () => {
               </View>
             </View> */}
 
-            <Input
-              label="Descrição *"
-              value={formData.req_descr}
-              onChangeText={(text) => updateFormData("req_descr", text)}
-              placeholder="Descreva a atividade a ser realizada"
-              multiline
-              numberOfLines={10}
-              maxLength={470}
-              type="text"
-            />
+        <Input
+          label="Descrição *"
+          value={formData.req_descr}
+          onChangeText={(text) => updateFormData("req_descr", text)}
+          placeholder="Descreva a atividade a ser realizada"
+          multiline
+          numberOfLines={10}
+          maxLength={470}
+          type="text"
+        />
 
-            <Input
-              label="Equipamento"
-              value={formData.equipment}
-              onChangeText={(text) => updateFormData("equipment", text)}
-              placeholder="Informações do equipamento"
-              maxLength={70}
-              type="text"
-            />
+        <Input
+          label="Equipamento"
+          value={formData.equipment}
+          onChangeText={(text) => updateFormData("equipment", text)}
+          placeholder="Informações do equipamento"
+          maxLength={70}
+          type="text"
+        />
 
-            <View style={styles.buttonGroup}>
-              <Button
-                title={loading ? "Criando..." : "Confirmar"}
-                onPress={handleSubmit}
-                variant="primary"
-                disabled={loading}
-              />
-            </View>
-          </View>
-        </ScrollView>
-      </TouchableWithoutFeedback>
-    </View>
+        <View style={styles.buttonGroup}>
+          <Button
+            title={loading ? "Criando..." : "Confirmar"}
+            onPress={handleSubmit}
+            variant="primary"
+            disabled={loading}
+          />
+        </View>
+      </View>
+    </KeyboardAvoindingContainer>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    paddingTop: 20,
-    flex: 1,
-    backgroundColor: "white",
-  },
   welcome: {
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 8,
     color: "#333",
   },
-  subtitle: {
-    fontSize: 16,
-    color: "#666",
-    marginBottom: 30,
-  },
 
-  scrollView: {
-    flex: 1,
-  },
-  scrollContent: {
-    flexGrow: 1,
-    paddingTop: Platform.OS === "ios" ? 44 : StatusBar.currentHeight || 0, // Navbar height
-  },
   form: {
     padding: 20,
   },
-  row: {
-    flexDirection: "row",
-    gap: 8,
-  },
+
   halfInput: {
     flex: 1,
     marginHorizontal: 4,

@@ -9,12 +9,10 @@ import {
   Platform,
   StatusBar,
   Modal,
-  Alert,
 } from "react-native";
 import { useAuth } from "@/src/contexts/AuthContext";
 import { useRouter, usePathname } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import Button from "@/src/components/Button";
 
 interface TopNavigationBarProps {
   title?: string;

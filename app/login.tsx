@@ -9,14 +9,15 @@ import {
   Text,
   Image,
   StyleSheet,
-  ScrollView,
-  TouchableWithoutFeedback,
   Platform,
+  Pressable,
+  Keyboard,
+  ScrollView,
   StatusBar,
+  KeyboardAvoidingView,
 } from "react-native";
 import Input from "@/src/components/Input";
 import Button from "@/src/components/Button";
-import KeyboardAvoidingContainer from "@/src/components/KeyboardAvoidingContainer";
 
 // Remove the onLogin prop since we're using AuthContext
 const LoginScreen: React.FC = () => {
@@ -83,54 +84,65 @@ const LoginScreen: React.FC = () => {
   };
 
   return (
-    <KeyboardAvoidingContainer>
-      <View style={styles.scrollContent}>
-        <View style={styles.card}>
-          {/* Logo Section */}
-          <View style={styles.logoContainer}>
-            <Image
-              source={require("@/assets/images/logo_hema.png")} // Replace with your logo path
-              style={styles.logo}
-              resizeMode="contain"
-            />
-          </View>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0} // Adjust this value as needed
+    >
+      <Pressable onPress={Keyboard.dismiss} style={styles.pressableContainer}>
+        <ScrollView
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled" // Important for nested touchables
+        >
+          <View style={styles.scrollContent}>
+            <View style={styles.card}>
+              {/* Logo Section */}
+              <View style={styles.logoContainer}>
+                <Image
+                  source={require("@/assets/images/logo_hema.png")} // Replace with your logo path
+                  style={styles.logo}
+                  resizeMode="contain"
+                />
+              </View>
 
-          {/* Form Section */}
-          <View style={styles.formContainer}>
-            <Text style={styles.title}>Sistema de Gerenciamento</Text>
+              {/* Form Section */}
+              <View style={styles.formContainer}>
+                <Text style={styles.title}>Sistema de Gerenciamento</Text>
 
-            <Input
-              label="Usuário"
-              value={username}
-              onChangeText={setUsername}
-              placeholder="Usuário"
-              containerStyle={styles.input}
-              autoCapitalize="none"
-              autoCorrect={false}
-            />
+                <Input
+                  label="Usuário"
+                  value={username}
+                  onChangeText={setUsername}
+                  placeholder="Usuário"
+                  containerStyle={styles.input}
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                />
 
-            <Input
-              label="Senha"
-              value={password}
-              onChangeText={setPassword}
-              placeholder="Senha"
-              containerStyle={styles.input}
-              type="password"
-              secureTextEntry
-              autoCapitalize="none"
-              autoCorrect={false}
-              showPasswordToggle={true}
-            />
+                <Input
+                  label="Senha"
+                  value={password}
+                  onChangeText={setPassword}
+                  placeholder="Senha"
+                  containerStyle={styles.input}
+                  type="password"
+                  secureTextEntry
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  showPasswordToggle={true}
+                />
 
-            <Button
-              title={isLoading ? "ENTRANDO..." : "ENTRAR"}
-              onPress={handleLogin}
-              variant="primary"
-              disabled={isLoading}
-              style={styles.loginButton}
-            />
+                <Button
+                  title={isLoading ? "ENTRANDO..." : "ENTRAR"}
+                  onPress={handleLogin}
+                  variant="primary"
+                  disabled={isLoading}
+                  style={styles.loginButton}
+                />
 
-            {/* <View style={styles.debugContainer}>
+                {/* <View style={styles.debugContainer}>
               <Text style={styles.debugText}>Debug Info:</Text>
               <Text style={styles.debugText}>
                 Loading: {isLoading ? "YES" : "NO"}
@@ -141,36 +153,40 @@ const LoginScreen: React.FC = () => {
               </Text>
             </View> */}
 
-            {/* Error Messages */}
-            {errors.length > 0 && (
-              <View style={styles.errorContainer}>
-                {errors.map((error, index) => (
-                  <Text key={index} style={styles.errorText}>
-                    • {error}
-                  </Text>
-                ))}
+                {/* Error Messages */}
+                {errors.length > 0 && (
+                  <View style={styles.errorContainer}>
+                    {errors.map((error, index) => (
+                      <Text key={index} style={styles.errorText}>
+                        • {error}
+                      </Text>
+                    ))}
+                  </View>
+                )}
               </View>
-            )}
+            </View>
           </View>
-        </View>
-      </View>
-    </KeyboardAvoidingContainer>
+        </ScrollView>
+      </Pressable>
+    </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f8f9fa",
+  },
+   pressableContainer: {
+    flex: 1,
+  },
+  scrollView: {
+    flex: 1,
   },
   scrollContent: {
     flexGrow: 1,
-    //justifyContent: "center",
-    paddingHorizontal: 20,
-    paddingTop:
-      Platform.OS === "ios"
-        ? 44
-        : (StatusBar.currentHeight ? StatusBar.currentHeight + 20 : 20) || 20,
+    justifyContent: "center",
+    paddingHorizontal: 15,
+    paddingBottom: 40,
   },
   card: {
     backgroundColor: "white",
@@ -190,7 +206,7 @@ const styles = StyleSheet.create({
     height: 80,
   },
   formContainer: {
-    padding: 30,
+    padding: 20,
   },
   title: {
     fontSize: 24,

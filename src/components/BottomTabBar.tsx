@@ -35,15 +35,15 @@ const tabs: Tab[] = [
     label: "Ordens",
   },
   {
-    name: "example",
-    href: "/example",
-    icon: "add-circle",
-    label: "Exemplo",
+    name: "user-edit",
+    href: "/profile",
+    icon: "person",
+    label: "Perfil",
   },
   {
     name: "users",
     href: "/users",
-    icon: "person",
+    icon: "person-outline",
     label: "Usuários",
   },
 ];
