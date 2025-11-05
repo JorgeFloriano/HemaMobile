@@ -11,6 +11,7 @@ interface User {
   function?: string;
   isClient?: boolean;
   clientId?: string;
+  role?: string;
 }
 
 interface AuthContextType {

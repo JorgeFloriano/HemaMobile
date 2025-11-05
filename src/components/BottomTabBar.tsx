@@ -11,6 +11,7 @@ import Animated, {
   interpolate,
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useAuth } from "@/src/contexts/AuthContext";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
@@ -19,14 +20,21 @@ interface Tab {
   href: string;
   icon: string;
   label: string;
+  showForAdmin?: boolean; // Property to control visibility
 }
 
-const tabs: Tab[] = [
+const BottomTabBar: React.FC = () => {
+  const router = useRouter();
+  const pathname = usePathname();
+  const insets = useSafeAreaInsets();
+  const { user } = useAuth();
+
+  const baseTabs: Tab[] = [
   {
     name: "index",
     href: "/",
     icon: "home",
-    label: "Início",
+    label: user?.role,
   },
   {
     name: "orders",
@@ -45,13 +53,19 @@ const tabs: Tab[] = [
     href: "/users",
     icon: "person-outline",
     label: "Usuários",
+    showForAdmin: true, // Only show for admin users
   },
 ];
 
-const BottomTabBar: React.FC = () => {
-  const router = useRouter();
-  const pathname = usePathname();
-  const insets = useSafeAreaInsets();
+  // Filter tabs based on user role
+  const tabs = baseTabs.filter(tab => {
+    if (tab.showForAdmin) {
+      // Only show this tab if user is admin
+      // Adjust this condition based on your actual user role property
+      return user?.role === "admin";
+    }
+    return true; // Show all other tabs
+  });
 
   // Find active tab index
   const activeIndex = tabs.findIndex((tab) => {
@@ -128,7 +142,7 @@ const BottomTabBar: React.FC = () => {
         {/* Animated Blue Border - FIXED: Better positioning */}
         <Animated.View style={[styles.activeIndicator, borderAnimatedStyle]} />
 
-        {/* Tab Buttons */}
+        {/* Tab Buttons - using filtered tabs */}
         {tabs.map((tab, index) => (
           <TabButton key={tab.name} tab={tab} index={index} />
         ))}
