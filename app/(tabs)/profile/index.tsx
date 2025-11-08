@@ -38,7 +38,22 @@ const ProfileScreen = () => {
   const loadUser = useCallback(async () => {
     try {
       const response = await api.get(`/users/${authUser?.id}/edit`);
+
+      // Check if the API response indicates failure
+      if (response.data.success === false) {
+        throw new Error(
+          response.data.error ||
+            response.data.message ||
+            "Falha ao carregar usuário"
+        );
+      }
+
       const userData = response.data.user || response.data.data;
+
+      if (!userData) {
+        throw new Error("Dados do usuário não encontrados na resposta");
+      }
+
       setUserData(userData);
 
       setFormData({
@@ -51,8 +66,26 @@ const ProfileScreen = () => {
         function: userData.function || "",
       });
     } catch (error: any) {
-      Alert.alert("Erro", "Falha ao carregar dados do usuário");
-      console.error("Error loading user data:", error);
+      console.error("Error loading user:", error);
+
+      let errorMessage = "Falha ao carregar usuário";
+
+      // Handle different error scenarios
+      if (error.response?.status === 404) {
+        // 404 errors from your API
+        errorMessage = error.response?.data?.error || "Usuário não encontrado";
+      } else if (error.response?.data?.error) {
+        // Other API errors with error field
+        errorMessage = error.response.data.error;
+      } else if (error.response?.data?.message) {
+        // API errors with message field
+        errorMessage = error.response.data.message;
+      } else if (error.message) {
+        // Error thrown from our code
+        errorMessage = error.message;
+      }
+
+      Alert.alert("Erro", errorMessage);
     }
   }, [authUser?.id]);
   // Load user data when component mounts

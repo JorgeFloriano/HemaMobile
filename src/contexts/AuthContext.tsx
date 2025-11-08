@@ -11,7 +11,9 @@ interface User {
   function?: string;
   isClient?: boolean;
   clientId?: string;
-  role?: string;
+  isAdmin?: boolean;
+  canCreateSat?: boolean;
+  canSeeSat?: boolean;
 }
 
 interface AuthContextType {

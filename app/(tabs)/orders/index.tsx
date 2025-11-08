@@ -12,6 +12,7 @@ import { useRouter } from "expo-router";
 import api from "@/src/services/api";
 import OrderCard from "@/src/components/OrderCard"; // We'll create this component
 import Button from "@/src/components/Button";
+import { useAuth } from "@/src/contexts/AuthContext";
 
 // Types
 export interface Order {
@@ -73,6 +74,7 @@ const OrdersScreen = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const { user } = useAuth();
 
   // Load orders
   const loadOrders = async (showRefreshing = false) => {
@@ -118,10 +120,17 @@ const OrdersScreen = () => {
   );
 
   // Handle order press
-  const handleOrderPress = (order: Order) => {
-    //Navigate to order details
-    router.push(`/orders/${order.id}`);
-  };
+    const handleOrderPress = (order: Order) => {
+      //If user.canSeeSat navigate to order details
+      if (user?.canSeeSat) {
+        router.push(`/orders/${order.id}`);
+      } else {
+        Alert.alert(
+          "Acesso negado",
+          "Sem permissão para visualizar os detalhes da solicitação de serviço."
+        );
+      }
+    };
 
   // Render empty state
   const renderEmptyState = () => (
@@ -167,11 +176,13 @@ const OrdersScreen = () => {
       <View style={styles.header}>
         <View style={styles.title}>
           <Text style={styles.welcome}>Solicitações</Text>
-          <Button
-            onPress={handleCreateOrder}
-            title="Nova"
-            variant="primary"
-          />
+          {user?.canCreateSat && (
+            <Button
+              onPress={handleCreateOrder}
+              title="Nova"
+              variant="primary"
+            />
+          )}
         </View>
         <Text style={styles.subtitle}>
           Gerenciamento de Solicitações de Serviço (SAT)

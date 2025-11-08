@@ -13,7 +13,6 @@ import api from "@/src/services/api";
 import UserCard from "@/src/components/UserCard";
 import Button from "@/src/components/Button";
 
-// Types
 export interface User {
   id: string;
   name: string;
@@ -53,7 +52,7 @@ const UsersScreen = () => {
       // Check if response has success flag
       if (response.data.success === false) {
         throw new Error(
-          response.data.error || response.data.message || "Failed to load users"
+          response.data.error || response.data.message || "Falha ao carregar usuários"
         );
       }
 
@@ -66,7 +65,7 @@ const UsersScreen = () => {
         err.response?.data?.error ||
         err.response?.data?.message ||
         err.message ||
-        "Failed to load orders";
+        "Falha ao carregar usuários";
 
       setError(errorMessage);
       Alert.alert("Error", errorMessage);

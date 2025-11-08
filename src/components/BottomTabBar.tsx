@@ -34,7 +34,7 @@ const BottomTabBar: React.FC = () => {
     name: "index",
     href: "/",
     icon: "home",
-    label: user?.role,
+    label: "Home",
   },
   {
     name: "orders",
@@ -62,7 +62,7 @@ const BottomTabBar: React.FC = () => {
     if (tab.showForAdmin) {
       // Only show this tab if user is admin
       // Adjust this condition based on your actual user role property
-      return user?.role === "admin";
+      return user?.isAdmin;
     }
     return true; // Show all other tabs
   });

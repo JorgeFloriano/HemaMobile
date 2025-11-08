@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Alert, StyleSheet, Text } from "react-native";
 import { useRouter } from "expo-router";
 import api from "@/src/services/api";
@@ -6,9 +6,20 @@ import Input from "@/src/components/Input";
 import Button from "@/src/components/Button";
 import KeyboardAvoindingContainer from "@/src/components/KeyboardAvoidingContainer";
 
-const CreateOrderScreen = () => {
+interface UsersResponse {
+  success?: boolean;
+  error?: string;
+  message?: string;
+  data?: any;
+}
+
+const CreateUserScreen = () => {
   const [loading, setLoading] = useState(false);
+  const [checkingPermission, setCheckingPermission] = useState(true);
+  const [hasPermission, setHasPermission] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  
   const [formData, setFormData] = useState({
     name: "",
     surname: "",
@@ -18,6 +29,57 @@ const CreateOrderScreen = () => {
     password_confirmation: "",
     function: "",
   });
+
+  // Verify if auth user can create a new user
+  const checkCreatePermission = async () => {
+    try {
+      setCheckingPermission(true);
+      setError(null);
+      
+      const response = await api.get<UsersResponse>("/users/create"); // Added await
+
+      // Check if response has error
+      if (response.data.error) {
+        Alert.alert("Acesso Negado", response.data.error);
+        setHasPermission(false);
+        setError(response.data.error);
+        router.back();
+        return;
+      }
+
+      // Check if response has success flag
+      if (response.data.success === true) {
+        setHasPermission(true);
+      } else {
+        setHasPermission(false);
+        setError(response.data.message || "Sem permissão para criar usuários");
+        Alert.alert("Acesso Negado", response.data.message || "Sem permissão para criar usuários");
+        router.back();
+      }
+      
+    } catch (err: any) {
+      console.error("Error checking permission:", err);
+
+      // Get detailed error message
+      const errorMessage =
+        err.response?.data?.error ||
+        err.response?.data?.message ||
+        err.message ||
+        "Falha ao verificar permissões";
+
+      setError(errorMessage);
+      setHasPermission(false);
+      Alert.alert("Erro", errorMessage);
+      router.back();
+    } finally {
+      setCheckingPermission(false);
+    }
+  };
+
+  // Check permission when component mounts
+  useEffect(() => {
+    checkCreatePermission();
+  }, []);
 
   const validateForm = () => {
     if (!formData.name) return "Por favor insira o nome do usuário";
@@ -33,10 +95,16 @@ const CreateOrderScreen = () => {
   };
 
   const handleSubmit = async () => {
+    // Check permission again before submitting
+    if (!hasPermission) {
+      Alert.alert("Acesso Negado", "Você não tem permissão para criar usuários");
+      router.back();
+    }
+
     const error = validateForm();
     if (error) {
       Alert.alert("Erro", error);
-      return;
+      router.back();
     }
 
     setLoading(true);
@@ -209,4 +277,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CreateOrderScreen;
+export default CreateUserScreen;
