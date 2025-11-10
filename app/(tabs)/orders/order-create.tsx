@@ -33,11 +33,19 @@ const CreateOrderScreen = () => {
 
   useEffect(() => {
     loadOrderTypes();
-  }, []);
+  });
 
   const loadOrderTypes = async () => {
     try {
       const response = await api.get("/orders/create");
+
+      // Check if response has error
+      if (response.data.error) {
+        Alert.alert("Acesso Negado", response.data.error);
+        router.back();
+        return;
+      }
+
       setTypes(response.data.types || response.data);
     } catch (error) {
       Alert.alert("Error", "Falha ao carregar tipos de serviços");

@@ -111,6 +111,13 @@ const OrdersScreen = () => {
 
   // Navigate to create order
   const handleCreateOrder = () => {
+    if (Boolean(user?.canCreateSat) !== true) {
+      Alert.alert(
+        "Acesso negado",
+        "Sem permissão para criar solicitações de serviço."
+      );
+      return;
+    }
     router.push("/(tabs)/orders/order-create");
   };
 
@@ -176,7 +183,7 @@ const OrdersScreen = () => {
       <View style={styles.header}>
         <View style={styles.title}>
           <Text style={styles.welcome}>Solicitações</Text>
-          {user?.canCreateSat && (
+          {Boolean(user?.canCreateSat) === true && (
             <Button
               onPress={handleCreateOrder}
               title="Nova"

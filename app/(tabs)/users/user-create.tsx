@@ -3,6 +3,7 @@ import { View, Alert, StyleSheet, Text } from "react-native";
 import { useRouter } from "expo-router";
 import api from "@/src/services/api";
 import Input from "@/src/components/Input";
+import CheckboxInput from "@/src/components/CheckboxInput";
 import Button from "@/src/components/Button";
 import KeyboardAvoindingContainer from "@/src/components/KeyboardAvoidingContainer";
 
@@ -15,11 +16,8 @@ interface UsersResponse {
 
 const CreateUserScreen = () => {
   const [loading, setLoading] = useState(false);
-  const [checkingPermission, setCheckingPermission] = useState(true);
   const [hasPermission, setHasPermission] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-  
   const [formData, setFormData] = useState({
     name: "",
     surname: "",
@@ -28,21 +26,19 @@ const CreateUserScreen = () => {
     password: "",
     password_confirmation: "",
     function: "",
+    can_create_sat: false,
+    can_see_sat: false,
   });
 
   // Verify if auth user can create a new user
   const checkCreatePermission = async () => {
     try {
-      setCheckingPermission(true);
-      setError(null);
-      
       const response = await api.get<UsersResponse>("/users/create"); // Added await
 
       // Check if response has error
       if (response.data.error) {
         Alert.alert("Acesso Negado", response.data.error);
         setHasPermission(false);
-        setError(response.data.error);
         router.back();
         return;
       }
@@ -52,11 +48,12 @@ const CreateUserScreen = () => {
         setHasPermission(true);
       } else {
         setHasPermission(false);
-        setError(response.data.message || "Sem permissão para criar usuários");
-        Alert.alert("Acesso Negado", response.data.message || "Sem permissão para criar usuários");
+        Alert.alert(
+          "Acesso Negado",
+          response.data.message || "Sem permissão para criar usuários"
+        );
         router.back();
       }
-      
     } catch (err: any) {
       console.error("Error checking permission:", err);
 
@@ -67,19 +64,16 @@ const CreateUserScreen = () => {
         err.message ||
         "Falha ao verificar permissões";
 
-      setError(errorMessage);
       setHasPermission(false);
       Alert.alert("Erro", errorMessage);
       router.back();
-    } finally {
-      setCheckingPermission(false);
     }
   };
 
   // Check permission when component mounts
   useEffect(() => {
     checkCreatePermission();
-  }, []);
+  });
 
   const validateForm = () => {
     if (!formData.name) return "Por favor insira o nome do usuário";
@@ -97,14 +91,16 @@ const CreateUserScreen = () => {
   const handleSubmit = async () => {
     // Check permission again before submitting
     if (!hasPermission) {
-      Alert.alert("Acesso Negado", "Você não tem permissão para criar usuários");
+      Alert.alert(
+        "Acesso Negado",
+        "Você não tem permissão para criar usuários"
+      );
       router.back();
     }
 
     const error = validateForm();
     if (error) {
       Alert.alert("Erro", error);
-      router.back();
     }
 
     setLoading(true);
@@ -157,17 +153,39 @@ const CreateUserScreen = () => {
       password: "",
       password_confirmation: "",
       function: "",
+      can_create_sat: false,
+      can_see_sat: false,
     });
   };
 
-  const updateFormData = (field: string, value: string) => {
+  const updateFormData = (field: string, value: string | boolean) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   return (
     <KeyboardAvoindingContainer>
       <View style={styles.form}>
-        <Text style={styles.welcome}>Cadastrar Usuário</Text>
+        <View style={styles.header}>
+          <Text style={styles.welcome}>Cadastrar Usuário</Text>
+          <Button
+            title={loading ? "Salvando..." : "Salvar"}
+            onPress={handleSubmit}
+            variant="primary"
+            disabled={loading}
+          />
+        </View>
+
+        <CheckboxInput
+          label="Permitir criação de solicitação"
+          value={formData.can_create_sat}
+          onChange={(value) => updateFormData("can_create_sat", value)}
+        />
+
+        <CheckboxInput
+          label="Permitir visualização de solicitação"
+          value={formData.can_see_sat}
+          onChange={(value) => updateFormData("can_see_sat", value)}
+        />
 
         <Input
           label="Nome *"
@@ -231,15 +249,6 @@ const CreateUserScreen = () => {
           maxLength={20}
           type="password"
         />
-
-        <View style={styles.buttonGroup}>
-          <Button
-            title={loading ? "Salvando..." : "Salvar"}
-            onPress={handleSubmit}
-            variant="primary"
-            disabled={loading}
-          />
-        </View>
       </View>
     </KeyboardAvoindingContainer>
   );
@@ -258,7 +267,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   form: {
-    padding: 20,
+    paddingHorizontal: 20,
     backgroundColor: "#ffffffff",
   },
   row: {
@@ -269,11 +278,11 @@ const styles = StyleSheet.create({
     flex: 1,
     marginHorizontal: 4,
   },
-  buttonGroup: {
+  header: {
+    marginTop: 4,
+    marginBottom: 16,
     flexDirection: "row",
     justifyContent: "space-between",
-    marginTop: 20,
-    gap: 16,
   },
 });
 

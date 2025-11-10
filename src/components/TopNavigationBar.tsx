@@ -33,9 +33,7 @@ const getParentPath = (path: string): string => {
 
 // Top Navigation Bar Component
 const TopNavigationBar: React.FC<TopNavigationBarProps> = ({
-  title = "Sistema de Gerenciamento",
   showBack = true,
-  showLogout = true,
   onBackPress,
 }) => {
   const router = useRouter();

@@ -111,6 +111,13 @@ const OrdersScreen = () => {
 
   // Navigate to create order
   const handleCreateOrder = () => {
+    if (Boolean(user?.canCreateSat) !== true) {
+      Alert.alert(
+        "Acesso negado",
+        "Sem permissão para criar solicitações de serviço."
+      );
+      return;
+    }
     router.push("/(tabs)/orders/order-create");
   };
 
@@ -120,17 +127,17 @@ const OrdersScreen = () => {
   );
 
   // Handle order press
-    const handleOrderPress = (order: Order) => {
-      //If user.canSeeSat navigate to order details
-      if (user?.canSeeSat) {
-        router.push(`/orders/${order.id}`);
-      } else {
-        Alert.alert(
-          "Acesso negado",
-          "Sem permissão para visualizar os detalhes da solicitação de serviço."
-        );
-      }
-    };
+  const handleOrderPress = (order: Order) => {
+    //If user.canSeeSat navigate to order details
+    if (user?.canSeeSat) {
+      router.push(`/orders/${order.id}`);
+    } else {
+      Alert.alert(
+        "Acesso negado",
+        "Sem permissão para visualizar os detalhes da solicitação de serviço."
+      );
+    }
+  };
 
   // Render empty state
   const renderEmptyState = () => (
@@ -176,7 +183,7 @@ const OrdersScreen = () => {
       <View style={styles.header}>
         <View style={styles.title}>
           <Text style={styles.welcome}>Solicitações</Text>
-          {user?.canCreateSat && (
+          {Boolean(user?.canCreateSat) === true && (
             <Button
               onPress={handleCreateOrder}
               title="Nova"
@@ -222,10 +229,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#f5f5f5",
   },
   title: {
-   flexDirection: "row",
-   alignItems: "center",
-   justifyContent: "space-between",
-   marginBottom: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 10,
   },
   welcome: {
     fontSize: 24,

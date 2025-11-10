@@ -4,7 +4,38 @@ import { useRouter, useLocalSearchParams } from "expo-router";
 import api from "@/src/services/api";
 import Input from "@/src/components/Input";
 import Button from "@/src/components/Button";
+import CheckboxInput from "@/src/components/CheckboxInput";
 import KeyboardAvoindingContainer from "@/src/components/KeyboardAvoidingContainer";
+
+// Define proper TypeScript interfaces for type safety
+interface UserCli {
+  id: number;
+  client_id: number;
+  can_create_sat: boolean;
+  can_see_sat: boolean;
+}
+
+interface User {
+  id: number;
+  name: string;
+  surname: string;
+  email: string;
+  username: string;
+  function: string;
+  cli: UserCli | null;
+}
+
+interface FormData {
+  name: string;
+  surname: string;
+  email: string;
+  username: string;
+  password: string;
+  password_confirmation: string;
+  function: string;
+  can_create_sat: boolean;
+  can_see_sat: boolean;
+}
 
 const UserEditScreen = () => {
   const [loading, setLoading] = useState(false);
@@ -20,6 +51,8 @@ const UserEditScreen = () => {
     password: "",
     password_confirmation: "",
     function: "",
+    can_create_sat: false,
+    can_see_sat: false,
   });
 
   const loadUser = useCallback(async () => {
@@ -43,6 +76,8 @@ const UserEditScreen = () => {
 
       setUser(userData);
 
+      console.log(JSON.stringify(userData, null, 2));
+
       setFormData({
         name: userData.name || "",
         surname: userData.surname || "",
@@ -51,6 +86,9 @@ const UserEditScreen = () => {
         password: "",
         password_confirmation: "",
         function: userData.function || "",
+        // Access cli attributes safely
+        can_create_sat: userData?.can_create_sat || false,
+        can_see_sat: userData?.can_see_sat || false,
       });
     } catch (error: any) {
       console.error("Error loading user:", error);
@@ -160,10 +198,12 @@ const UserEditScreen = () => {
       password: "",
       password_confirmation: "",
       function: "",
+      can_create_sat: false,
+      can_see_sat: false,
     });
   };
 
-  const updateFormData = (field: string, value: string) => {
+  const updateFormData = (field: string, value: string | boolean) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -178,7 +218,27 @@ const UserEditScreen = () => {
   return (
     <KeyboardAvoindingContainer>
       <View style={styles.form}>
-        <Text style={styles.welcome}>Editar Usuário</Text>
+        <View style={styles.header}>
+          <Text style={styles.welcome}>Editar Usuário</Text>
+          <Button
+            title={loading ? "Salvando..." : "Salvar"}
+            onPress={handleSubmit}
+            variant="primary"
+            disabled={loading}
+          />
+        </View>
+
+        <CheckboxInput
+          label="Permitir criação de solicitação"
+          value={formData.can_create_sat}
+          onChange={(value) => updateFormData("can_create_sat", value)}
+        />
+
+        <CheckboxInput
+          label="Permitir visualização de solicitação"
+          value={formData.can_see_sat}
+          onChange={(value) => updateFormData("can_see_sat", value)}
+        />
 
         <Input
           label="Nome *"
@@ -243,7 +303,7 @@ const UserEditScreen = () => {
           type="password"
         />
 
-        <View style={styles.buttonGroup}>
+        <View style={styles.header}>
           <Button
             title={loading ? "Atualizando..." : "Atualizar"}
             onPress={handleSubmit}
@@ -275,7 +335,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   form: {
-    padding: 20,
+    paddingHorizontal: 20,
     backgroundColor: "#ffffffff",
   },
   row: {
@@ -286,11 +346,11 @@ const styles = StyleSheet.create({
     flex: 1,
     marginHorizontal: 4,
   },
-  buttonGroup: {
+  header: {
+    marginTop: 4,
+    marginBottom: 16,
     flexDirection: "row",
     justifyContent: "space-between",
-    marginTop: 20,
-    gap: 16,
   },
 });
 
