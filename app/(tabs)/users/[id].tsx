@@ -7,36 +7,6 @@ import Button from "@/src/components/Button";
 import CheckboxInput from "@/src/components/CheckboxInput";
 import KeyboardAvoindingContainer from "@/src/components/KeyboardAvoidingContainer";
 
-// Define proper TypeScript interfaces for type safety
-interface UserCli {
-  id: number;
-  client_id: number;
-  can_create_sat: boolean;
-  can_see_sat: boolean;
-}
-
-interface User {
-  id: number;
-  name: string;
-  surname: string;
-  email: string;
-  username: string;
-  function: string;
-  cli: UserCli | null;
-}
-
-interface FormData {
-  name: string;
-  surname: string;
-  email: string;
-  username: string;
-  password: string;
-  password_confirmation: string;
-  function: string;
-  can_create_sat: boolean;
-  can_see_sat: boolean;
-}
-
 const UserEditScreen = () => {
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState<any>(null);

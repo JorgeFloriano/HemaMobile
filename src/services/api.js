@@ -1,32 +1,94 @@
+// import axios from "axios";
+// import AsyncStorage from "@react-native-async-storage/async-storage";
+
+// // Use your computer's IP address, not localhost!
+// // Find your IP: ipconfig (Windows) or ifconfig (Linux/Mac)
+
+// //const API_BASE_URL = "http://10.166.119.214/Hema/public/api"; // Replace with your IP, localhost
+// const API_BASE_URL = "http://hematest.jldev.app.br/api"; // Remote server
+
+// const api = axios.create({
+//   baseURL: API_BASE_URL,
+//   timeout: 10000,
+//   headers: {
+//     "Content-Type": "application/json",
+//     Accept: "application/json",
+//   },
+// });
+
+// // Add request interceptor for debugging
+// api.interceptors.request.use(
+//   (config) => {
+//     console.log('API Request:', {
+//       url: config.url,
+//       method: config.method,
+//       data: config.data
+//     });
+//     return config;
+//   },
+//   (error) => {
+//     console.log('API Request Error:', error);
+//     return Promise.reject(error);
+//   }
+// );
+
+// // Add token to requests
+// api.interceptors.request.use(
+//   async (config) => {
+//     const token = await AsyncStorage.getItem("authToken");
+//     if (token) {
+//       config.headers.Authorization = `Bearer ${token}`;
+//     }
+//     return config;
+//   },
+//   (error) => {
+//     return Promise.reject(error);
+//   }
+// );
+
+// // Handle token expiration
+// api.interceptors.response.use(
+//   (response) => response,
+//   async (error) => {
+//     if (error.response?.status === 401) {
+//       // Token expired or invalid
+//       await AsyncStorage.removeItem('authToken');
+//       await AsyncStorage.removeItem('userData');
+//       // You might want to redirect to login here
+//     }
+//     return Promise.reject(error);
+//   }
+// );
+
+// export default api;
+ 
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-// Use your computer's IP address, not localhost!
-// Find your IP: ipconfig (Windows) or ifconfig (Linux/Mac)
-
-const API_BASE_URL = "http://192.168.0.110/Hema/public/api"; // Replace with your IP
+// Remote server - make sure it's HTTPS for production
+const API_BASE_URL = "https://hematest.jldev.app.br/api";
 
 const api = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 10000,
+  timeout: 15000,
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
   },
 });
 
-// Add request interceptor for debugging
+// Enhanced request interceptor for better debugging
 api.interceptors.request.use(
   (config) => {
-    console.log('API Request:', {
-      url: config.url,
-      method: config.method,
+    console.log('🚀 API Request:', {
+      url: `${config.baseURL}${config.url}`,
+      method: config.method?.toUpperCase(),
       data: config.data
     });
     return config;
   },
   (error) => {
-    console.log('API Request Error:', error);
+    console.log('❌ API Request Error:', error);
     return Promise.reject(error);
   }
 );
@@ -34,9 +96,16 @@ api.interceptors.request.use(
 // Add token to requests
 api.interceptors.request.use(
   async (config) => {
-    const token = await AsyncStorage.getItem("authToken");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    try {
+      const token = await AsyncStorage.getItem("authToken");
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+        console.log('✅ Token added to request');
+      } else {
+        console.log('ℹ️ No token found');
+      }
+    } catch (error) {
+      console.log('❌ Error getting token:', error);
     }
     return config;
   },
@@ -45,16 +114,30 @@ api.interceptors.request.use(
   }
 );
 
-// Handle token expiration
+// Enhanced response interceptor
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    console.log('✅ API Response:', {
+      url: response.config.url,
+      status: response.status,
+      data: response.data
+    });
+    return response;
+  },
   async (error) => {
+    console.log('❌ API Error Response:', {
+      url: error.config?.url,
+      status: error.response?.status,
+      method: error.config?.method?.toUpperCase(),
+      data: error.response?.data
+    });
+
     if (error.response?.status === 401) {
-      // Token expired or invalid
+      console.log('🔐 Token expired, clearing storage');
       await AsyncStorage.removeItem('authToken');
       await AsyncStorage.removeItem('userData');
-      // You might want to redirect to login here
     }
+    
     return Promise.reject(error);
   }
 );
