@@ -186,7 +186,7 @@ const OrdersScreen = () => {
           {Boolean(user?.canCreateSat) === true && (
             <Button
               onPress={handleCreateOrder}
-              title="Nova"
+              title="Criar"
               variant="primary"
             />
           )}

@@ -176,7 +176,7 @@ const UsersScreen = () => {
       <View style={styles.header}>
         <View style={styles.title}>
           <Text style={styles.welcome}>Usuários</Text>
-          <Button onPress={handleCreateUser} title="Novo" variant="primary" />
+          <Button onPress={handleCreateUser} title="Cadastrar" variant="primary" />
         </View>
         <Text style={styles.subtitle}>Gerenciamento de Usuários</Text>
       </View>

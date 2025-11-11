@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { View, Alert, StyleSheet, Text, Keyboard } from "react-native";
 import { useRouter } from "expo-router";
 import api from "@/src/services/api";
@@ -10,6 +10,14 @@ import KeyboardAvoindingContainer from "@/src/components/KeyboardAvoidingContain
 interface Type {
   id: string;
   description: string;
+}
+
+interface FormData {
+  order_type_id: string;
+  sector: string;
+  req_name: string;
+  req_descr: string;
+  equipment: string;
 }
 
 const CreateOrderScreen = () => {
@@ -31,12 +39,11 @@ const CreateOrderScreen = () => {
     equipment: "",
   });
 
-  useEffect(() => {
-    loadOrderTypes();
-  });
-
-  const loadOrderTypes = async () => {
+  // FIXED: Added useCallback to prevent infinite re-renders
+  const loadOrderTypes = useCallback(async () => {
     try {
+      console.log("🔄 Loading order types...");
+
       const response = await api.get("/orders/create");
 
       // Check if response has error
@@ -46,12 +53,37 @@ const CreateOrderScreen = () => {
         return;
       }
 
-      setTypes(response.data.types || response.data);
-    } catch (error) {
-      Alert.alert("Error", "Falha ao carregar tipos de serviços");
-      console.error("Error loading types:", error);
+      // FIXED: Better data handling
+      const typesData = response.data.types || response.data;
+
+      if (Array.isArray(typesData)) {
+        setTypes(typesData);
+        console.log(`✅ Loaded ${typesData.length} order types`);
+      } else {
+        console.warn("⚠️ Unexpected response format:", response.data);
+        setTypes([]);
+      }
+    } catch (error: any) {
+      console.error("❌ Error loading types:", error);
+
+      let errorMessage = "Falha ao carregar tipos de serviços";
+
+      if (error.response?.status === 401) {
+        errorMessage = "Sessão expirada. Faça login novamente.";
+        // Optional: Redirect to login
+        // router.push('/login');
+      } else if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      }
+
+      Alert.alert("Erro", errorMessage);
     }
-  };
+  }, [router]);
+
+  // FIXED: Added proper useEffect dependency array
+  useEffect(() => {
+    loadOrderTypes();
+  }, [loadOrderTypes]); // Now loadOrderTypes is stable due to useCallback
 
   const handleSubmit = async () => {
     if (!formData.order_type_id) {
@@ -122,7 +154,7 @@ const CreateOrderScreen = () => {
     });
   };
 
-  const updateFormData = (field: string, value: string) => {
+  const updateFormData = (field: keyof FormData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
