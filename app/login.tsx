@@ -127,7 +127,7 @@ const LoginScreen: React.FC = () => {
                   placeholder="Senha"
                   containerStyle={styles.input}
                   type="password"
-                  secureTextEntry
+                  secureTextEntry={true}
                   autoCapitalize="none"
                   autoCorrect={false}
                   showPasswordToggle={true}
@@ -185,7 +185,6 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: "center",
     paddingHorizontal: 15,
-    paddingBottom: 40,
   },
   card: {
     backgroundColor: "white",
