@@ -272,15 +272,6 @@ const UserEditScreen = () => {
           maxLength={20}
           type="password"
         />
-
-        <View style={styles.header}>
-          <Button
-            title={loading ? "Atualizando..." : "Atualizar"}
-            onPress={handleSubmit}
-            variant="primary"
-            disabled={loading}
-          />
-        </View>
       </View>
     </KeyboardAvoindingContainer>
   );
@@ -298,11 +289,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 8,
     color: "#333",
-  },
-  subtitle: {
-    fontSize: 16,
-    color: "#666",
-    marginBottom: 30,
   },
   form: {
     paddingHorizontal: 20,

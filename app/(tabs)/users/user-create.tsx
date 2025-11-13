@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { View, Alert, StyleSheet, Text } from "react-native";
 import { useRouter } from "expo-router";
 import api from "@/src/services/api";
@@ -7,18 +7,44 @@ import CheckboxInput from "@/src/components/CheckboxInput";
 import Button from "@/src/components/Button";
 import KeyboardAvoindingContainer from "@/src/components/KeyboardAvoidingContainer";
 
-interface UsersResponse {
+// Types
+interface UserFormData {
+  name: string;
+  surname: string;
+  email: string;
+  username: string;
+  password: string;
+  password_confirmation: string;
+  function: string;
+  can_create_sat: boolean;
+  can_see_sat: boolean;
+}
+
+interface ApiResponse<T = any> {
   success?: boolean;
   error?: string;
   message?: string;
-  data?: any;
+  data?: T;
+  errors?: Record<string, string[]>;
 }
 
-const CreateUserScreen = () => {
-  const [loading, setLoading] = useState(false);
-  const [hasPermission, setHasPermission] = useState(false);
+// Constants
+const FORM_LABELS = {
+  title: "Cadastrar Usuário",
+  save: "Salvar",
+  saving: "Salvando...",
+  success: "Sucesso",
+  error: "Erro",
+  accessDenied: "Acesso Negado",
+} as const;
+
+const CreateUserScreen: React.FC = () => {
   const router = useRouter();
-  const [formData, setFormData] = useState({
+  const [loading, setLoading] = useState(false);
+  const [permissionLoading, setPermissionLoading] = useState(true);
+  const [hasPermission, setHasPermission] = useState(false);
+  
+  const [formData, setFormData] = useState<UserFormData>({
     name: "",
     surname: "",
     email: "",
@@ -30,114 +56,106 @@ const CreateUserScreen = () => {
     can_see_sat: false,
   });
 
-  // Verify if auth user can create a new user
-  const checkCreatePermission = async () => {
+  // Permission check
+  const checkCreatePermission = useCallback(async () => {
     try {
-      const response = await api.get<UsersResponse>("/users/create"); // Added await
+      setPermissionLoading(true);
+      const response = await api.get<ApiResponse>("/users/create");
 
-      // Check if response has error
       if (response.data.error) {
-        Alert.alert("Acesso Negado", response.data.error);
-        setHasPermission(false);
+        showAlert(FORM_LABELS.accessDenied, response.data.error);
         router.back();
         return;
       }
 
-      // Check if response has success flag
-      if (response.data.success === true) {
+      if (response.data.success) {
         setHasPermission(true);
       } else {
-        setHasPermission(false);
-        Alert.alert(
-          "Acesso Negado",
+        showAlert(
+          FORM_LABELS.accessDenied,
           response.data.message || "Sem permissão para criar usuários"
         );
         router.back();
       }
     } catch (err: any) {
-      console.error("Error checking permission:", err);
-
-      // Get detailed error message
-      const errorMessage =
-        err.response?.data?.error ||
-        err.response?.data?.message ||
-        err.message ||
-        "Falha ao verificar permissões";
-
-      setHasPermission(false);
-      Alert.alert("Erro", errorMessage);
+      const errorMessage = getErrorMessage(err, "Falha ao verificar permissões");
+      showAlert(FORM_LABELS.error, errorMessage);
       router.back();
+    } finally {
+      setPermissionLoading(false);
     }
-  };
+  }, [router]);
 
-  // Check permission when component mounts
+  // Effects
   useEffect(() => {
     checkCreatePermission();
-  });
+  }, [checkCreatePermission]);
 
-  const validateForm = () => {
-    if (!formData.name) return "Por favor insira o nome do usuário";
-    if (!formData.email)
-      return "Por favor insira um e-mail válido para o usuário";
-    if (!formData.username) return "Por favor insira um nome de usuário";
-    if (!formData.password) return "Por favor insira uma senha para o usuário";
-    if (!formData.password_confirmation)
-      return "Por favor confirme a senha para o usuário";
-    if (formData.password !== formData.password_confirmation)
-      return "A senha e a confirmação da senha devem ser iguais";
-    return null;
+  // Utility functions
+  const showAlert = (title: string, message: string) => {
+    Alert.alert(title, message);
   };
 
+  const getErrorMessage = (error: any, defaultMessage: string): string => {
+    return error.response?.data?.error ||
+           error.response?.data?.message ||
+           error.message ||
+           defaultMessage;
+  };
+
+  // Form validation
+  const validateForm = (): string | null => {
+    const validations = [
+      { condition: !formData.name, message: "Por favor insira o nome do usuário" },
+      { condition: !formData.email, message: "Por favor insira um e-mail válido para o usuário" },
+      { condition: !formData.username, message: "Por favor insira um nome de usuário" },
+      { condition: !formData.password, message: "Por favor insira uma senha para o usuário" },
+      { condition: !formData.password_confirmation, message: "Por favor confirme a senha para o usuário" },
+      { 
+        condition: formData.password !== formData.password_confirmation, 
+        message: "A senha e a confirmação da senha devem ser iguais" 
+      },
+    ];
+
+    const error = validations.find(v => v.condition);
+    return error ? error.message : null;
+  };
+
+  // Form submission
   const handleSubmit = async () => {
-    // Check permission again before submitting
     if (!hasPermission) {
-      Alert.alert(
-        "Acesso Negado",
-        "Você não tem permissão para criar usuários"
-      );
-      router.back();
+      showAlert(FORM_LABELS.accessDenied, "Você não tem permissão para criar usuários");
+      return;
     }
 
     const error = validateForm();
     if (error) {
-      Alert.alert("Erro", error);
+      showAlert(FORM_LABELS.error, error);
+      return;
     }
 
     setLoading(true);
 
     try {
-      // Laravel API endpoint, automatcally identifies the store function trough method as POST
-      const response = await api.post("/users", formData);
+      const response = await api.post<ApiResponse>("/users", formData);
 
       if (response.data.success) {
-        Alert.alert("Sucesso", response.data.message, [
-          {
-            text: "OK",
-            onPress: () => {
-              resetForm();
-              router.push("/(tabs)/users"); // Go back to previous screen
-            },
-          },
-        ]);
+        showAlert(FORM_LABELS.success, response.data.message || "Usuário criado com sucesso");
+        resetForm();
+        router.push("/(tabs)/users");
       } else {
-        Alert.alert(
-          "Erro",
-          response.data.message || "Falha ao criar cadastro de usuário"
-        );
+        showAlert(FORM_LABELS.error, response.data.message || "Falha ao criar cadastro de usuário");
       }
     } catch (error: any) {
       console.error("Error creating user:", error);
 
-      // Handle validation errors from Laravel
       if (error.response?.data?.errors) {
         const errors = error.response.data.errors;
         const firstError = Object.values(errors)[0] as string[];
-        Alert.alert("Erro", firstError[0]);
+        showAlert(FORM_LABELS.error, firstError[0]);
       } else {
-        Alert.alert(
-          "Erro",
-          error.response?.data?.message || "Falha ao criar cadastro de usuário"
-        );
+        const errorMessage = getErrorMessage(error, "Falha ao criar cadastro de usuário");
+        showAlert(FORM_LABELS.error, errorMessage);
       }
     } finally {
       setLoading(false);
@@ -158,9 +176,18 @@ const CreateUserScreen = () => {
     });
   };
 
-  const updateFormData = (field: string, value: string | boolean) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+  const updateFormData = (field: keyof UserFormData, value: string | boolean) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
   };
+
+  if (!hasPermission) {
+    return (
+      <View style={styles.centered}>
+        <Text>Acesso negado</Text>
+      </View>
+    );
+  }
+
 
   return (
     <KeyboardAvoindingContainer>
@@ -283,6 +310,11 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     flexDirection: "row",
     justifyContent: "space-between",
+  },
+  centered: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

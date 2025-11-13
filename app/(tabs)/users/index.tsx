@@ -135,7 +135,7 @@ const UsersScreen = () => {
   // Render empty state
   const renderEmptyState = () => (
     <View style={styles.emptyState}>
-      <Text style={styles.emptyStateText}>No users found</Text>
+      <Text style={styles.emptyStateText}>Usuários não encontrados</Text>
       <Button
         title="Create First User"
         onPress={handleCreateUser}
@@ -162,7 +162,7 @@ const UsersScreen = () => {
     return (
       <View style={styles.centerContainer}>
         <ActivityIndicator size="large" color="#007AFF" />
-        <Text style={styles.loadingText}>Loading users...</Text>
+        <Text style={styles.loadingText}>Carregando usuários...</Text>
       </View>
     );
   }

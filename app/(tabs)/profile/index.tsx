@@ -195,7 +195,16 @@ const ProfileScreen = () => {
   return (
     <KeyboardAvoidingContainer>
       <View style={styles.form}>
-        <Text style={styles.welcome}>Editar Perfil</Text>
+        <View style={styles.header}>
+          <Text style={styles.welcome}>Editar Perfil</Text>
+          <Button
+            title={loading ? "Salvando..." : "Salvar"}
+            onPress={handleSubmit}
+            variant="primary"
+            disabled={loading}
+          />
+        </View>
+
         <Input
           label="Nome *"
           value={formData.name}
@@ -252,14 +261,6 @@ const ProfileScreen = () => {
           maxLength={20}
           type="password"
         />
-        <View style={styles.buttonGroup}>
-          <Button
-            title={loading ? "Atualizando..." : "Atualizar"}
-            onPress={handleSubmit}
-            variant="primary"
-            disabled={loading}
-          />
-        </View>
       </View>
     </KeyboardAvoidingContainer>
   );
@@ -281,14 +282,14 @@ const styles = StyleSheet.create({
   },
   form: {
     flex: 1,
-    padding: 20,
+    paddingHorizontal: 20,
     backgroundColor: "#ffffff",
   },
-  buttonGroup: {
+  header: {
+    marginTop: 4,
+    marginBottom: 16,
     flexDirection: "row",
     justifyContent: "space-between",
-    marginTop: 20,
-    gap: 12,
   },
 });
 

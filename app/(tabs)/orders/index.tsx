@@ -89,9 +89,9 @@ const OrdersScreen = () => {
       const response = await api.get<OrdersResponse>("/orders");
       setOrders(response.data.orders);
     } catch (err) {
-      const errorMessage = "Failed to load orders";
+      const errorMessage = "Falha ao carregar solicitações de serviço";
       setError(errorMessage);
-      Alert.alert("Error", errorMessage);
+      Alert.alert("Erro", errorMessage);
       console.error("Error loading orders:", err);
     } finally {
       setLoading(false);
@@ -142,7 +142,7 @@ const OrdersScreen = () => {
   // Render empty state
   const renderEmptyState = () => (
     <View style={styles.emptyState}>
-      <Text style={styles.emptyStateText}>No orders found</Text>
+      <Text style={styles.emptyStateText}>Solicitações de serviço não encontradas</Text>
       <Button
         title="Create First Order"
         onPress={handleCreateOrder}
@@ -169,7 +169,7 @@ const OrdersScreen = () => {
     return (
       <View style={styles.centerContainer}>
         <ActivityIndicator size="large" color="#007AFF" />
-        <Text style={styles.loadingText}>Loading orders...</Text>
+        <Text style={styles.loadingText}>Carregando solicitações...</Text>
       </View>
     );
   }

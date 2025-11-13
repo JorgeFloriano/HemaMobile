@@ -13,7 +13,6 @@ import {
   Pressable,
   Keyboard,
   ScrollView,
-  StatusBar,
   KeyboardAvoidingView,
 } from "react-native";
 import Input from "@/src/components/Input";

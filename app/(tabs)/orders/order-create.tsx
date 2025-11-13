@@ -87,7 +87,7 @@ const CreateOrderScreen = () => {
 
   const handleSubmit = async () => {
     if (!formData.order_type_id) {
-      Alert.alert("Error", "Por favor selecione um tipo de serviço");
+      Alert.alert("Erro", "Por favor selecione um tipo de serviço");
       return;
     }
 
@@ -165,7 +165,7 @@ const CreateOrderScreen = () => {
   return (
     <KeyboardAvoindingContainer>
       <View style={styles.form}>
-        <Text style={styles.welcome}>Solicitação de Atendimento</Text>
+        <Text style={styles.welcome}>Abrir Solicitação</Text>
         <OptionSelector
           label="Tipo de Serviço *"
           placeholder="Selecione um tipo de serviço"
