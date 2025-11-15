@@ -6,23 +6,23 @@
     "orientation": "portrait",
     "icon": "./assets/images/logo_hema_splash.png",
     "scheme": "hemamobile",
-    "userInterfaceStyle": "automatic",
+    "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/images/logo_hema_splash.png",
+      "image": "./assets/images/logo_hema3.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "ios": {
+      "userInterfaceStyle": "light",
       "supportsTablet": true,
       "bundleIdentifier": "com.anonymous.HemaMobile"
     },
     "android": {
+      "userInterfaceStyle": "light",
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/images/logo_hema3.png",
-        "backgroundImage": "./assets/images/logo_hema.png",
-        "monochromeImage": "./assets/images/logo_hema.png"
+        "foregroundImage": "./assets/images/logo_icon.png",
+        "backgroundColor": "#270984ff"
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
@@ -38,12 +38,12 @@
         "expo-splash-screen",
         {
           "image": "./assets/images/logo_hema.png",
-          "imageWidth": 100,
-          "imageHeight": 100,
+          "imageWidth": 150,
+          "imageHeight": 150,
           "resizeMode": "contain",
-          "backgroundColor": "#1b0363ff",
+          "backgroundColor": "#270984ff",
           "dark": {
-            "backgroundColor": "#000000"
+            "backgroundColor": "#270984ff"
           }
         }
       ],

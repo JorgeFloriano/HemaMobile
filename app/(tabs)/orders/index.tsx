@@ -217,16 +217,22 @@ const OrdersScreen = () => {
 };
 
 const styles = StyleSheet.create({
+  centerContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#f5f5f5",
+  },
   container: {
     flex: 1,
     paddingTop: 60,
-    backgroundColor: "#f5f5f5",
     paddingHorizontal: 16,
+    backgroundColor: "#f5f5f5",
   },
   header: {
-    justifyContent: "space-between",
     paddingVertical: 16,
     backgroundColor: "#f5f5f5",
+    justifyContent: "space-between",
   },
   title: {
     flexDirection: "row",
@@ -247,18 +253,6 @@ const styles = StyleSheet.create({
   listContent: {
     flexGrow: 1,
     paddingBottom: 16,
-  },
-  buttonGroup: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 20,
-    gap: 16,
-  },
-  centerContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#f5f5f5",
   },
   loadingText: {
     marginTop: 12,

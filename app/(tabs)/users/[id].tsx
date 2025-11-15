@@ -199,13 +199,13 @@ const UserEditScreen = () => {
         </View>
 
         <CheckboxInput
-          label="Permitir criação de solicitação"
+          label="Permitir abrir solicitação"
           value={formData.can_create_sat}
           onChange={(value) => updateFormData("can_create_sat", value)}
         />
 
         <CheckboxInput
-          label="Permitir visualização de solicitação"
+          label="Permitir visualizar solicitações"
           value={formData.can_see_sat}
           onChange={(value) => updateFormData("can_see_sat", value)}
         />
@@ -284,27 +284,19 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "white",
   },
+  form: {
+    paddingTop: 60,
+    paddingHorizontal: 16,
+    backgroundColor: "#ffffffff",
+  },
   welcome: {
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 8,
     color: "#333",
   },
-  form: {
-    paddingHorizontal: 20,
-    backgroundColor: "#ffffffff",
-  },
-  row: {
-    flexDirection: "row",
-    gap: 8,
-  },
-  halfInput: {
-    flex: 1,
-    marginHorizontal: 4,
-  },
   header: {
-    marginTop: 4,
-    marginBottom: 16,
+    paddingVertical: 16,
     flexDirection: "row",
     justifyContent: "space-between",
   },

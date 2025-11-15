@@ -42,13 +42,14 @@ const CheckboxInput: React.FC<CheckboxInputProps> = ({
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    alignItems: "center",
     marginBottom: 16,
+    paddingHorizontal: 0,
   },
   label: {
     fontSize: 16,
     fontWeight: "600",
-    marginRight: 8,
+    marginLeft: 8,
+    color: "#333",
   },
   checkboxContainer: {
     width: 24,

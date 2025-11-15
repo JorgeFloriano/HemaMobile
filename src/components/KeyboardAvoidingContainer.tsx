@@ -40,7 +40,6 @@ const KeyboardAvoidingContainer: React.FC<KeyboardAvoidingContainerProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 30,
     backgroundColor: "white",
   },
    pressableContainer: {
@@ -51,7 +50,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
-    paddingTop: Platform.OS === "ios" ? 44 : StatusBar.currentHeight || 0, // Navbar height
+    //paddingTop: Platform.OS === "ios" ? 44 : StatusBar.currentHeight || 0, // Navbar height
     paddingBottom: 40,
   },
 });

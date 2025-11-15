@@ -203,13 +203,13 @@ const CreateUserScreen: React.FC = () => {
         </View>
 
         <CheckboxInput
-          label="Permitir criação de solicitação"
+          label="Permitir criar solicitação"
           value={formData.can_create_sat}
           onChange={(value) => updateFormData("can_create_sat", value)}
         />
 
         <CheckboxInput
-          label="Permitir visualização de solicitação"
+          label="Permitir visualizar solicitação"
           value={formData.can_see_sat}
           onChange={(value) => updateFormData("can_see_sat", value)}
         />
@@ -282,32 +282,25 @@ const CreateUserScreen: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
+  centerContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "white",
+  },
+  form: {
+    paddingTop: 60,
+    paddingHorizontal: 16,
+    backgroundColor: "#ffffffff",
+  },
   welcome: {
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 8,
     color: "#333",
   },
-  subtitle: {
-    fontSize: 16,
-    color: "#666",
-    marginBottom: 30,
-  },
-  form: {
-    paddingHorizontal: 20,
-    backgroundColor: "#ffffffff",
-  },
-  row: {
-    flexDirection: "row",
-    gap: 8,
-  },
-  halfInput: {
-    flex: 1,
-    marginHorizontal: 4,
-  },
   header: {
-    marginTop: 4,
-    marginBottom: 16,
+    paddingVertical: 16,
     flexDirection: "row",
     justifyContent: "space-between",
   },

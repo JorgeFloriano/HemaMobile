@@ -274,22 +274,22 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "white",
   },
+  form: {
+    flex: 1,
+    paddingTop: 60,
+    paddingHorizontal: 16,
+    backgroundColor: "#ffffff",
+  },
+  header: {
+    paddingVertical: 16,
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
   welcome: {
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 8,
     color: "#333",
-  },
-  form: {
-    flex: 1,
-    paddingHorizontal: 20,
-    backgroundColor: "#ffffff",
-  },
-  header: {
-    marginTop: 4,
-    marginBottom: 16,
-    flexDirection: "row",
-    justifyContent: "space-between",
   },
 });
 

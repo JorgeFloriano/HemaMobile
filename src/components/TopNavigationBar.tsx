@@ -1,5 +1,5 @@
 // src/components/TopNavigationBar.tsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -45,6 +45,17 @@ const TopNavigationBar: React.FC<TopNavigationBarProps> = ({
     await logout();
     router.replace("/login");
   };
+
+  // FIXED: Move logout logic to useEffect
+  useEffect(() => {
+    if (!user || !user.id || !user.isClient) {
+      const performLogout = async () => {
+        await logout();
+        router.replace("/login");
+      };
+      performLogout();
+    }
+  }, [user, logout, router]);
 
   const showLogoutConfirmation = () => {
     setShowLogoutModal(true);

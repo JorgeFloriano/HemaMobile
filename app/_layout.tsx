@@ -1,29 +1,46 @@
 // app/_layout.tsx
-import { Stack } from "expo-router";
+import { Stack, usePathname, useRouter } from "expo-router";
 import { ActivityIndicator, View, StatusBar } from "react-native";
-import { AuthProvider, useAuth } from '@/src/contexts/AuthContext';
+import { AuthProvider, useAuth } from "@/src/contexts/AuthContext";
+import { useEffect } from "react";
 
 function RootLayoutContent() {
   const { user, isLoading } = useAuth();
+  const router = useRouter();
+  const pathname = usePathname();
+  
+  // FIXED: Proper authentication check
+  useEffect(() => {
+    if (!isLoading) {
+      const isAuthenticated = user?.id && user?.isClient;
+      if (!isAuthenticated && !pathname.includes("/login")) {
+        router.replace("/login");
+      }
+    }
+  }, [user, isLoading, router, pathname]);
 
   if (isLoading) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <ActivityIndicator size="large" color="#1b0363ff" />
       </View>
     );
   }
 
+  const isAuthenticated = user && user?.id && user?.isClient;
+
   return (
     <>
-      <StatusBar barStyle="light-content" translucent backgroundColor="transparent" />
+      <StatusBar
+        barStyle={isAuthenticated ? "light-content" : "dark-content"}
+        translucent
+        backgroundColor="transparent"
+      />
       <Stack screenOptions={{ headerShown: false }}>
-        {!user?.isClient && !user ? (
-          // Show login when not authenticated (no navigation bars)
-          <Stack.Screen name="login" />
-        ) : (
-          // Show tabs when authenticated (with navigation bars)
+        {isAuthenticated ? (
           <Stack.Screen name="(tabs)" />
+        ) : (
+          <Stack.Screen name="login" />
         )}
       </Stack>
     </>

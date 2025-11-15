@@ -246,6 +246,7 @@ const Input: React.FC<InputProps> = ({
               value={value}
               onChangeText={handleChangeText}
               placeholder={getPlaceholder()}
+              placeholderTextColor="#969a9fff"
               maxLength={getMaxLength()}
               multiline={multiline}
               numberOfLines={numberOfLines}
@@ -286,9 +287,11 @@ const Input: React.FC<InputProps> = ({
       {label && <Text style={styles.label}>{label}</Text>}
       <View style={styles.inputWrapper}>
         <TextInput
+        
           value={value}
           onChangeText={handleChangeText}
           placeholder={getPlaceholder()}
+          placeholderTextColor="#969a9fff"
           maxLength={getMaxLength()}
           multiline={multiline}
           numberOfLines={numberOfLines}

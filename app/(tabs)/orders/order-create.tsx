@@ -242,12 +242,13 @@ const styles = StyleSheet.create({
   welcome: {
     fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 8,
+    paddingVertical: 16,
     color: "#333",
   },
 
   form: {
-    padding: 20,
+    paddingTop: 60,
+    paddingHorizontal: 16,
   },
 
   halfInput: {
