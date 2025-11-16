@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { View, Alert, StyleSheet, Text, Keyboard } from "react-native";
 import { useRouter } from "expo-router";
 import api from "@/src/services/api";
-import Input from "@/src/components/Input";
+import TextInput from "@/src/components/TextInput";
 import Button from "@/src/components/Button";
 import OptionSelector from "@/src/components/OptionSelector";
 import KeyboardAvoindingContainer from "@/src/components/KeyboardAvoidingContainer";
@@ -174,7 +174,7 @@ const CreateOrderScreen = () => {
           onTypeSelect={handleTypeSelect}
         />
 
-        <Input
+        <TextInput
           label="Setor *"
           value={formData.sector}
           onChangeText={(text) => updateFormData("sector", text)}
@@ -185,7 +185,7 @@ const CreateOrderScreen = () => {
 
         {/* <View style={styles.row}>
               <View style={styles.halfInput}>
-                <Input
+                <TextInput
                   label="Data do Acionamento *"
                   value={formData.req_date}
                   onChangeText={(text) => updateFormData("req_date", text)}
@@ -195,7 +195,7 @@ const CreateOrderScreen = () => {
               </View>
 
               <View style={styles.halfInput}>
-                <Input
+                <TextInput
                   label="Hora do Acionamento *"
                   value={formData.req_time}
                   onChangeText={(text) => updateFormData("req_time", text)}
@@ -205,7 +205,7 @@ const CreateOrderScreen = () => {
               </View>
             </View> */}
 
-        <Input
+        <TextInput
           label="Descrição *"
           value={formData.req_descr}
           onChangeText={(text) => updateFormData("req_descr", text)}
@@ -216,7 +216,7 @@ const CreateOrderScreen = () => {
           type="text"
         />
 
-        <Input
+        <TextInput
           label="Equipamento"
           value={formData.equipment}
           onChangeText={(text) => updateFormData("equipment", text)}

@@ -2,10 +2,11 @@ import React, { useState, useEffect, useCallback } from "react";
 import { View, Alert, StyleSheet, Text, Keyboard } from "react-native";
 import { useRouter } from "expo-router";
 import api from "@/src/services/api";
-import Input from "@/src/components/Input";
+import TextInput from "@/src/components/TextInput";
 import Button from "@/src/components/Button";
 import KeyboardAvoidingContainer from "@/src/components/KeyboardAvoidingContainer";
 import { useAuth } from "@/src/contexts/AuthContext";
+import PasswordInput from "@/src/components/PasswordInput";
 
 // Add User type definition
 interface User {
@@ -205,7 +206,7 @@ const ProfileScreen = () => {
           />
         </View>
 
-        <Input
+        <TextInput
           label="Nome *"
           value={formData.name}
           onChangeText={(text) => updateFormData("name", text)}
@@ -213,7 +214,7 @@ const ProfileScreen = () => {
           maxLength={20}
           type="text"
         />
-        <Input
+        <TextInput
           label="Sobrenome"
           value={formData.surname}
           onChangeText={(text) => updateFormData("surname", text)}
@@ -221,7 +222,7 @@ const ProfileScreen = () => {
           maxLength={20}
           type="text"
         />
-        <Input
+        <TextInput
           label="Email *"
           value={formData.email}
           onChangeText={(text) => updateFormData("email", text)}
@@ -229,7 +230,7 @@ const ProfileScreen = () => {
           maxLength={50}
           type="email"
         />
-        <Input
+        <TextInput
           label="Usuário *"
           value={formData.username}
           onChangeText={(text) => updateFormData("username", text)}
@@ -237,7 +238,7 @@ const ProfileScreen = () => {
           maxLength={20}
           type="text"
         />
-        <Input
+        <TextInput
           label="Função"
           value={formData.function}
           onChangeText={(text) => updateFormData("function", text)}
@@ -245,21 +246,21 @@ const ProfileScreen = () => {
           maxLength={20}
           type="text"
         />
-        <Input
+        <PasswordInput
           label="Nova Senha (deixe vazio para manter a atual)"
           value={formData.password}
           onChangeText={(text) => updateFormData("password", text)}
           placeholder="Nova senha"
           maxLength={20}
-          type="password"
+          showPasswordToggle={true}
         />
-        <Input
+        <PasswordInput
           label="Confirmar Nova Senha"
           value={formData.password_confirmation}
           onChangeText={(text) => updateFormData("password_confirmation", text)}
           placeholder="Confirmar nova senha"
           maxLength={20}
-          type="password"
+          showPasswordToggle={true}
         />
       </View>
     </KeyboardAvoidingContainer>

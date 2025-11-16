@@ -2,7 +2,8 @@ import React, { useState, useEffect, useCallback } from "react";
 import { View, Alert, StyleSheet, Text, Keyboard } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import api from "@/src/services/api";
-import Input from "@/src/components/Input";
+import TextInput from "@/src/components/TextInput";
+import PasswordInput from "@/src/components/PasswordInput";
 import Button from "@/src/components/Button";
 import CheckboxInput from "@/src/components/CheckboxInput";
 import KeyboardAvoindingContainer from "@/src/components/KeyboardAvoidingContainer";
@@ -210,7 +211,7 @@ const UserEditScreen = () => {
           onChange={(value) => updateFormData("can_see_sat", value)}
         />
 
-        <Input
+        <TextInput
           label="Nome *"
           value={formData.name}
           onChangeText={(text) => updateFormData("name", text)}
@@ -219,7 +220,7 @@ const UserEditScreen = () => {
           type="text"
         />
 
-        <Input
+        <TextInput
           label="Sobrenome"
           value={formData.surname}
           onChangeText={(text) => updateFormData("surname", text)}
@@ -228,7 +229,7 @@ const UserEditScreen = () => {
           type="text"
         />
 
-        <Input
+        <TextInput
           label="Email *"
           value={formData.email}
           onChangeText={(text) => updateFormData("email", text)}
@@ -237,7 +238,7 @@ const UserEditScreen = () => {
           type="email"
         />
 
-        <Input
+        <TextInput
           label="Usuário *"
           value={formData.username}
           onChangeText={(text) => updateFormData("username", text)}
@@ -246,7 +247,7 @@ const UserEditScreen = () => {
           type="text"
         />
 
-        <Input
+        <TextInput
           label="Função"
           value={formData.function}
           onChangeText={(text) => updateFormData("function", text)}
@@ -255,22 +256,22 @@ const UserEditScreen = () => {
           type="text"
         />
 
-        <Input
+        <PasswordInput
           label="Nova Senha (deixe vazio para manter atual)"
           value={formData.password}
           onChangeText={(text) => updateFormData("password", text)}
           placeholder="Nova senha"
           maxLength={20}
-          type="password"
+          showPasswordToggle={true}
         />
 
-        <Input
+        <PasswordInput
           label="Confirmar Nova Senha"
           value={formData.password_confirmation}
           onChangeText={(text) => updateFormData("password_confirmation", text)}
           placeholder="Confirmar nova senha"
           maxLength={20}
-          type="password"
+          showPasswordToggle={true}
         />
       </View>
     </KeyboardAvoindingContainer>

@@ -3,6 +3,8 @@ import { useRouter } from "expo-router";
 import { authService } from "@/src/services/auth";
 import { useAuth } from "@/src/contexts/AuthContext";
 //import api from "@/src/services/api";
+import TextInput from "@/src/components/TextInput";
+import PasswordInput from "@/src/components/PasswordInput";
 
 import {
   View,
@@ -15,7 +17,6 @@ import {
   ScrollView,
   KeyboardAvoidingView,
 } from "react-native";
-import Input from "@/src/components/Input";
 import Button from "@/src/components/Button";
 
 // Remove the onLogin prop since we're using AuthContext
@@ -110,7 +111,7 @@ const LoginScreen: React.FC = () => {
               <View style={styles.formContainer}>
                 <Text style={styles.title}>Sistema de Gerenciamento</Text>
 
-                <Input
+                {/* <TextInput
                   label="Usuário"
                   value={username}
                   onChangeText={setUsername}
@@ -120,7 +121,7 @@ const LoginScreen: React.FC = () => {
                   autoCorrect={false}
                 />
 
-                <Input
+                <TextInput
                   label="Senha"
                   value={password}
                   onChangeText={setPassword}
@@ -130,6 +131,20 @@ const LoginScreen: React.FC = () => {
                   secureTextEntry={true}
                   autoCapitalize="none"
                   autoCorrect={false}
+                  showPasswordToggle={true}
+                /> */}
+
+                <TextInput
+                  label="Usuário"
+                  value={username}
+                  onChangeText={setUsername}
+                  placeholder="Usuário"
+                />
+
+                <PasswordInput
+                  label="Senha"
+                  value={password}
+                  onChangeText={setPassword}
                   showPasswordToggle={true}
                 />
 
@@ -175,7 +190,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-   pressableContainer: {
+  pressableContainer: {
     flex: 1,
   },
   scrollView: {

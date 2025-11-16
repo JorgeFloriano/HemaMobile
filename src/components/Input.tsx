@@ -40,7 +40,7 @@ interface InputProps {
   onSubmitEditing?: () => void;
 }
 
-const Input: React.FC<InputProps> = ({
+const Input: React.FC<TextInputProps> = ({
   label,
   value,
   onChangeText,
@@ -211,17 +211,19 @@ const Input: React.FC<InputProps> = ({
   };
 
   const inputStyle: TextStyle = {
-    backgroundColor: "white",
+    backgroundColor: "transparent",
     borderWidth: 1,
-    borderColor: isFocused ? "#270984ff" : "#ced4da",
+    borderColor: "#ced4da",
     borderRadius: 8,
-    padding: 12,
+    //padding: 12,
     fontSize: 16,
     // Put focus styles first
     ...(isFocused && {
       borderColor: "#270984",
-      borderWidth: 1,
-      elevation: 3,
+      outlineColor: "#2809843e",
+      //outlineStyle: "solid",
+      outlineWidth: 3,
+      //padding: 12,
     }),
     // Then other conditional styles
     ...(multiline && {
@@ -231,6 +233,11 @@ const Input: React.FC<InputProps> = ({
     ...((type === "date" || type === "time") && {
       color: value ? "#333" : "#6b7280",
     }),
+    ...(showPasswordToggle &&
+      secureTextEntry &&
+      {
+        //paddingRight: 50, // Ensure consistent padding
+      }),
     // Custom style last (so it can override everything)
     ...style,
   };
@@ -287,7 +294,6 @@ const Input: React.FC<InputProps> = ({
       {label && <Text style={styles.label}>{label}</Text>}
       <View style={styles.inputWrapper}>
         <TextInput
-        
           value={value}
           onChangeText={handleChangeText}
           placeholder={getPlaceholder()}
@@ -333,6 +339,7 @@ const Input: React.FC<InputProps> = ({
 const styles = StyleSheet.create({
   container: {
     marginBottom: 16,
+    backgroundColor: "transparent",
   },
   label: {
     fontSize: 16,
@@ -342,13 +349,15 @@ const styles = StyleSheet.create({
   },
   toggleButton: {
     position: "absolute",
-    right: 10,
-    top: 4,
-    padding: 8,
-    borderRadius: 4,
+    visibility: "visible",
+    top: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: "center",
+    paddingRight: 16,
   },
   input: {
-    backgroundColor: "white",
+    backgroundColor: "transparent",
     borderWidth: 1,
     borderColor: "#ced4da",
     borderRadius: 8,
@@ -357,6 +366,7 @@ const styles = StyleSheet.create({
   },
   inputWithToggle: {
     paddingRight: 50, // Space for the toggle button
+    backgroundColor: "transparent",
   },
   inputWrapper: {
     position: "relative",

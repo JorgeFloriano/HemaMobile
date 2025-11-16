@@ -2,7 +2,8 @@ import React, { useState, useEffect, useCallback } from "react";
 import { View, Alert, StyleSheet, Text } from "react-native";
 import { useRouter } from "expo-router";
 import api from "@/src/services/api";
-import Input from "@/src/components/Input";
+import TextInput from "@/src/components/TextInput";
+import PasswordInput from "@/src/components/PasswordInput";
 import CheckboxInput from "@/src/components/CheckboxInput";
 import Button from "@/src/components/Button";
 import KeyboardAvoindingContainer from "@/src/components/KeyboardAvoidingContainer";
@@ -43,7 +44,7 @@ const CreateUserScreen: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [permissionLoading, setPermissionLoading] = useState(true);
   const [hasPermission, setHasPermission] = useState(false);
-  
+
   const [formData, setFormData] = useState<UserFormData>({
     name: "",
     surname: "",
@@ -78,7 +79,10 @@ const CreateUserScreen: React.FC = () => {
         router.back();
       }
     } catch (err: any) {
-      const errorMessage = getErrorMessage(err, "Falha ao verificar permissões");
+      const errorMessage = getErrorMessage(
+        err,
+        "Falha ao verificar permissões"
+      );
       showAlert(FORM_LABELS.error, errorMessage);
       router.back();
     } finally {
@@ -97,34 +101,54 @@ const CreateUserScreen: React.FC = () => {
   };
 
   const getErrorMessage = (error: any, defaultMessage: string): string => {
-    return error.response?.data?.error ||
-           error.response?.data?.message ||
-           error.message ||
-           defaultMessage;
+    return (
+      error.response?.data?.error ||
+      error.response?.data?.message ||
+      error.message ||
+      defaultMessage
+    );
   };
 
   // Form validation
   const validateForm = (): string | null => {
     const validations = [
-      { condition: !formData.name, message: "Por favor insira o nome do usuário" },
-      { condition: !formData.email, message: "Por favor insira um e-mail válido para o usuário" },
-      { condition: !formData.username, message: "Por favor insira um nome de usuário" },
-      { condition: !formData.password, message: "Por favor insira uma senha para o usuário" },
-      { condition: !formData.password_confirmation, message: "Por favor confirme a senha para o usuário" },
-      { 
-        condition: formData.password !== formData.password_confirmation, 
-        message: "A senha e a confirmação da senha devem ser iguais" 
+      {
+        condition: !formData.name,
+        message: "Por favor insira o nome do usuário",
+      },
+      {
+        condition: !formData.email,
+        message: "Por favor insira um e-mail válido para o usuário",
+      },
+      {
+        condition: !formData.username,
+        message: "Por favor insira um nome de usuário",
+      },
+      {
+        condition: !formData.password,
+        message: "Por favor insira uma senha para o usuário",
+      },
+      {
+        condition: !formData.password_confirmation,
+        message: "Por favor confirme a senha para o usuário",
+      },
+      {
+        condition: formData.password !== formData.password_confirmation,
+        message: "A senha e a confirmação da senha devem ser iguais",
       },
     ];
 
-    const error = validations.find(v => v.condition);
+    const error = validations.find((v) => v.condition);
     return error ? error.message : null;
   };
 
   // Form submission
   const handleSubmit = async () => {
     if (!hasPermission) {
-      showAlert(FORM_LABELS.accessDenied, "Você não tem permissão para criar usuários");
+      showAlert(
+        FORM_LABELS.accessDenied,
+        "Você não tem permissão para criar usuários"
+      );
       return;
     }
 
@@ -140,11 +164,17 @@ const CreateUserScreen: React.FC = () => {
       const response = await api.post<ApiResponse>("/users", formData);
 
       if (response.data.success) {
-        showAlert(FORM_LABELS.success, response.data.message || "Usuário criado com sucesso");
+        showAlert(
+          FORM_LABELS.success,
+          response.data.message || "Usuário criado com sucesso"
+        );
         resetForm();
         router.push("/(tabs)/users");
       } else {
-        showAlert(FORM_LABELS.error, response.data.message || "Falha ao criar cadastro de usuário");
+        showAlert(
+          FORM_LABELS.error,
+          response.data.message || "Falha ao criar cadastro de usuário"
+        );
       }
     } catch (error: any) {
       console.error("Error creating user:", error);
@@ -154,7 +184,10 @@ const CreateUserScreen: React.FC = () => {
         const firstError = Object.values(errors)[0] as string[];
         showAlert(FORM_LABELS.error, firstError[0]);
       } else {
-        const errorMessage = getErrorMessage(error, "Falha ao criar cadastro de usuário");
+        const errorMessage = getErrorMessage(
+          error,
+          "Falha ao criar cadastro de usuário"
+        );
         showAlert(FORM_LABELS.error, errorMessage);
       }
     } finally {
@@ -176,8 +209,11 @@ const CreateUserScreen: React.FC = () => {
     });
   };
 
-  const updateFormData = (field: keyof UserFormData, value: string | boolean) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+  const updateFormData = (
+    field: keyof UserFormData,
+    value: string | boolean
+  ) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   if (!hasPermission) {
@@ -187,7 +223,6 @@ const CreateUserScreen: React.FC = () => {
       </View>
     );
   }
-
 
   return (
     <KeyboardAvoindingContainer>
@@ -214,7 +249,7 @@ const CreateUserScreen: React.FC = () => {
           onChange={(value) => updateFormData("can_see_sat", value)}
         />
 
-        <Input
+        <TextInput
           label="Nome *"
           value={formData.name}
           onChangeText={(text) => updateFormData("name", text)}
@@ -223,7 +258,7 @@ const CreateUserScreen: React.FC = () => {
           type="text"
         />
 
-        <Input
+        <TextInput
           label="Sobrenome"
           value={formData.surname}
           onChangeText={(text) => updateFormData("surname", text)}
@@ -232,7 +267,7 @@ const CreateUserScreen: React.FC = () => {
           type="text"
         />
 
-        <Input
+        <TextInput
           label="Email *"
           value={formData.email}
           onChangeText={(text) => updateFormData("email", text)}
@@ -241,7 +276,7 @@ const CreateUserScreen: React.FC = () => {
           type="email"
         />
 
-        <Input
+        <TextInput
           label="Usuário *"
           value={formData.username}
           onChangeText={(text) => updateFormData("username", text)}
@@ -250,7 +285,7 @@ const CreateUserScreen: React.FC = () => {
           type="text"
         />
 
-        <Input
+        <TextInput
           label="Função"
           value={formData.function}
           onChangeText={(text) => updateFormData("function", text)}
@@ -259,22 +294,22 @@ const CreateUserScreen: React.FC = () => {
           type="text"
         />
 
-        <Input
+        <PasswordInput
           label="Senha *"
           value={formData.password}
           onChangeText={(text) => updateFormData("password", text)}
           placeholder="Senha"
           maxLength={20}
-          type="password"
+          showPasswordToggle={true}
         />
 
-        <Input
+        <PasswordInput
           label="Confirmar Senha *"
           value={formData.password_confirmation}
           onChangeText={(text) => updateFormData("password_confirmation", text)}
           placeholder="Confirmar Senha"
           maxLength={20}
-          type="password"
+          showPasswordToggle={true}
         />
       </View>
     </KeyboardAvoindingContainer>
