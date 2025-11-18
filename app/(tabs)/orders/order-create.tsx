@@ -249,6 +249,7 @@ const styles = StyleSheet.create({
   form: {
     paddingTop: 60,
     paddingHorizontal: 16,
+    paddingBottom: 16,
   },
 
   halfInput: {

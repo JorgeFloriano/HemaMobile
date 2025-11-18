@@ -1,3 +1,4 @@
+// src/services/api.js
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -14,6 +15,35 @@ const api = axios.create({
     "Content-Type": "application/json",
     Accept: "application/json",
   },
+  withCredentials: true, // ← CRITICAL: Send cookies with requests
+});
+
+// CSRF Token Management
+let csrfToken = false;
+
+// Ensure CSRF token before requests
+api.interceptors.request.use(async (config) => {
+
+  console.log('🔄 API Request:', config.url);
+
+  // Skip for CSRF endpoint itself
+  if (config.url?.includes('/sanctum/csrf-cookie')) return config;
+  
+  // Get CSRF token if we don't have it
+  if (!csrfToken) {
+    try {
+      console.log('🔐 Setting up CSRF token...');
+      await axios.get('https://hematest.jldev.app.br/sanctum/csrf-cookie', {
+        withCredentials: true,
+      });
+      csrfToken = true; // Token is now in cookies
+      console.log('✅ CSRF token initialized');
+    } catch (error) {
+      console.warn('⚠️CSRF token setup failed, proceeding anyway, but this may cause issues', error.message);
+    }
+  }
+  
+  return config;
 });
 
 // Add request interceptor for debugging
@@ -38,6 +68,7 @@ api.interceptors.request.use(
     const token = await AsyncStorage.getItem("authToken");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+      console.log('🔑 Added auth token to request');
     }
     return config;
   },
@@ -54,7 +85,7 @@ api.interceptors.response.use(
       // Token expired or invalid
       await AsyncStorage.removeItem('authToken');
       await AsyncStorage.removeItem('userData');
-      // You might want to redirect to login here
+      csrfToken = false;
     }
     return Promise.reject(error);
   }
