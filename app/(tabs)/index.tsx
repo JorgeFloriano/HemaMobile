@@ -114,7 +114,7 @@ const OrdersScreen = () => {
     if (Boolean(user?.canCreateSat) !== true) {
       Alert.alert(
         "Acesso negado",
-        "Sem permissão para criar solicitações de serviço."
+        "Sem permissão para criar solicitações de assistência técnica."
       );
       return;
     }
@@ -134,7 +134,7 @@ const OrdersScreen = () => {
     } else {
       Alert.alert(
         "Acesso negado",
-        "Sem permissão para visualizar os detalhes da solicitação de serviço."
+        "Sem permissão para visualizar os detalhes da solicitação de assistência técnica."
       );
     }
   };
@@ -192,7 +192,7 @@ const OrdersScreen = () => {
           )}
         </View>
         <Text style={styles.subtitle}>
-          Gerenciamento de Solicitações de Serviço (SAT)
+          Solicitações de Assistência Tecnica (SAT)
         </Text>
       </View>
 

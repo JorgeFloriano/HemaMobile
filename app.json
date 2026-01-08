@@ -19,20 +19,31 @@
       "bundleIdentifier": "com.anonymous.HemaMobile"
     },
     "android": {
+      "package": "com.jldev.hema.client",
+      "googleServicesFile": "./google-services.json",
       "userInterfaceStyle": "light",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/logo_icon.png",
-        "backgroundColor": "#270984ff"
+        "backgroundColor": "#270984"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false,
-      "package": "com.anonymous.HemaMobile"
+      "predictiveBackGestureEnabled": false
     },
     "web": {
       "output": "static",
       "favicon": "./assets/images/logo2_hema.png"
     },
     "plugins": [
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/images/notificationicon.png",
+          "color": "#ffffff",
+          "sounds": [
+            "./assets/sounds/notificationsound.wav"
+          ]
+        }
+      ],
       "expo-router",
       [
         "expo-splash-screen",
@@ -41,9 +52,9 @@
           "imageWidth": 150,
           "imageHeight": 150,
           "resizeMode": "contain",
-          "backgroundColor": "#270984ff",
+          "backgroundColor": "#270984",
           "dark": {
-            "backgroundColor": "#270984ff"
+            "backgroundColor": "#270984"
           }
         }
       ],
@@ -54,10 +65,13 @@
       "reactCompiler": true
     },
     "extra": {
-      "router": {},
+      "router": {
+        "origin": false
+      },
       "eas": {
         "projectId": "67eaf031-fe92-4904-8777-4ad924c15954"
       }
-    }
+    },
+    "owner": "jorge.luis"
   }
 }

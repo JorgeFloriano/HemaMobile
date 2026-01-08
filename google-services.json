@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "381293207998",
+    "project_id": "hema-notifications",
+    "storage_bucket": "hema-notifications.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:381293207998:android:b23e4a4a97132274c759ef",
+        "android_client_info": {
+          "package_name": "com.jldev.hema.client"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqw_DfznViucExADEfmWuc5sXV77MyNNI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:381293207998:android:2bc3a3f4362bc897c759ef",
+        "android_client_info": {
+          "package_name": "com.jldev.hema.team"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqw_DfznViucExADEfmWuc5sXV77MyNNI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

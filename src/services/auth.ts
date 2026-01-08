@@ -20,6 +20,7 @@ export interface AuthResponse {
 export const authService = {
   async login(credentials: LoginCredentials): Promise<AuthResponse> {
     try {
+      console.log('📡 Full URL:', api.defaults.baseURL + '/auth/login');
       console.log("Attempting login with:", {
         username: credentials.username,
         // Don't log password for security

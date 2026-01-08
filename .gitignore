@@ -9,6 +9,8 @@ dist/
 web-build/
 expo-env.d.ts
 
+hema-notifications-firebase-adminsdk-fbsvc-9480f3b836.json
+
 # Native
 .kotlin/
 *.orig.*
