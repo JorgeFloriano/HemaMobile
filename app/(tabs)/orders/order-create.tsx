@@ -24,7 +24,6 @@ const CreateOrderScreen = () => {
   const router = useRouter();
   const [types, setTypes] = useState<Type[]>([]);
   const [loading, setLoading] = useState(false);
-
   const [formData, setFormData] = useState({
     order_type_id: "",
     sector: "",
@@ -64,19 +63,18 @@ const CreateOrderScreen = () => {
         setTypes([]);
       }
     } catch (error: any) {
-      console.error("❌ Error loading types:", error);
+      // Se a API retornou 403, o erro cai aqui
+      if (error.response) {
+        // O servidor respondeu com um status de erro (4xx, 5xx)
+        const errorMessage = error.response.data.error || "Acesso Negado";
 
-      let errorMessage = "Falha ao carregar tipos de serviços";
-
-      if (error.response?.status === 401) {
-        errorMessage = "Sessão expirada. Faça login novamente.";
-        // Optional: Redirect to login
-        // router.push('/login');
-      } else if (error.response?.data?.message) {
-        errorMessage = error.response.data.message;
+        Alert.alert("Acesso Negado", errorMessage);
+        router.back();
+      } else {
+        // Erro de rede ou outro problema
+        Alert.alert("Erro", "Falha ao carregar dados do serviço");
+        console.error("Error loading order:", error);
       }
-
-      Alert.alert("Erro", errorMessage);
     }
   }, [router]);
 
@@ -116,7 +114,7 @@ const CreateOrderScreen = () => {
       } else {
         Alert.alert(
           "Erro",
-          response.data.message || "Falha ao criar ordem de serviço"
+          response.data.message || "Falha ao criar ordem de serviço",
         );
       }
     } catch (error: any) {
@@ -130,7 +128,7 @@ const CreateOrderScreen = () => {
       } else {
         Alert.alert(
           "Erro",
-          error.response?.data?.message || "Falha ao criar ordem de serviço"
+          error.response?.data?.message || "Falha ao criar ordem de serviço",
         );
       }
     } finally {

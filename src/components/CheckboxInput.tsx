@@ -26,10 +26,16 @@ const CheckboxInput: React.FC<CheckboxInputProps> = ({
         onPress={handleCheckboxChange}
         style={styles.TouchableOpacity}
       >
-        <View style={isChecked ? styles.selectedCheckboxContainer : styles.checkboxContainer}>
+        <View
+          style={
+            isChecked
+              ? styles.selectedCheckboxContainer
+              : styles.checkboxContainer
+          }
+        >
           {isChecked ? (
             <Text style={styles.checkedText}>
-              <FontAwesome6 name="check" size={15} color="#1b0363ff" />
+              <FontAwesome6 name="check" size={15} color="#1e1e21" />
             </Text>
           ) : null}
         </View>
@@ -63,8 +69,8 @@ const styles = StyleSheet.create({
   selectedCheckboxContainer: {
     width: 24,
     height: 24,
-    borderColor: "#1b0363ff",
-    outlineColor: "#2809843e",
+    borderColor: "#1e1e21",
+    outlineColor: "#1e1e213e",
     outlineWidth: 3,
     outlineStyle: "solid",
     borderWidth: 1,

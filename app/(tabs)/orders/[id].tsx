@@ -24,24 +24,33 @@ const OrderDetailScreen = () => {
   const loadOrder = useCallback(
     async (showRefreshing = false) => {
       try {
-        if (showRefreshing) {
-          setRefreshing(true);
-        } else {
-          setLoading(true);
-        }
+        if (showRefreshing) setRefreshing(true);
+        else setLoading(true);
 
         const response = await api.get<{ order: Order }>(`/orders/${id}`);
+
+        // Se chegar aqui, é porque o status foi 2xx (Sucesso)
         setOrder(response.data.order);
-      } catch (error) {
-        Alert.alert("Error", "Falha ao carregar dados do serviço");
-        console.error("Error loading order:", error);
+      } catch (error: any) {
+        // Se a API retornou 403, o erro cai aqui
+        if (error.response) {
+          // O servidor respondeu com um status de erro (4xx, 5xx)
+          const errorMessage = error.response.data.error || "Acesso Negado";
+
+          Alert.alert("Acesso Negado", errorMessage);
+          router.back();
+        } else {
+          // Erro de rede ou outro problema
+          Alert.alert("Erro", "Falha ao carregar dados do serviço");
+          console.error("Error loading order:", error);
+        }
       } finally {
         setLoading(false);
         setRefreshing(false);
       }
     },
-    [id]
-  ); // Add dependencies that loadOrder uses
+    [id, router],
+  );
 
   useEffect(() => {
     if (id) {
@@ -180,82 +189,86 @@ const OrderDetailScreen = () => {
 
         {/* Notes Section */}
 
-        {order.notes.length > 0 && (<View style={styles.section}>
-          <Text style={styles.sectionTitle}>Informações do Atendimento</Text>
-          {order.notes.map((note, index) => (
-            <View key={index}>
-              <View style={styles.intervRow}>
-                <Text style={styles.intervLabel}>
-                  Intervenção {index + 1} de {order.notes.length}
-                </Text>
-                <Text style={styles.intervValue}>{formatDate(note.date)}</Text>
-              </View>
+        {order.notes.length > 0 && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Informações do Atendimento</Text>
+            {order.notes.map((note, index) => (
+              <View key={index}>
+                <View style={styles.intervRow}>
+                  <Text style={styles.intervLabel}>
+                    Intervenção {index + 1} de {order.notes.length}
+                  </Text>
+                  <Text style={styles.intervValue}>
+                    {formatDate(note.date)}
+                  </Text>
+                </View>
 
-              <View style={styles.detailRow}>
-                <Text style={styles.subtitle}>Serviços Realizados:</Text>
-              </View>
+                <View style={styles.detailRow}>
+                  <Text style={styles.subtitle}>Serviços Realizados:</Text>
+                </View>
 
-              <Text style={styles.description}>{note.services}</Text>
-              {note.materials.length > 0 ? (
-                <>
-                  <View style={styles.detailRow}>
-                    <Text style={styles.subtitle}>Materiais utilizados:</Text>
-                  </View>
-
-                  {note.materials.map((material, index) => (
-                    <View key={index} style={styles.materialsRow}>
-                      <Text style={styles.materialLabel}>
-                        {material.description}
-                      </Text>
-                      <Text style={styles.materialValue}>
-                        {material.pivot.quantity} {material.unit}
-                      </Text>
-                    </View>
-                  ))}
-                </>
-              ) : null}
-              <View
-                style={[
-                  styles.details,
-                  index === order.notes.length - 1 && styles.noBorder, // Remove border for last item
-                ]}
-              >
-                {note.tecs && (
+                <Text style={styles.description}>{note.services}</Text>
+                {note.materials.length > 0 ? (
                   <>
-                    <View style={styles.materialsRow}>
-                      <Text style={styles.materialLabel}>Horário:</Text>
-                      <Text style={styles.materialValue}>
-                        Início: {formatTime(note.start)}h - Término:{" "}
-                        {formatTime(note.end)}h
-                      </Text>
-                    </View>
-
                     <View style={styles.detailRow}>
-                      <Text style={styles.subtitle}>Executante(s):</Text>
+                      <Text style={styles.subtitle}>Materiais utilizados:</Text>
                     </View>
-                    {note.tecs.map((tecn, index) => (
-                      <View key={index}>
-                        <View style={styles.materialsRow}>
-                          <Text style={styles.materialLabel}>Nome:</Text>
-                          <Text style={styles.materialValue}>
-                            {tecn.user.name} {tecn.user.surname}
-                          </Text>
-                        </View>
 
-                        <View style={styles.materialsRow}>
-                          <Text style={styles.materialLabel}>Função:</Text>
-                          <Text style={styles.materialValue}>
-                            {tecn.user.function}
-                          </Text>
-                        </View>
+                    {note.materials.map((material, index) => (
+                      <View key={index} style={styles.materialsRow}>
+                        <Text style={styles.materialLabel}>
+                          {material.description}
+                        </Text>
+                        <Text style={styles.materialValue}>
+                          {material.pivot.quantity} {material.unit}
+                        </Text>
                       </View>
                     ))}
                   </>
-                )}
+                ) : null}
+                <View
+                  style={[
+                    styles.details,
+                    index === order.notes.length - 1 && styles.noBorder, // Remove border for last item
+                  ]}
+                >
+                  {note.tecs && (
+                    <>
+                      <View style={styles.materialsRow}>
+                        <Text style={styles.materialLabel}>Horário:</Text>
+                        <Text style={styles.materialValue}>
+                          Início: {formatTime(note.start)}h - Término:{" "}
+                          {formatTime(note.end)}h
+                        </Text>
+                      </View>
+
+                      <View style={styles.detailRow}>
+                        <Text style={styles.subtitle}>Executante(s):</Text>
+                      </View>
+                      {note.tecs.map((tecn, index) => (
+                        <View key={index}>
+                          <View style={styles.materialsRow}>
+                            <Text style={styles.materialLabel}>Nome:</Text>
+                            <Text style={styles.materialValue}>
+                              {tecn.user.name} {tecn.user.surname}
+                            </Text>
+                          </View>
+
+                          <View style={styles.materialsRow}>
+                            <Text style={styles.materialLabel}>Função:</Text>
+                            <Text style={styles.materialValue}>
+                              {tecn.user.function}
+                            </Text>
+                          </View>
+                        </View>
+                      ))}
+                    </>
+                  )}
+                </View>
               </View>
-            </View>
-          ))}
-        </View>)}
+            ))}
+          </View>
+        )}
       </ScrollView>
     </View>
   );

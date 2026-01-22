@@ -33,7 +33,9 @@ const OptionSelector: React.FC<OptionSelectorProps> = ({
   const getSelectedTypeName = () => {
     if (!selectedTypeId) return placeholder || "Selecione uma opção";
     const selected = types.find((type) => type.id === selectedTypeId);
-    return selected ? selected.description : placeholder || "Selecione uma opção";
+    return selected
+      ? selected.description
+      : placeholder || "Selecione uma opção";
   };
 
   const handleTypeSelect = (type: Type) => {
@@ -179,7 +181,7 @@ const styles = StyleSheet.create({
     borderBottomColor: "#f3f4f6",
   },
   modalItemSelected: {
-    backgroundColor: "#1b0363ff",
+    backgroundColor: "#1e1e21",
   },
   modalItemText: {
     fontSize: 16,

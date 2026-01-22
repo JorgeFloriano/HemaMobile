@@ -249,7 +249,7 @@ const ProfileScreen = () => {
         <PasswordInput
           label="Nova Senha (deixe vazio para manter a atual)"
           value={formData.password}
-          onChangeText={(text) => updateFormData("password", text)}
+          onChangeText={(text) => updateFormData("password", text.trim())}
           placeholder="Nova senha"
           maxLength={20}
           showPasswordToggle={true}
@@ -257,7 +257,7 @@ const ProfileScreen = () => {
         <PasswordInput
           label="Confirmar Nova Senha"
           value={formData.password_confirmation}
-          onChangeText={(text) => updateFormData("password_confirmation", text)}
+          onChangeText={(text) => updateFormData("password_confirmation", text.trim())}
           placeholder="Confirmar nova senha"
           maxLength={20}
           showPasswordToggle={true}

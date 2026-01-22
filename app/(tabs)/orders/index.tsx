@@ -63,9 +63,11 @@ export interface Order {
       pivot: { quantity: number };
     }[];
   }[];
+  error?: string;
 }
 interface OrdersResponse {
   orders: Order[];
+  error?: string;
 }
 
 const OrdersScreen = () => {
@@ -88,11 +90,19 @@ const OrdersScreen = () => {
       setError(null);
       const response = await api.get<OrdersResponse>("/orders");
       setOrders(response.data.orders);
-    } catch (err) {
-      const errorMessage = "Falha ao carregar solicitações de assistência técnica";
-      setError(errorMessage);
-      Alert.alert("Erro", errorMessage);
-      console.error("Error loading orders:", err);
+    } catch (error: any) {
+      // Se a API retornou 403, o erro cai aqui
+      if (error.response) {
+        // O servidor respondeu com um status de erro (4xx, 5xx)
+        const errorMessage = error.response.data.error || "Acesso Negado";
+
+        Alert.alert("Acesso Negado", errorMessage);
+        router.back();
+      } else {
+        // Erro de rede ou outro problema
+        Alert.alert("Erro", "Falha ao carregar solicitações de assistência técnica");
+        console.error("Error loading orders:", error);
+      }
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -114,7 +124,7 @@ const OrdersScreen = () => {
     if (Boolean(user?.canCreateSat) !== true) {
       Alert.alert(
         "Acesso negado",
-        "Sem permissão para criar solicitações de assistência técnica."
+        "Sem permissão para criar solicitações de assistência técnica.",
       );
       return;
     }
@@ -134,7 +144,7 @@ const OrdersScreen = () => {
     } else {
       Alert.alert(
         "Acesso negado",
-        "Sem permissão para visualizar os detalhes da solicitação de assistencia técnica."
+        "Sem permissão para visualizar os detalhes da solicitação de assistencia técnica.",
       );
     }
   };
@@ -142,7 +152,9 @@ const OrdersScreen = () => {
   // Render empty state
   const renderEmptyState = () => (
     <View style={styles.emptyState}>
-      <Text style={styles.emptyStateText}>Solicitações de assistência técnica não encontradas</Text>
+      <Text style={styles.emptyStateText}>
+        Solicitações de assistência técnica não encontradas
+      </Text>
       <Button
         title="Create First Order"
         onPress={handleCreateOrder}

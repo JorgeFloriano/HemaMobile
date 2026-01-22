@@ -24,7 +24,9 @@ const LoginScreen: React.FC = () => {
   const router = useRouter();
   const { login } = useAuth();
   const [username, setUsername] = useState("client.alpha");
+  //const [username, setUsername] = useState("");
   const [password, setPassword] = useState("Senha123");
+  //const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -210,7 +212,7 @@ const styles = StyleSheet.create({
   },
   logoContainer: {
     padding: 30,
-    backgroundColor: "#1b0363ff",
+    backgroundColor: "#1e1e21",
     borderBottomWidth: 1,
     borderBottomColor: "#e9ecef",
   },

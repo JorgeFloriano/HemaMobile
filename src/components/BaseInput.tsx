@@ -56,13 +56,13 @@ const BaseInput: React.FC<BaseInputProps> = ({
   const baseStyle: TextStyle = {
     backgroundColor: "transparent",
     borderWidth: 1,
-    borderColor:"#ced4da",
+    borderColor: "#ced4da",
     borderRadius: 8,
     paddingLeft: 11,
     fontSize: 16,
     ...(isFocused && {
-      borderColor: "#270984",
-      outlineColor: "#2809843e",
+      borderColor: "#1e1e21",
+      outlineColor: "#1e1e213e",
       outlineWidth: 3,
       outlineStyle: "solid",
       paddingLeft: 12,

@@ -147,12 +147,12 @@ const Input: React.FC<TextInputProps> = ({
     } else if (numbers.length <= 8) {
       return `${numbers.slice(0, 2)}/${numbers.slice(2, 4)}/${numbers.slice(
         4,
-        8
+        8,
       )}`;
     } else {
       return `${numbers.slice(0, 2)}/${numbers.slice(2, 4)}/${numbers.slice(
         4,
-        8
+        8,
       )}`;
     }
   };
@@ -219,7 +219,7 @@ const Input: React.FC<TextInputProps> = ({
     fontSize: 16,
     // Put focus styles first
     ...(isFocused && {
-      borderColor: "#270984",
+      borderColor: "#1e1e21",
       outlineColor: "#2809843e",
       //outlineStyle: "solid",
       outlineWidth: 3,

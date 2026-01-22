@@ -8,7 +8,7 @@ function RootLayoutContent() {
   const { user, isLoading } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
-  
+
   // FIXED: Proper authentication check
   useEffect(() => {
     if (!isLoading) {
@@ -22,7 +22,7 @@ function RootLayoutContent() {
   if (isLoading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" color="#1b0363ff" />
+        <ActivityIndicator size="large" color="#1e1e21" />
       </View>
     );
   }

@@ -30,35 +30,35 @@ const BottomTabBar: React.FC = () => {
   const { user } = useAuth();
 
   const baseTabs: Tab[] = [
-  {
-    name: "index",
-    href: "/",
-    icon: "home",
-    label: "Home",
-  },
-  {
-    name: "orders",
-    href: "/orders",
-    icon: "list",
-    label: "Ordens",
-  },
-  {
-    name: "user-edit",
-    href: "/profile",
-    icon: "person",
-    label: "Perfil",
-  },
-  {
-    name: "users",
-    href: "/users",
-    icon: "person-outline",
-    label: "Usuários",
-    showForAdmin: true, // Only show for admin users
-  },
-];
+    {
+      name: "index",
+      href: "/",
+      icon: "home",
+      label: "Home",
+    },
+    {
+      name: "orders",
+      href: "/orders",
+      icon: "list",
+      label: "Ordens",
+    },
+    {
+      name: "user-edit",
+      href: "/profile",
+      icon: "person",
+      label: "Perfil",
+    },
+    {
+      name: "users",
+      href: "/users",
+      icon: "person-outline",
+      label: "Usuários",
+      showForAdmin: true, // Only show for admin users
+    },
+  ];
 
   // Filter tabs based on user role
-  const tabs = baseTabs.filter(tab => {
+  const tabs = baseTabs.filter((tab) => {
     if (tab.showForAdmin) {
       // Only show this tab if user is admin
       // Adjust this condition based on your actual user role property
@@ -94,7 +94,7 @@ const BottomTabBar: React.FC = () => {
     const translateX = interpolate(
       borderPosition.value,
       [0, tabs.length - 1],
-      [0, (tabs.length - 1) * tabWidth]
+      [0, (tabs.length - 1) * tabWidth],
     );
 
     return {
@@ -108,7 +108,7 @@ const BottomTabBar: React.FC = () => {
 
     const textAnimatedStyle = useAnimatedStyle(() => {
       return {
-        color: withTiming(active ? "#270984" : "#A0A0A0", {
+        color: withTiming(active ? "#1e1e21" : "#A0A0A0", {
           duration: 20,
         }),
         fontSize: withTiming(active ? 12 : 11, {
@@ -126,7 +126,7 @@ const BottomTabBar: React.FC = () => {
         <Ionicons
           name={tab.icon as any}
           size={24} // Slightly smaller for better fit
-          color={active ? "#270984" : "#A0A0A0"}
+          color={active ? "#1e1e21" : "#A0A0A0"}
         />
 
         <Animated.Text style={[styles.tabLabel, textAnimatedStyle]}>
@@ -152,9 +152,7 @@ const BottomTabBar: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    
-  },
+  container: {},
   tabBar: {
     flexDirection: "row",
     height: 70, // Increased height for better touch area
@@ -177,7 +175,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 0,
     height: 3,
-    backgroundColor: "#270984",
+    backgroundColor: "#1e1e21",
     borderRadius: 2,
   },
 });

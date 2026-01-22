@@ -63,10 +63,10 @@ const TopNavigationBar: React.FC<TopNavigationBarProps> = ({
 
   const icon = () => {
     if (pathname === "/") {
-      return 'log-out-outline';
+      return "log-out-outline";
     }
-    return 'arrow-back-outline';
-  }
+    return "arrow-back-outline";
+  };
 
   const handleButtonPress = () => {
     if (pathname === "/") {
@@ -111,12 +111,15 @@ const TopNavigationBar: React.FC<TopNavigationBarProps> = ({
         </View>
         {/* Back button on the left */}
         {showBack && (
-          <TouchableOpacity style={styles.backButton} onPress={handleButtonPress}>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={handleButtonPress}
+          >
             <Ionicons name={icon()} size={24} color="white" />
           </TouchableOpacity>
         )}
       </View>
-    {/* Logout Confirmation Modal */}
+      {/* Logout Confirmation Modal */}
       <Modal
         visible={showLogoutModal}
         transparent={true}
@@ -129,16 +132,16 @@ const TopNavigationBar: React.FC<TopNavigationBarProps> = ({
             <Text style={styles.modalMessage}>
               Tem certeza que deseja sair do aplicativo?
             </Text>
-            
+
             <View style={styles.modalButtons}>
-              <TouchableOpacity 
+              <TouchableOpacity
                 style={[styles.modalButton, styles.cancelButton]}
                 onPress={() => setShowLogoutModal(false)}
               >
                 <Text style={styles.cancelButtonText}>Cancelar</Text>
               </TouchableOpacity>
-              
-              <TouchableOpacity 
+
+              <TouchableOpacity
                 style={[styles.modalButton, styles.confirmButton]}
                 onPress={handleLogout}
               >
@@ -152,10 +155,9 @@ const TopNavigationBar: React.FC<TopNavigationBarProps> = ({
   );
 };
 
-
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#1b0363ff",
+    backgroundColor: "#1e1e21",
     position: "absolute",
     top: 0,
     left: 0,
@@ -164,7 +166,7 @@ const styles = StyleSheet.create({
   },
   statusBarBackground: {
     height: Platform.OS === "ios" ? 44 : StatusBar.currentHeight,
-    backgroundColor: "#1b0363ff",
+    backgroundColor: "#1e1e21",
   },
   content: {
     flexDirection: "row",
@@ -200,7 +202,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 2,
   },
- // Modal Styles
+  // Modal Styles
   modalOverlay: {
     flex: 1,
     backgroundColor: "rgba(0, 0, 0, 0.5)",
@@ -249,7 +251,7 @@ const styles = StyleSheet.create({
     borderColor: "#ddd",
   },
   confirmButton: {
-    backgroundColor: "#1b0363ff",
+    backgroundColor: "#1e1e21",
   },
   cancelButtonText: {
     color: "#333",
