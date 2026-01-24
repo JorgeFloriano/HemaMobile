@@ -1,26 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome";
 
 type CheckboxInputProps = {
   label: string;
   value: boolean;
   onChange: (value: boolean) => void;
-  icon?: keyof typeof MaterialCommunityIcons.glyphMap; // Nome do ícone
-  iconColor?: string; // Cor personalizada para o ícone
 };
 
 const CheckboxInput: React.FC<CheckboxInputProps> = ({
   label,
   value,
   onChange,
-  icon,
-  iconColor = "#1e1e21", // Cor padrão caso não envie uma
 }) => {
-  
+  const [isChecked, setIsChecked] = useState(value);
+
   const handleCheckboxChange = () => {
-    onChange(!value);
+    setIsChecked(!isChecked);
+    onChange(!isChecked);
   };
 
   return (
@@ -28,33 +25,21 @@ const CheckboxInput: React.FC<CheckboxInputProps> = ({
       <TouchableOpacity
         onPress={handleCheckboxChange}
         style={styles.TouchableOpacity}
-        activeOpacity={0.8}
       >
         <View
           style={
-            value
+            isChecked
               ? styles.selectedCheckboxContainer
               : styles.checkboxContainer
           }
         >
-          {value ? (
+          {isChecked ? (
             <Text style={styles.checkedText}>
               <FontAwesome6 name="check" size={15} color="#1e1e21" />
             </Text>
           ) : null}
         </View>
-
-        <View style={styles.contentContainer}>
-          <Text style={styles.label}>{label}</Text>
-          {icon && (
-            <MaterialCommunityIcons 
-              name={icon} 
-              size={20} 
-              color={iconColor} 
-              style={styles.iconStyle} 
-            />
-          )}
-        </View>
+        <Text style={styles.label}> {label}</Text>
       </TouchableOpacity>
     </View>
   );
@@ -69,15 +54,8 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#333",
-  },
-  contentContainer: {
-    flexDirection: "row",
-    alignItems: "center",
     marginLeft: 8,
-  },
-  iconStyle: {
-    marginRight: 4,
+    color: "#333",
   },
   checkboxContainer: {
     width: 24,
@@ -92,7 +70,6 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     borderColor: "#1e1e21",
-    // Mantido conforme seu original
     outlineColor: "#1e1e213e",
     outlineWidth: 3,
     outlineStyle: "solid",
@@ -103,7 +80,7 @@ const styles = StyleSheet.create({
   },
   TouchableOpacity: {
     flexDirection: "row",
-    alignItems: "center", // Garante alinhamento vertical entre box e texto
+    justifyContent: "center",
   },
   checkedText: {
     color: "#333",

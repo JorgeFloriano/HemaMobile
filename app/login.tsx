@@ -113,29 +113,6 @@ const LoginScreen: React.FC = () => {
               <View style={styles.formContainer}>
                 <Text style={styles.title}>Sistema de Gerenciamento</Text>
 
-                {/* <TextInput
-                  label="Usuário"
-                  value={username}
-                  onChangeText={setUsername}
-                  placeholder="Usuário"
-                  containerStyle={styles.input}
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                />
-
-                <TextInput
-                  label="Senha"
-                  value={password}
-                  onChangeText={setPassword}
-                  placeholder="Senha"
-                  containerStyle={styles.input}
-                  type="password"
-                  secureTextEntry={true}
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  showPasswordToggle={true}
-                /> */}
-
                 <TextInput
                   label="Usuário"
                   value={username}
@@ -157,17 +134,6 @@ const LoginScreen: React.FC = () => {
                   disabled={isLoading}
                   style={styles.loginButton}
                 />
-
-                {/* <View style={styles.debugContainer}>
-              <Text style={styles.debugText}>Debug Info:</Text>
-              <Text style={styles.debugText}>
-                Loading: {isLoading ? "YES" : "NO"}
-              </Text>
-              <Text style={styles.debugText}>Username: {username}</Text>
-              <Text style={styles.debugText}>
-                API Base: {api.defaults.baseURL}
-              </Text>
-            </View> */}
 
                 {/* Error Messages */}
                 {errors.length > 0 && (

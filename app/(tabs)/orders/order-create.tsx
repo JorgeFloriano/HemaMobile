@@ -6,6 +6,8 @@ import TextInput from "@/src/components/TextInput";
 import Button from "@/src/components/Button";
 import OptionSelector from "@/src/components/OptionSelector";
 import KeyboardAvoindingContainer from "@/src/components/KeyboardAvoidingContainer";
+import CheckboxInput from "@/src/components/CheckboxInput";
+import Feather from "@expo/vector-icons/Feather";
 
 interface Type {
   id: string;
@@ -18,6 +20,7 @@ interface FormData {
   req_name: string;
   req_descr: string;
   equipment: string;
+  is_emergency: boolean;
 }
 
 const CreateOrderScreen = () => {
@@ -28,14 +31,9 @@ const CreateOrderScreen = () => {
     order_type_id: "",
     sector: "",
     req_name: "",
-    // req_date: new Date().toLocaleDateString("pt-BR"),
-    // req_time: new Date().toLocaleTimeString("pt-BR", {
-    //   hour: "2-digit",
-    //   minute: "2-digit",
-    //   hour12: false,
-    // }),
     req_descr: "",
     equipment: "",
+    is_emergency: false,
   });
 
   // FIXED: Added useCallback to prevent infinite re-renders
@@ -141,18 +139,13 @@ const CreateOrderScreen = () => {
       order_type_id: "",
       sector: "",
       req_name: "",
-      // req_date: new Date().toLocaleDateString("pt-BR"),
-      // req_time: new Date().toLocaleTimeString("pt-BR", {
-      //   hour: "2-digit",
-      //   minute: "2-digit",
-      //   hour12: false,
-      // }),
       req_descr: "",
       equipment: "",
+      is_emergency: false,
     });
   };
 
-  const updateFormData = (field: keyof FormData, value: string) => {
+  const updateFormData = (field: keyof FormData, value: string | boolean) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -181,28 +174,6 @@ const CreateOrderScreen = () => {
           type="text"
         />
 
-        {/* <View style={styles.row}>
-              <View style={styles.halfInput}>
-                <TextInput
-                  label="Data do Acionamento *"
-                  value={formData.req_date}
-                  onChangeText={(text) => updateFormData("req_date", text)}
-                  placeholder="DD/MM/AAAA"
-                  type="date"
-                />
-              </View>
-
-              <View style={styles.halfInput}>
-                <TextInput
-                  label="Hora do Acionamento *"
-                  value={formData.req_time}
-                  onChangeText={(text) => updateFormData("req_time", text)}
-                  placeholder="HH:MM"
-                  type="time"
-                />
-              </View>
-            </View> */}
-
         <TextInput
           label="Descrição *"
           value={formData.req_descr}
@@ -221,6 +192,16 @@ const CreateOrderScreen = () => {
           placeholder="Informações do equipamento"
           maxLength={70}
           type="text"
+        />
+
+        <Text style={styles.subtitle}>Selecione o campo abaixo apenas se precisa de atendimento urgente e fora do horário comercial!</Text>
+
+        <CheckboxInput
+          icon="alert-circle-outline"
+          iconColor="red" // Opcional
+          label="EMERGENCIAL "
+          value={formData.is_emergency}
+          onChange={(value) => updateFormData("is_emergency", value)}
         />
 
         <View style={styles.buttonGroup}>
@@ -248,6 +229,12 @@ const styles = StyleSheet.create({
     paddingTop: 60,
     paddingHorizontal: 16,
     paddingBottom: 16,
+  },
+
+  subtitle: {
+    fontSize: 16,
+    color: "#666",
+    marginBottom: 16,
   },
 
   halfInput: {
