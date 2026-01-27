@@ -219,7 +219,7 @@ const Input: React.FC<TextInputProps> = ({
     fontSize: 16,
     // Put focus styles first
     ...(isFocused && {
-      borderColor: "#1e1e21",
+      borderColor: "#1b0363",
       outlineColor: "#2809843e",
       //outlineStyle: "solid",
       outlineWidth: 3,

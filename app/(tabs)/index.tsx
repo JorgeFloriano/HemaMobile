@@ -142,9 +142,9 @@ const OrdersScreen = () => {
   // Render empty state
   const renderEmptyState = () => (
     <View style={styles.emptyState}>
-      <Text style={styles.emptyStateText}>No orders found</Text>
+      <Text style={styles.emptyStateText}>Nenhuma solicitação encontrada</Text>
       <Button
-        title="Create First Order"
+        title="Criar Primeira Solicitação"
         onPress={handleCreateOrder}
         variant="primary"
         style={styles.emptyStateButton}

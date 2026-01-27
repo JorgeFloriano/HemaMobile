@@ -108,7 +108,7 @@ const BottomTabBar: React.FC = () => {
 
     const textAnimatedStyle = useAnimatedStyle(() => {
       return {
-        color: withTiming(active ? "#1e1e21" : "#A0A0A0", {
+        color: withTiming(active ? "#1b0363" : "#A0A0A0", {
           duration: 20,
         }),
         fontSize: withTiming(active ? 12 : 11, {
@@ -126,7 +126,7 @@ const BottomTabBar: React.FC = () => {
         <Ionicons
           name={tab.icon as any}
           size={24} // Slightly smaller for better fit
-          color={active ? "#1e1e21" : "#A0A0A0"}
+          color={active ? "#1b0363" : "#A0A0A0"}
         />
 
         <Animated.Text style={[styles.tabLabel, textAnimatedStyle]}>
@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 0,
     height: 3,
-    backgroundColor: "#1e1e21",
+    backgroundColor: "#1b0363",
     borderRadius: 2,
   },
 });

@@ -74,14 +74,14 @@ const CreateUserScreen: React.FC = () => {
       } else {
         showAlert(
           FORM_LABELS.accessDenied,
-          response.data.message || "Sem permissão para criar usuários"
+          response.data.message || "Sem permissão para criar usuários",
         );
         router.back();
       }
     } catch (err: any) {
       const errorMessage = getErrorMessage(
         err,
-        "Falha ao verificar permissões"
+        "Falha ao verificar permissões",
       );
       showAlert(FORM_LABELS.error, errorMessage);
       router.back();
@@ -147,7 +147,7 @@ const CreateUserScreen: React.FC = () => {
     if (!hasPermission) {
       showAlert(
         FORM_LABELS.accessDenied,
-        "Você não tem permissão para criar usuários"
+        "Você não tem permissão para criar usuários",
       );
       return;
     }
@@ -166,14 +166,14 @@ const CreateUserScreen: React.FC = () => {
       if (response.data.success) {
         showAlert(
           FORM_LABELS.success,
-          response.data.message || "Usuário criado com sucesso"
+          response.data.message || "Usuário criado com sucesso",
         );
         resetForm();
         router.push("/(tabs)/users");
       } else {
         showAlert(
           FORM_LABELS.error,
-          response.data.message || "Falha ao criar cadastro de usuário"
+          response.data.message || "Falha ao criar cadastro de usuário",
         );
       }
     } catch (error: any) {
@@ -186,7 +186,7 @@ const CreateUserScreen: React.FC = () => {
       } else {
         const errorMessage = getErrorMessage(
           error,
-          "Falha ao criar cadastro de usuário"
+          "Falha ao criar cadastro de usuário",
         );
         showAlert(FORM_LABELS.error, errorMessage);
       }
@@ -211,7 +211,7 @@ const CreateUserScreen: React.FC = () => {
 
   const updateFormData = (
     field: keyof UserFormData,
-    value: string | boolean
+    value: string | boolean,
   ) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
@@ -229,12 +229,6 @@ const CreateUserScreen: React.FC = () => {
       <View style={styles.form}>
         <View style={styles.header}>
           <Text style={styles.welcome}>Cadastrar Usuário</Text>
-          <Button
-            title={loading ? "Salvando..." : "Salvar"}
-            onPress={handleSubmit}
-            variant="primary"
-            disabled={loading}
-          />
         </View>
 
         <CheckboxInput
@@ -274,6 +268,9 @@ const CreateUserScreen: React.FC = () => {
           placeholder="Email"
           maxLength={50}
           type="email"
+          autoCapitalize="none" // Impede a primeira letra maiúscula
+          autoCorrect={false} // Desativa a correção ortográfica (o que você pediu)
+          keyboardType="email-address"
         />
 
         <TextInput
@@ -283,6 +280,9 @@ const CreateUserScreen: React.FC = () => {
           placeholder="Username"
           maxLength={20}
           type="text"
+          autoCapitalize="none" // Impede a primeira letra maiúscula
+          autoCorrect={false} // Desativa a correção ortográfica (o que você pediu)
+          keyboardType="email-address"
         />
 
         <TextInput
@@ -311,6 +311,14 @@ const CreateUserScreen: React.FC = () => {
           maxLength={20}
           showPasswordToggle={true}
         />
+
+         <Button
+            title={loading ? "Salvando..." : "Salvar"}
+            onPress={handleSubmit}
+            style={{ width: "25%"}}
+            variant="primary"
+            disabled={loading}
+          />
       </View>
     </KeyboardAvoindingContainer>
   );
@@ -326,6 +334,7 @@ const styles = StyleSheet.create({
   form: {
     paddingTop: 60,
     paddingHorizontal: 16,
+    paddingBottom: 16,
     backgroundColor: "#ffffffff",
   },
   welcome: {

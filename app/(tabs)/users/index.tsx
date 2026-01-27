@@ -137,7 +137,7 @@ const UsersScreen = () => {
     <View style={styles.emptyState}>
       <Text style={styles.emptyStateText}>Usuários não encontrados</Text>
       <Button
-        title="Create First User"
+        title="Criar Primeiro Usuário"
         onPress={handleCreateUser}
         variant="primary"
         style={styles.emptyStateButton}

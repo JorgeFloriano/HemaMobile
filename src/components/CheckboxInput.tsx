@@ -16,9 +16,8 @@ const CheckboxInput: React.FC<CheckboxInputProps> = ({
   value,
   onChange,
   icon,
-  iconColor = "#1e1e21", // Cor padrão caso não envie uma
+  iconColor = "#1b0363", // Cor padrão caso não envie uma
 }) => {
-  
   const handleCheckboxChange = () => {
     onChange(!value);
   };
@@ -32,14 +31,12 @@ const CheckboxInput: React.FC<CheckboxInputProps> = ({
       >
         <View
           style={
-            value
-              ? styles.selectedCheckboxContainer
-              : styles.checkboxContainer
+            value ? styles.selectedCheckboxContainer : styles.checkboxContainer
           }
         >
           {value ? (
             <Text style={styles.checkedText}>
-              <FontAwesome6 name="check" size={15} color="#1e1e21" />
+              <FontAwesome6 name="check" size={15} color="#1b0363" />
             </Text>
           ) : null}
         </View>
@@ -47,11 +44,11 @@ const CheckboxInput: React.FC<CheckboxInputProps> = ({
         <View style={styles.contentContainer}>
           <Text style={styles.label}>{label}</Text>
           {icon && (
-            <MaterialCommunityIcons 
-              name={icon} 
-              size={20} 
-              color={iconColor} 
-              style={styles.iconStyle} 
+            <MaterialCommunityIcons
+              name={icon}
+              size={20}
+              color={iconColor}
+              style={styles.iconStyle}
             />
           )}
         </View>
@@ -91,9 +88,9 @@ const styles = StyleSheet.create({
   selectedCheckboxContainer: {
     width: 24,
     height: 24,
-    borderColor: "#1e1e21",
+    borderColor: "#1b0363",
     // Mantido conforme seu original
-    outlineColor: "#1e1e213e",
+    outlineColor: "#1b03633e",
     outlineWidth: 3,
     outlineStyle: "solid",
     borderWidth: 1,

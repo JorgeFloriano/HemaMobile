@@ -4,14 +4,14 @@
     "slug": "HemaMobile",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/logo_hema_splash.png",
+    "icon": "./assets/images/logo_hema.png",
     "scheme": "hemamobile",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/images/logo_hema3.png",
+      "image": "./assets/images/logo_hema.png",
       "resizeMode": "contain",
-      "backgroundColor": "#1e1e21"
+      "backgroundColor": "#1b0363"
     },
     "ios": {
       "userInterfaceStyle": "light",
@@ -24,7 +24,7 @@
       "userInterfaceStyle": "light",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/logo_icon.png",
-        "backgroundColor": "#1e1e21"
+        "backgroundColor": "#1b0363"
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false
@@ -38,10 +38,8 @@
         "expo-notifications",
         {
           "icon": "./assets/images/notificationicon.png",
-          "color": "#ffffff",
-          "sounds": [
-            "./assets/sounds/notificationsound.wav"
-          ]
+          "color": "#1b0363",
+          "sounds": ["./assets/sounds/notificationsound.wav"]
         }
       ],
       "expo-router",
@@ -52,9 +50,9 @@
           "imageWidth": 150,
           "imageHeight": 150,
           "resizeMode": "contain",
-          "backgroundColor": "#1e1e21",
+          "backgroundColor": "#1b0363",
           "dark": {
-            "backgroundColor": "#1e1e21"
+            "backgroundColor": "#1b0363"
           }
         }
       ],

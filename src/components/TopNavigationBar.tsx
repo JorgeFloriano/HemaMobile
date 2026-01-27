@@ -157,7 +157,7 @@ const TopNavigationBar: React.FC<TopNavigationBarProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#1e1e21",
+    backgroundColor: "#1b0363",
     position: "absolute",
     top: 0,
     left: 0,
@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
   },
   statusBarBackground: {
     height: Platform.OS === "ios" ? 44 : StatusBar.currentHeight,
-    backgroundColor: "#1e1e21",
+    backgroundColor: "#1b0363",
   },
   content: {
     flexDirection: "row",
@@ -251,7 +251,7 @@ const styles = StyleSheet.create({
     borderColor: "#ddd",
   },
   confirmButton: {
-    backgroundColor: "#1e1e21",
+    backgroundColor: "#1b0363",
   },
   cancelButtonText: {
     color: "#333",

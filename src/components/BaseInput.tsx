@@ -61,8 +61,8 @@ const BaseInput: React.FC<BaseInputProps> = ({
     paddingLeft: 11,
     fontSize: 16,
     ...(isFocused && {
-      borderColor: "#1e1e21",
-      outlineColor: "#1e1e213e",
+      borderColor: "#1b0363",
+      outlineColor: "#1b03633e",
       outlineWidth: 3,
       outlineStyle: "solid",
       paddingLeft: 12,

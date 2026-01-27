@@ -24,18 +24,18 @@ const Button: React.FC<ButtonProps> = ({
     borderRadius: 10,
     alignItems: "center" as const,
     ...(variant === "primary" && {
-      backgroundColor: "#1e1e21",
+      backgroundColor: "#1b0363",
     }),
     ...(variant === "secondary" && {
       backgroundColor: "transparent",
       borderWidth: 1,
-      borderColor: "#1e1e21",
+      borderColor: "#1b0363",
     }),
     ...(variant === "icon" && {
       paddingVertical: 6,
       paddingHorizontal: 8,
       borderWidth: 1,
-      borderColor: "#1e1e21",
+      borderColor: "#1b0363",
       hoverBackgroundColor: "#cdc6e2ff",
     }),
     ...style,
@@ -47,7 +47,7 @@ const Button: React.FC<ButtonProps> = ({
       color: "white",
     }),
     ...(variant === "secondary" && {
-      color: "#1e1e21ff",
+      color: "#1b0363ff",
     }),
     ...textStyle,
   };

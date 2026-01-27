@@ -35,7 +35,7 @@ const UserEditScreen = () => {
         throw new Error(
           response.data.error ||
             response.data.message ||
-            "Falha ao carregar usuário"
+            "Falha ao carregar usuário",
         );
       }
 
@@ -138,7 +138,7 @@ const UserEditScreen = () => {
       } else {
         Alert.alert(
           "Erro",
-          response.data.message || "Falha ao atualizar usuário"
+          response.data.message || "Falha ao atualizar usuário",
         );
       }
     } catch (error: any) {
@@ -152,7 +152,7 @@ const UserEditScreen = () => {
       } else {
         Alert.alert(
           "Erro",
-          error.response?.data?.message || "Falha ao atualizar usuário"
+          error.response?.data?.message || "Falha ao atualizar usuário",
         );
       }
     } finally {
@@ -191,12 +191,6 @@ const UserEditScreen = () => {
       <View style={styles.form}>
         <View style={styles.header}>
           <Text style={styles.welcome}>Editar Usuário</Text>
-          <Button
-            title={loading ? "Salvando..." : "Salvar"}
-            onPress={handleSubmit}
-            variant="primary"
-            disabled={loading}
-          />
         </View>
 
         <CheckboxInput
@@ -236,6 +230,9 @@ const UserEditScreen = () => {
           placeholder="Email"
           maxLength={50}
           type="email"
+          autoCapitalize="none" // Impede a primeira letra maiúscula
+          autoCorrect={false} // Desativa a correção ortográfica (o que você pediu)
+          keyboardType="email-address"
         />
 
         <TextInput
@@ -245,6 +242,9 @@ const UserEditScreen = () => {
           placeholder="Username"
           maxLength={20}
           type="text"
+          autoCapitalize="none" // Impede a primeira letra maiúscula
+          autoCorrect={false} // Desativa a correção ortográfica (o que você pediu)
+          keyboardType="email-address"
         />
 
         <TextInput
@@ -268,11 +268,21 @@ const UserEditScreen = () => {
         <PasswordInput
           label="Confirmar Nova Senha"
           value={formData.password_confirmation}
-          onChangeText={(text) => updateFormData("password_confirmation", text.trim())}
+          onChangeText={(text) =>
+            updateFormData("password_confirmation", text.trim())
+          }
           placeholder="Confirmar nova senha"
           maxLength={20}
           showPasswordToggle={true}
         />
+
+        <Button
+            title={loading ? "Salvando..." : "Salvar"}
+            onPress={handleSubmit}
+            variant="primary"
+            style={{ width: "25%" }}
+            disabled={loading}
+          />
       </View>
     </KeyboardAvoindingContainer>
   );
@@ -288,6 +298,7 @@ const styles = StyleSheet.create({
   form: {
     paddingTop: 60,
     paddingHorizontal: 16,
+    paddingBottom: 16,
     backgroundColor: "#ffffffff",
   },
   welcome: {

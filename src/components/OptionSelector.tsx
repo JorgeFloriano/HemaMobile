@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
     color: "#6b7280",
   },
   modalList: {
-    maxHeight: 300,
+    maxHeight: 500,
   },
   modalItem: {
     padding: 16,
@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
     borderBottomColor: "#f3f4f6",
   },
   modalItemSelected: {
-    backgroundColor: "#1e1e21",
+    backgroundColor: "#1b0363",
   },
   modalItemText: {
     fontSize: 16,

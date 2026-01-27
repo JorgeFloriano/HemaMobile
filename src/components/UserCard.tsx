@@ -62,7 +62,7 @@ const UserCard: React.FC<UserCardProps> = ({
           <Text style={styles.detailLabel}>Username: {user.username}</Text>
           <View style={styles.buttonRow}>
             <Button
-              title={<Feather name="edit" size={18} color="#1e1e21" />}
+              title={<Feather name="edit" size={18} color="#1b0363" />}
               onPress={handleEdit}
               variant="icon"
               disabled={isDeleting}
@@ -70,9 +70,9 @@ const UserCard: React.FC<UserCardProps> = ({
             <Button
               title={
                 isDeleting ? (
-                  <ActivityIndicator size="small" color="#1e1e21" />
+                  <ActivityIndicator size="small" color="#1b0363" />
                 ) : (
-                  <Feather name="trash-2" size={18} color="#1e1e21" />
+                  <Feather name="trash-2" size={18} color="#1b0363" />
                 )
               }
               onPress={handleDelete}

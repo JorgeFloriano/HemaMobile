@@ -156,7 +156,7 @@ const OrdersScreen = () => {
         Solicitações de assistência técnica não encontradas
       </Text>
       <Button
-        title="Create First Order"
+        title="Criar Primeira Solicitação"
         onPress={handleCreateOrder}
         variant="primary"
         style={styles.emptyStateButton}
