@@ -7,7 +7,6 @@ import Button from "@/src/components/Button";
 import OptionSelector from "@/src/components/OptionSelector";
 import KeyboardAvoindingContainer from "@/src/components/KeyboardAvoidingContainer";
 import CheckboxInput from "@/src/components/CheckboxInput";
-import Feather from "@expo/vector-icons/Feather";
 
 interface Type {
   id: string;

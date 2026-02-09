@@ -52,7 +52,9 @@ const UsersScreen = () => {
       // Check if response has success flag
       if (response.data.success === false) {
         throw new Error(
-          response.data.error || response.data.message || "Falha ao carregar usuários"
+          response.data.error ||
+            response.data.message ||
+            "Falha ao carregar usuários",
         );
       }
 
@@ -88,7 +90,7 @@ const UsersScreen = () => {
       } else {
         Alert.alert(
           "Erro",
-          response.data.message || "Falha ao excluir usuário"
+          response.data.message || "Falha ao excluir usuário",
         );
       }
     } catch (error: any) {
@@ -150,7 +152,7 @@ const UsersScreen = () => {
     <View style={styles.errorState}>
       <Text style={styles.errorStateText}>{error}</Text>
       <Button
-        title="Try Again"
+        title="Tentar Novamente"
         onPress={() => loadUsers()}
         variant="primary"
         style={styles.errorStateButton}
@@ -176,7 +178,11 @@ const UsersScreen = () => {
       <View style={styles.header}>
         <View style={styles.title}>
           <Text style={styles.welcome}>Usuários</Text>
-          <Button onPress={handleCreateUser} title="Cadastrar" variant="primary" />
+          <Button
+            onPress={handleCreateUser}
+            title="Cadastrar"
+            variant="primary"
+          />
         </View>
         <Text style={styles.subtitle}>Gerenciamento de Usuários</Text>
       </View>

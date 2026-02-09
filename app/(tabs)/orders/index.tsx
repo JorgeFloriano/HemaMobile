@@ -100,7 +100,10 @@ const OrdersScreen = () => {
         router.back();
       } else {
         // Erro de rede ou outro problema
-        Alert.alert("Erro", "Falha ao carregar solicitações de assistência técnica");
+        Alert.alert(
+          "Erro",
+          "Falha ao carregar solicitações de assistência técnica",
+        );
         console.error("Error loading orders:", error);
       }
     } finally {
@@ -169,7 +172,7 @@ const OrdersScreen = () => {
     <View style={styles.errorState}>
       <Text style={styles.errorStateText}>{error}</Text>
       <Button
-        title="Try Again"
+        title="Tentar Novamente"
         onPress={() => loadOrders()}
         variant="primary"
         style={styles.errorStateButton}

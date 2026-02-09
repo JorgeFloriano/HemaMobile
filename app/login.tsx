@@ -117,7 +117,7 @@ const LoginScreen: React.FC = () => {
                   label="Usuário"
                   value={username}
                   onChangeText={setUsername}
-                  placeholder="Usuário"
+                  placeholder="Digite seu nome de usuário"
                   autoCapitalize="none" // Impede a primeira letra maiúscula
                   autoCorrect={false} // Desativa a correção ortográfica (o que você pediu)
                   keyboardType="email-address"
@@ -126,6 +126,7 @@ const LoginScreen: React.FC = () => {
                 <PasswordInput
                   label="Senha"
                   value={password}
+                  placeholder="Digite sua senha"
                   onChangeText={setPassword}
                   showPasswordToggle={true}
                 />

@@ -232,13 +232,13 @@ const CreateUserScreen: React.FC = () => {
         </View>
 
         <CheckboxInput
-          label="Permitir criar solicitação"
+          label="Permitir criar solicitações"
           value={formData.can_create_sat}
           onChange={(value) => updateFormData("can_create_sat", value)}
         />
 
         <CheckboxInput
-          label="Permitir visualizar solicitação"
+          label="Permitir visualizar solicitações"
           value={formData.can_see_sat}
           onChange={(value) => updateFormData("can_see_sat", value)}
         />

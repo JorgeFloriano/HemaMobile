@@ -89,9 +89,9 @@ const OrdersScreen = () => {
       const response = await api.get<OrdersResponse>("/orders");
       setOrders(response.data.orders);
     } catch (err) {
-      const errorMessage = "Failed to load orders";
+      const errorMessage = "Falha ao carregar solicitações de assistência técnica";
       setError(errorMessage);
-      Alert.alert("Error", errorMessage);
+      Alert.alert("Erro", errorMessage);
       console.error("Error loading orders:", err);
     } finally {
       setLoading(false);
@@ -114,7 +114,7 @@ const OrdersScreen = () => {
     if (Boolean(user?.canCreateSat) !== true) {
       Alert.alert(
         "Acesso negado",
-        "Sem permissão para criar solicitações de assistência técnica."
+        "Sem permissão para criar solicitações de assistência técnica.",
       );
       return;
     }
@@ -134,7 +134,7 @@ const OrdersScreen = () => {
     } else {
       Alert.alert(
         "Acesso negado",
-        "Sem permissão para visualizar os detalhes da solicitação de assistência técnica."
+        "Sem permissão para visualizar os detalhes da solicitação de assistência técnica.",
       );
     }
   };
@@ -157,7 +157,7 @@ const OrdersScreen = () => {
     <View style={styles.errorState}>
       <Text style={styles.errorStateText}>{error}</Text>
       <Button
-        title="Try Again"
+        title="Tentar Novamente"
         onPress={() => loadOrders()}
         variant="primary"
         style={styles.errorStateButton}
