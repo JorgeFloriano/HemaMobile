@@ -2,9 +2,9 @@
   "expo": {
     "name": "Hema Client",
     "slug": "HemaMobile",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
-    "icon": "./assets/images/logo_hema.png",
+    "icon": "./assets/images/logo_icon.png",
     "scheme": "hemamobile",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,

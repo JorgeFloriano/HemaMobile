@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Order } from "@/app/(tabs)/orders";
+import StatusBadge from "./StatusBadge";
 
 interface OrderCardProps {
   order: Order;
@@ -8,13 +9,6 @@ interface OrderCardProps {
 }
 
 const OrderCard: React.FC<OrderCardProps> = ({ order, onPress }) => {
-  const getStatusColor = (finished: boolean) => {
-    return finished ? "#4CAF50" : "#FF9800";
-  };
-
-  const getStatusText = (finished: boolean) => {
-    return finished ? "F" : "P";
-  };
 
   const formatDate = (date: string) => {
     const [year, month, day] = date.split("-");
@@ -44,14 +38,10 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onPress }) => {
           {order.id} - {order.type.description}
         </Text>
        
-        <View
-          style={[
-            styles.statusBadge,
-            { backgroundColor: getStatusColor(order.finished) },
-          ]}
-        >
-          <Text style={styles.statusText}>{getStatusText(order.finished)}</Text>
-        </View>
+        <StatusBadge 
+          finished={order.finished} 
+          isEmergency={order.is_emergency} 
+        />
       </View>
 
       <Text style={styles.description} numberOfLines={2}>
