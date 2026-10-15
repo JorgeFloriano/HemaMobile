@@ -13,8 +13,14 @@ interface Type {
   description: string;
 }
 
+interface Client {
+  id: string;
+  name: string;
+}
+
 interface FormData {
   order_type_id: string;
+  client_id: string;
   sector: string;
   req_name: string;
   req_descr: string;
@@ -25,9 +31,11 @@ interface FormData {
 const CreateOrderScreen = () => {
   const router = useRouter();
   const [types, setTypes] = useState<Type[]>([]);
+  const [clients, setClients] = useState<Client[]>([]);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     order_type_id: "",
+    client_id: "",
     sector: "",
     req_name: "",
     req_descr: "",
@@ -36,7 +44,7 @@ const CreateOrderScreen = () => {
   });
 
   // FIXED: Added useCallback to prevent infinite re-renders
-  const loadOrderTypes = useCallback(async () => {
+  const loadData = useCallback(async () => {
     try {
       console.log("🔄 Loading order types...");
 
@@ -52,6 +60,8 @@ const CreateOrderScreen = () => {
       // FIXED: Better data handling
       const typesData = response.data.types || response.data;
 
+      const clientsData = response.data.clients || response.data;
+
       if (Array.isArray(typesData)) {
         setTypes(typesData);
         console.log(`✅ Loaded ${typesData.length} order types`);
@@ -59,6 +69,15 @@ const CreateOrderScreen = () => {
         console.warn("⚠️ Unexpected response format:", response.data);
         setTypes([]);
       }
+
+      if (Array.isArray(clientsData)) {
+        setClients(clientsData);
+        console.log(`✅ Loaded ${clientsData.length} clients`);
+      } else {
+        console.warn("⚠️ Unexpected response format:", response.data);
+        setClients([]);
+      }
+
     } catch (error: any) {
       // Se a API retornou 403, o erro cai aqui
       if (error.response) {
@@ -77,12 +96,17 @@ const CreateOrderScreen = () => {
 
   // FIXED: Added proper useEffect dependency array
   useEffect(() => {
-    loadOrderTypes();
-  }, [loadOrderTypes]); // Now loadOrderTypes is stable due to useCallback
+    loadData();
+  }, [loadData]); // Now loadData is stable due to useCallback
 
   const handleSubmit = async () => {
     if (!formData.order_type_id) {
       Alert.alert("Erro", "Por favor selecione um tipo de serviço");
+      return;
+    }
+
+    if (!formData.client_id) {
+      Alert.alert("Erro", "Por favor selecione uma unidade");
       return;
     }
 
@@ -136,6 +160,7 @@ const CreateOrderScreen = () => {
   const resetForm = () => {
     setFormData({
       order_type_id: "",
+      client_id: "",
       sector: "",
       req_name: "",
       req_descr: "",
@@ -152,16 +177,31 @@ const CreateOrderScreen = () => {
     updateFormData("order_type_id", type.id);
   };
 
+  const handleClientSelect = (client: Client) => {
+    updateFormData("client_id", client.id);
+  };
+
   return (
     <KeyboardAvoindingContainer>
       <View style={styles.form}>
         <Text style={styles.welcome}>Abrir Solicitação</Text>
+        
         <OptionSelector
           label="Tipo de Serviço *"
           placeholder="Selecione um tipo de serviço"
           types={types}
           selectedTypeId={formData.order_type_id}
           onTypeSelect={handleTypeSelect}
+          // labelKey="description" (já é o padrão)
+        />
+
+        <OptionSelector
+          label="Unidade *"
+          placeholder="Selecione uma unidade"
+          types={clients}
+          selectedTypeId={formData.client_id}
+          onTypeSelect={handleClientSelect}
+          labelKey="name" // <--- AQUI ESTÁ O TRUQUE: diz ao componente para usar 'name'
         />
 
         <TextInput
@@ -193,12 +233,10 @@ const CreateOrderScreen = () => {
           type="text"
         />
 
-        <Text style={styles.subtitle}>Selecione o campo abaixo apenas se precisa de atendimento urgente e fora do horário comercial!</Text>
-
         <CheckboxInput
           icon="alert-circle-outline"
           iconColor="red" // Opcional
-          label="EMERGENCIAL "
+          label="EMERGENCIAL (fora do horário comercial) "
           value={formData.is_emergency}
           onChange={(value) => updateFormData("is_emergency", value)}
         />

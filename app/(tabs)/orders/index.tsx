@@ -18,6 +18,10 @@ import { useAuth } from "@/src/contexts/AuthContext";
 export interface Order {
   id: string;
   order_type_id: string;
+  client: {
+    id: string;
+    name: string;
+  }
   tec_id?: string | null;
   req_descr: string;
   req_name: string;

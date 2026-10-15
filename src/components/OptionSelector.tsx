@@ -8,44 +8,51 @@ import {
   View,
 } from "react-native";
 
-interface Type {
-  id: string;
-  description: string;
+// Tornamos a interface genérica ou flexível para cobrir ambos os casos
+interface OptionItem {
+  id: string | number;
+  description?: string;
+  name?: string;
+  [key: string]: any; // Permite outras propriedades
 }
 
-interface OptionSelectorProps {
-  types: Type[];
-  selectedTypeId: string;
-  onTypeSelect: (type: Type) => void;
+interface OptionSelectorProps<T extends OptionItem> {
+  types: T[];
+  selectedTypeId: string | number;
+  onTypeSelect: (item: T) => void;
   label?: string;
   placeholder?: string;
+  labelKey?: "description" | "name"; // Define qual propriedade mostrar (padrão: description)
 }
 
-const OptionSelector: React.FC<OptionSelectorProps> = ({
+export default function OptionSelector<T extends OptionItem>({
   types,
   selectedTypeId,
   onTypeSelect,
   label,
   placeholder,
-}) => {
+  labelKey = "description",
+}: OptionSelectorProps<T>) {
   const [modalVisible, setModalVisible] = useState(false);
 
-  const getSelectedTypeName = () => {
+  const getSelectedLabel = () => {
     if (!selectedTypeId) return placeholder || "Selecione uma opção";
-    const selected = types.find((type) => type.id === selectedTypeId);
-    return selected
-      ? selected.description
-      : placeholder || "Selecione uma opção";
+    const selected = types.find((item) => String(item.id) === String(selectedTypeId));
+    
+    if (!selected) return placeholder || "Selecione uma opção";
+    
+    // Retorna o valor com base na chave escolhida ou fallback para name/description
+    return selected[labelKey] || selected.description || selected.name || placeholder;
   };
 
-  const handleTypeSelect = (type: Type) => {
-    onTypeSelect(type);
+  const handleSelect = (item: T) => {
+    onTypeSelect(item);
     setModalVisible(false);
   };
 
   return (
     <View style={styles.inputGroup}>
-      <Text style={styles.label}>{label}</Text>
+      {label && <Text style={styles.label}>{label}</Text>}
       <TouchableOpacity
         style={styles.selectButton}
         onPress={() => setModalVisible(true)}
@@ -56,7 +63,7 @@ const OptionSelector: React.FC<OptionSelectorProps> = ({
             !selectedTypeId && styles.placeholderText,
           ]}
         >
-          {getSelectedTypeName()}
+          {getSelectedLabel()}
         </Text>
         <Text style={styles.dropdownIcon}>▼</Text>
       </TouchableOpacity>
@@ -79,33 +86,37 @@ const OptionSelector: React.FC<OptionSelectorProps> = ({
               </TouchableOpacity>
             </View>
             <ScrollView style={styles.modalList}>
-              {types.map((type) => (
-                <TouchableOpacity
-                  key={type.id}
-                  style={[
-                    styles.modalItem,
-                    selectedTypeId === type.id && styles.modalItemSelected,
-                  ]}
-                  onPress={() => handleTypeSelect(type)}
-                >
-                  <Text
+              {types.map((item) => {
+                const itemText = item[labelKey] || item.description || item.name;
+                const isSelected = String(selectedTypeId) === String(item.id);
+
+                return (
+                  <TouchableOpacity
+                    key={item.id}
                     style={[
-                      styles.modalItemText,
-                      selectedTypeId === type.id &&
-                        styles.modalItemTextSelected,
+                      styles.modalItem,
+                      isSelected && styles.modalItemSelected,
                     ]}
+                    onPress={() => handleSelect(item)}
                   >
-                    {type.description}
-                  </Text>
-                </TouchableOpacity>
-              ))}
+                    <Text
+                      style={[
+                        styles.modalItemText,
+                        isSelected && styles.modalItemTextSelected,
+                      ]}
+                    >
+                      {itemText}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
             </ScrollView>
           </View>
         </View>
       </Modal>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   inputGroup: {
@@ -191,5 +202,3 @@ const styles = StyleSheet.create({
     color: "white",
   },
 });
-
-export default OptionSelector;

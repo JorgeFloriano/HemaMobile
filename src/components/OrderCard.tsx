@@ -50,6 +50,11 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onPress }) => {
 
       <View style={styles.details}>
         <View style={styles.detailRow}>
+          <Text style={styles.detailLabel}>Unidade:</Text>
+          <Text style={styles.detailValue}>{order.client.name}</Text>
+        </View>
+        
+        <View style={styles.detailRow}>
           <Text style={styles.detailLabel}>Setor:</Text>
           <Text style={styles.detailValue}>{order.sector}</Text>
         </View>
